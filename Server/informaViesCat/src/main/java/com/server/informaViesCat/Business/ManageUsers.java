@@ -13,7 +13,7 @@ import java.util.List;
  */
 
 
-
+/* test */
 public class ManageUsers {
 
     private static List<User> llistaUsuaris;
