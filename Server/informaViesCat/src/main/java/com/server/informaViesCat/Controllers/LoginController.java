@@ -1,7 +1,8 @@
 package com.server.informaViesCat.Controllers;
 
-import com.server.informaViesCat.Business.ManageUsers;
 import com.server.informaViesCat.Entities.User;
+import com.server.informaViesCat.Repository.UserRepository;
+import java.sql.SQLException;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,30 +18,34 @@ public class LoginController {
     /**
      * Conecta el usuari
      *
-     * @param name Nom del usuari
+     * @param username username del usuari
      * @param pass Clau de pass.
      * @return Retorna una entitat user amb el seu estat
      */
-    @GetMapping("login/{name}/{pass}")
-    public User login(@PathVariable String name, @PathVariable String pass) {
+    @GetMapping("login/{username}/{pass}")
+    public User login(@PathVariable String username, @PathVariable String pass) throws SQLException {
 
-        User autenticarUsuario = ManageUsers.autenticarUsuario(name, pass);
+       // User autenticarUsuario = ManageUsers.autenticarUsuario(username, pass);
+        
+        UserRepository userRepository = new UserRepository();
+        User userObtained = userRepository.getByUsernameAndPassword(username, pass);
 
-        return autenticarUsuario;
+        return userObtained;
     }
 
     /**
      * Desconecta el usuari
      *
-     * @param name Nom del usuari
+     * @param username username del usuari
      * @param pass Clau de pass.
      * @return Retorna una entitat user amb el seu estat
      */
-    @GetMapping("logout/{name}/{pass}")
-    public User logout(@PathVariable String name, @PathVariable String pass) {
+    @GetMapping("logout/{username}/{pass}")
+    public User logout(@PathVariable String username, @PathVariable String pass) {
 
-        User autenticarUsuario = ManageUsers.desconectarUsuario(name, pass);
-        return autenticarUsuario;
+        //User autenticarUsuario = ManageUsers.desconectarUsuario(username, pass);
+        //return autenticarUsuario;
+        return null;
     }
 
 }

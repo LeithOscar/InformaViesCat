@@ -81,6 +81,14 @@
             <version>2.7</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.6.0</version>
+        </dependency>  
+        
+          
+        
     </dependencies>
     <name>informaViesCat</name>
 </project>

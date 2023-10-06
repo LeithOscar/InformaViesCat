@@ -1,6 +1,7 @@
 package com.server.informaViesCat;
 
-import com.server.informaViesCat.Business.ManageUsers;
+import java.sql.SQLException;
+import javax.crypto.AEADBadTagException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author leith
  */
-
 @SpringBootApplication
 public class InformaViesCat {
 
@@ -17,10 +17,12 @@ public class InformaViesCat {
 
         // Inicia la aplicación Spring Boot
         SpringApplication.run(InformaViesCat.class, args);
-        
-        // init
-        ManageUsers manageUsers = new ManageUsers();
+
+        CConnection.conectar();
+
 
     }
+    
+   
 
 }
