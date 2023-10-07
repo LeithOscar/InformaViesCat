@@ -1,4 +1,4 @@
--- Database: informaViesCat
+Database: informaViesCat
 
 -- DROP DATABASE IF EXISTS "informaViesCat";
 
@@ -13,13 +13,13 @@ CREATE DATABASE "informaViesCat"
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
 	
-	-- Crear la tabla "Rol"
+	-- Create table Rol
 	CREATE TABLE Rol (
 		id SERIAL PRIMARY KEY,
 		RolName VARCHAR(255) NOT NULL
 	);
 
--- Crear la tabla "Users" con la restricción de clave externa
+	--  Create table user with restrictions
 	CREATE TABLE Users (
 		id SERIAL PRIMARY KEY,
 		RolId INT REFERENCES Rol(id),
@@ -31,14 +31,14 @@ CREATE DATABASE "informaViesCat"
 		IsLogged BOOLEAN DEFAULT false
 	);
 	
-	-- DADES --
-	-- Insertar los roles en la tabla "Rol"
+	-- Data --
+	-- Rol table
 	INSERT INTO Rol (RolName) VALUES
 		('Administrador'),
 		('Técnico'),
 		('Usuario');
 		
-		-- Insertar usuarios con diferentes roles en la tabla "Users"
+	-- Insert into user table
 	INSERT INTO Users (RolId, Name, LastName, UserName, Password, Email) VALUES
 		(1, 'Juan', 'Pérez', 'juanperez', '1234', 'juan@example.com'), -- Rol: Administrador
 		(2, 'María', 'González', 'mariagonzalez', '1234', 'maria@example.com'), -- Rol: Técnico
@@ -48,7 +48,8 @@ CREATE DATABASE "informaViesCat"
 		(3, 'Elena', 'Rodríguez', 'elenarodriguez', '1234', 'elena@example.com'); -- Rol: Usuario
 
 
--- obtenir usuario y rol by username y password
+	-- Exemple Querys
+	-- Get user by username and pass
 		SELECT u.*, r.RolName
 	FROM Users u
 	JOIN Rol r ON u.RolId = r.id
