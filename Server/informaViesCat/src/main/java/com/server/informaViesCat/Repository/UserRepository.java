@@ -1,10 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.server.informaViesCat.Repository;
 
-import com.server.informaViesCat.CConnection;
+import com.server.informaViesCat.Configuration.ConnectionBD;
 import com.server.informaViesCat.Entities.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,48 +8,101 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * UserRepository
  *
- * @author leith
+ * Aquesta clase centralitza tots els accesos a la base de dades de la entitat
+ * User
  */
 public class UserRepository {
 
-    private Connection conexion;
+    private Connection bdConnection;
 
     public UserRepository() {
 
-        conexion = CConnection.conectar();
+        bdConnection = ConnectionBD.conectar();
 
     }
 
-    public User getByUsernameAndPassword(String username, String password) throws SQLException {
+    /**
+     * GetByUsernameAndPassword
+     *
+     * @param userName username del usuari
+     * @param password Clau de pass.
+     * @return Retorna una entitat user amb el seu estat
+     */
+    public User GetByUsernameAndPassword(String userName, String password) throws SQLException {
+
+        User user = this.GetUser(userName, password);
+
+        if (user != null) {
+
+            User UserUpdated = this.UpdateIsLogged(user, true, bdConnection);
+            return UserUpdated;
+
+        } else {
+            return new User(0, "", "", false, "", "", "");
+        }
+
+    }
+
+    /**
+     * GetByUsernameAndPassword
+     *
+     * @param userName username del usuari
+     * @param password Clau de pass.
+     * @return Retorna una entitat user amb el seu estat
+     */
+    public User Logout(String userName, String password) throws SQLException {
+
+        User user = this.GetUser(userName, password);
+        User UserUpdated = this.UpdateIsLogged(user, false, bdConnection);
+        return UserUpdated;
+
+    }
+
+    private User UpdateIsLogged(User user, boolean state, Connection connection) throws SQLException {
+
+        if (user != null) {
+
+            String updateUser = "UPDATE Users SET isLogged = " + state + " WHERE Id =" + user.getId();
+            PreparedStatement updateStmt = connection.prepareStatement(updateUser);
+            updateStmt.executeUpdate();
+
+            User userUpdated = this.GetUser(user.getUserName(), user.getPassword());
+
+            return userUpdated;
+        }
+
+        return user;
+
+    }
+
+    private User GetUser(String userName, String password) throws SQLException {
 
         String consultaSQL = "SELECT u.*, r.RolName\n"
                 + "	FROM Users u\n"
                 + "	JOIN Rol r ON u.RolId = r.id\n"
-                + "	WHERE u.UserName ='" + username + "' AND u.Password = '" + password + "';";
+                + "	WHERE u.UserName ='" + userName + "' AND u.Password = '" + password + "';";
 
-        PreparedStatement pstmt = conexion.prepareStatement(consultaSQL);
+        PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
 
         ResultSet result = pstmt.executeQuery();
 
         User user = null;
 
         while (result.next()) {
-            int id = result.getInt("id");
-            String name = result.getString("Name");
-            String lastName = result.getString("LastName");
-            String userName = result.getString("UserName");
-            String email = result.getString("Email");
-            String pass = result.getString("Password");
+            int _id = result.getInt("id");
+            String _name = result.getString("Name");
+            String _lastName = result.getString("LastName");
+            String _userName = result.getString("UserName");
+            String _email = result.getString("Email");
+            String _pass = result.getString("Password");
+            boolean _isLogged = result.getBoolean("isLogged");
 
-            user = new User(id, name, pass, true, userName, lastName, email);
+            user = new User(_id, _name, _pass, _isLogged, userName, _lastName, _email);
         }
 
-        if (user != null) {
-            return user;
-        } else {
-            return new User(0, "", "", false, "", "", "");
-        }
+        return user;
 
     }
 }

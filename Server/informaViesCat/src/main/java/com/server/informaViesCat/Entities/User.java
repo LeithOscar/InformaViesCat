@@ -16,7 +16,8 @@ public class User {
     private final String password;
     private boolean logged;
 
-    public User(int id, String name, String password, Boolean connected, String userName, String lastName, String email) {
+    public User(int id, String name, String password, Boolean connected, String userName, 
+            String lastName, String email) {
         this.id = id;
         this.name = name;
         this.userName = userName;
@@ -26,8 +27,15 @@ public class User {
         this.logged = connected;
     }
 
+      public int getId() {
+        return id;
+    }
     public String getName() {
         return name;
+    }
+    
+     public String getUserName() {
+        return userName;
     }
 
     public String getPassword() {

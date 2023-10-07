@@ -3,6 +3,8 @@ package com.server.informaViesCat.Controllers;
 import com.server.informaViesCat.Entities.User;
 import com.server.informaViesCat.Repository.UserRepository;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,10 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  *
- * @author leith
+ * @author leith Controlador d'accès per el login i el logout
  */
 @RestController
 public class LoginController {
+
+    private UserRepository userRepository = null;
+
+    public LoginController() {
+
+        this.userRepository = new UserRepository();
+    }
 
     /**
      * Conecta el usuari
@@ -23,12 +32,15 @@ public class LoginController {
      * @return Retorna una entitat user amb el seu estat
      */
     @GetMapping("login/{username}/{pass}")
-    public User login(@PathVariable String username, @PathVariable String pass) throws SQLException {
+    public User login(@PathVariable String username, @PathVariable String pass) {
 
-       // User autenticarUsuario = ManageUsers.autenticarUsuario(username, pass);
-        
-        UserRepository userRepository = new UserRepository();
-        User userObtained = userRepository.getByUsernameAndPassword(username, pass);
+        User userObtained = null;
+        try {
+            userObtained = userRepository.GetByUsernameAndPassword(username, pass);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         return userObtained;
     }
@@ -43,9 +55,15 @@ public class LoginController {
     @GetMapping("logout/{username}/{pass}")
     public User logout(@PathVariable String username, @PathVariable String pass) {
 
-        //User autenticarUsuario = ManageUsers.desconectarUsuario(username, pass);
-        //return autenticarUsuario;
-        return null;
+        User userObtained = null;
+        try {
+            userObtained = userRepository.Logout(username, pass);
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return userObtained;
     }
+    
 
 }

@@ -1,17 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package com.server.informaViesCat;
+
+package com.server.informaViesCat.Configuration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-/**
- *
- * @author leith
- */
-public class CConnection {
+
+    /**
+     * Conecta el usuari
+     *
+     * Clase que es conecta a la base de dades, retorna la conexió 
+     */
+public class ConnectionBD {
      public static Connection conectar() {
         String url = "jdbc:postgresql://localhost:5432/informaViesCat";
         String usuario = "postgres";
