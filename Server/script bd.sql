@@ -1,4 +1,4 @@
-Database: informaViesCat
+-- Database: informaViesCat
 
 -- DROP DATABASE IF EXISTS "informaViesCat";
 
