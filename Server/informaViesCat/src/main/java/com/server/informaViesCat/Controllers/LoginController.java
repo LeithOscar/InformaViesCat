@@ -1,11 +1,10 @@
 package com.server.informaViesCat.Controllers;
 
+import com.server.informaViesCat.Business.UserBusiness;
 import com.server.informaViesCat.Entities.User;
-import com.server.informaViesCat.Repository.UserRepository;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LoginController {
 
-    private UserRepository userRepository = null;
+    private UserBusiness userBusiness = null;
 
     public LoginController() {
 
-        this.userRepository = new UserRepository();
+        this.userBusiness = new UserBusiness();
     }
 
     /**
@@ -35,12 +34,8 @@ public class LoginController {
     public User login(@PathVariable String username, @PathVariable String pass) {
 
         User userObtained = null;
-        try {
-            userObtained = userRepository.GetByUsernameAndPassword(username, pass);
 
-        } catch (SQLException ex) {
-            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        userObtained = userBusiness.login(username, pass);
 
         return userObtained;
     }
@@ -56,14 +51,10 @@ public class LoginController {
     public User logout(@PathVariable String username, @PathVariable String pass) {
 
         User userObtained = null;
-        try {
-            userObtained = userRepository.Logout(username, pass);
-        } catch (SQLException ex) {
-            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        userObtained = userBusiness.Logout(username, pass);
 
         return userObtained;
     }
-    
 
 }
