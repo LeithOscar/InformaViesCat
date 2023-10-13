@@ -10,13 +10,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Gestio del negoci de l'entitat User
- *
- * @param UserName username del usuari
- * @param password Clau de pass.
- * @return Retorna una entitat user amb el seu estat
- */
+
 public class UserBusiness {
 
     private UserRepository repo = null;
@@ -45,7 +39,7 @@ public class UserBusiness {
                     return UserUpdated;
 
                 } else {
-                    return new User(0, "", "", false, "", "", "");
+                    return new User(0,0, "", "", false, "", "", "");
                 }
 
             } catch (SQLException ex) {
@@ -74,7 +68,7 @@ public class UserBusiness {
                     return UserUpdated;
 
                 } else {
-                    return new User(0, "", "", false, "", "", "");
+                    return new User(0,0, "", "", false, "", "", "");
                 }
 
             } catch (SQLException ex) {
@@ -83,6 +77,31 @@ public class UserBusiness {
 
         }
         return null;
+
+    }
+
+    /**
+     * login, desactiva la propiedad islogged a false
+     *
+     * @param user username del usuari
+     * @return RRetorna true si la operacio es exitosa o false en cas contrari
+     */
+    public boolean CreateNewUser(User user) {
+
+        if (user != null) {
+
+            var userEmail = this.repo.Exist(user.GetEmail());
+            if (userEmail == 0) {
+
+                this.repo.CreateNewUser(user);
+                return true;
+
+            } else {
+                return false;
+            }
+        }
+        
+        return false;
 
     }
 

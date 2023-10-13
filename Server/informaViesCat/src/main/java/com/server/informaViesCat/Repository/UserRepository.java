@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * UserRepository
@@ -34,7 +36,7 @@ public class UserRepository {
         return this.GetUser(userName, password);
     }
 
- /**
+    /**
      * Actualitza islogged al argument state indicat
      *
      * @param user username del usuari
@@ -77,13 +79,53 @@ public class UserRepository {
             String _lastName = result.getString("LastName");
             String _userName = result.getString("UserName");
             String _email = result.getString("Email");
-            String _pass= result.getString("Password");
+            String _pass = result.getString("Password");
+            int _rolId = result.getInt("rolId");
             boolean _isLogged = result.getBoolean("isLogged");
 
-            user = new User(_id, _name, _pass, _isLogged, userName, _lastName, _email);
+            user = new User(_id, _rolId, _name, _pass, _isLogged, userName, _lastName, _email);
         }
 
         return user;
 
+    }
+
+    public void CreateNewUser(User user) {
+
+        try {
+            String consultaSQL = "INSERT INTO users (rolId, name, lastName, userName, password,email, islogged ) VALUES (?,?,?,?,?,?,?)";
+
+            PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
+
+            pstmt.setInt(1, user.getRolId());
+            pstmt.setString(2, user.getName());
+            pstmt.setString(3, user.getLastName());
+            pstmt.setString(4, user.getUserName());
+            pstmt.setString(5, user.getPassword());
+            pstmt.setString(6, user.GetEmail());
+            pstmt.setBoolean(7, user.isLogged());
+
+            pstmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public int Exist(String email) {
+        String consultaSQL = "SELECT Email"
+                + "	FROM Users \n"
+                + "	WHERE Email ='" + email + "';";
+
+        PreparedStatement pstmt;
+        try {
+            pstmt = bdConnection.prepareStatement(consultaSQL);
+            pstmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return 0;
     }
 }

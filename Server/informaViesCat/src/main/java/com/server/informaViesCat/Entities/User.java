@@ -8,17 +8,22 @@ package com.server.informaViesCat.Entities;
  */
 public class User {
 
-    private final int id;
-    private final String name;
-    private final String userName;
-    private final String lastName;
-    private final String email;
-    private final String password;
-    private boolean logged;
+    public int id = 0;
+    public String name = null;
+    public String userName = null;
+    public String lastName = null;
+    public String email = null;
+    public String password = null;
+    public boolean logged;
+    public Integer rolId;
 
-    public User(int id, String name, String password, Boolean connected, String userName, 
+    public User() {
+    }
+
+    public User(int id, int rolId, String name, String password, Boolean connected, String userName,
             String lastName, String email) {
         this.id = id;
+        this.rolId = rolId;
         this.name = name;
         this.userName = userName;
         this.lastName = lastName;
@@ -27,14 +32,23 @@ public class User {
         this.logged = connected;
     }
 
-      public int getId() {
+    public int getId() {
         return id;
     }
+
+    public int getRolId() {
+        return rolId;
+    }
+
     public String getName() {
         return name;
     }
-    
-     public String getUserName() {
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getUserName() {
         return userName;
     }
 
@@ -50,8 +64,8 @@ public class User {
         logged = true;
     }
 
-    public boolean Exist() {
-        return (!this.getName().isEmpty() && !this.getPassword().isBlank()) == true;
+    public String GetEmail() {
+        return email;
     }
 
     public void Disconnect() {
