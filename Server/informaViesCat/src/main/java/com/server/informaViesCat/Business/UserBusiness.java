@@ -5,20 +5,23 @@
 package com.server.informaViesCat.Business;
 
 import com.server.informaViesCat.Entities.User;
+import com.server.informaViesCat.Interfaces.IBusiness.IUserBusiness;
+import com.server.informaViesCat.Interfaces.IRepository.IUserRepository;
 import com.server.informaViesCat.Repository.UserRepository;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 
+public class UserBusiness implements IUserBusiness {
 
-public class UserBusiness {
-
-    private UserRepository repo = null;
+    private IUserRepository repo = null;
 
     public UserBusiness() {
 
         this.repo = new UserRepository();
 
+    }
+
+    public UserBusiness(IUserRepository repoMock) {
+        this.repo = repoMock;
     }
 
     /**
@@ -30,20 +33,15 @@ public class UserBusiness {
      */
     public User login(String UserName, String password) {
 
-        if (!UserName.isEmpty() & !password.isBlank()) {
-            try {
-                User user = this.repo.GetByUsernameAndPassword(UserName, password);
-                if (user != null) {
+        if (!UserName.isEmpty() & !password.isEmpty()) {
+            User user = this.repo.GetByUsernameAndPassword(UserName, password);
+            if (user != null) {
 
-                    User UserUpdated = this.repo.UpdateIsLogged(user, true);
-                    return UserUpdated;
+                User UserUpdated = this.repo.UpdateIsLogged(user, true);
+                return UserUpdated;
 
-                } else {
-                    return new User(0,0, "", "", false, "", "", "");
-                }
-
-            } catch (SQLException ex) {
-                Logger.getLogger(UserBusiness.class.getName()).log(Level.SEVERE, null, ex);
+            } else {
+                return null;
             }
 
         }
@@ -60,19 +58,14 @@ public class UserBusiness {
     public User Logout(String UserName, String password) {
 
         if (!UserName.isEmpty() & !password.isBlank()) {
-            try {
-                User user = this.repo.GetByUsernameAndPassword(UserName, password);
-                if (user != null) {
+            User user = this.repo.GetByUsernameAndPassword(UserName, password);
+            if (user != null) {
 
-                    User UserUpdated = this.repo.UpdateIsLogged(user, false);
-                    return UserUpdated;
+                User UserUpdated = this.repo.UpdateIsLogged(user, false);
+                return UserUpdated;
 
-                } else {
-                    return new User(0,0, "", "", false, "", "", "");
-                }
-
-            } catch (SQLException ex) {
-                Logger.getLogger(UserBusiness.class.getName()).log(Level.SEVERE, null, ex);
+            } else {
+                return new User(0, 0, "", "", false, "", "", "");
             }
 
         }
@@ -100,8 +93,14 @@ public class UserBusiness {
                 return false;
             }
         }
-        
+
         return false;
+
+    }
+
+    public List<User> getAll() {
+
+        return this.repo.GetAll();
 
     }
 

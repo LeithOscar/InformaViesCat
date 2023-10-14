@@ -2,6 +2,7 @@ package com.server.informaViesCat.Controllers;
 
 import com.server.informaViesCat.Business.UserBusiness;
 import com.server.informaViesCat.Entities.User;
+import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import org.springframework.http.MediaType;
@@ -19,11 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/users")
-public class LoginController {
+public class UserController {
 
     private UserBusiness userBusiness = null;
 
-    public LoginController() {
+    public UserController() {
 
         this.userBusiness = new UserBusiness();
     }
@@ -62,7 +63,18 @@ public class LoginController {
         return userObtained;
     }
 
-     /**
+    /**
+     * Obté tots els usuaris
+     *
+     * @return llistat dels usuarios
+     */
+    @GetMapping("/getall")
+    public List<User> getAll() {
+
+        return userBusiness.getAll();
+    }
+
+    /**
      * Crea el usuari
      *
      * @param user username del usuari
