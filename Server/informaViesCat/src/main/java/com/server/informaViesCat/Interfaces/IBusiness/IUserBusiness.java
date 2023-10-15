@@ -12,8 +12,15 @@ import java.util.List;
  * @author leith
  */
 public interface IUserBusiness {
-     public User login(String UserName, String password);
-     User Logout(String UserName, String password);
-     boolean CreateNewUser(User user);
-      List<User> getAll();
+
+    public User Login(String UserName, String password);
+
+    User Logout(String UserName, String password);
+
+    boolean CreateNewUser(User user);
+
+    List<User> GetAll();
+
+    boolean Modify(User user);
+
 }

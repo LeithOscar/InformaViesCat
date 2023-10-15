@@ -23,4 +23,6 @@ public interface IUserRepository {
 
     List<User> GetAll();
 
+    boolean Modify(User user);
+
 }

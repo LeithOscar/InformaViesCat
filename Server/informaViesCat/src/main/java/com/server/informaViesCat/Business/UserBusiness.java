@@ -31,7 +31,7 @@ public class UserBusiness implements IUserBusiness {
      * @param password Clau de pass.
      * @return Retorna una entitat user amb el seu estat
      */
-    public User login(String UserName, String password) {
+    public User Login(String UserName, String password) {
 
         if (!UserName.isEmpty() & !password.isEmpty()) {
             User user = this.repo.GetByUsernameAndPassword(UserName, password);
@@ -59,13 +59,13 @@ public class UserBusiness implements IUserBusiness {
 
         if (!UserName.isEmpty() & !password.isBlank()) {
             User user = this.repo.GetByUsernameAndPassword(UserName, password);
-            if (user != null) {
+           if (user != null && user.isLogged()) {
 
                 User UserUpdated = this.repo.UpdateIsLogged(user, false);
                 return UserUpdated;
 
             } else {
-                return new User(0, 0, "", "", false, "", "", "");
+                return null;
             }
 
         }
@@ -77,7 +77,7 @@ public class UserBusiness implements IUserBusiness {
      * login, desactiva la propiedad islogged a false
      *
      * @param user username del usuari
-     * @return RRetorna true si la operacio es exitosa o false en cas contrari
+     * @return Retorna true si la operacio es exitosa o false en cas contrari
      */
     public boolean CreateNewUser(User user) {
 
@@ -98,10 +98,23 @@ public class UserBusiness implements IUserBusiness {
 
     }
 
-    public List<User> getAll() {
+      /**
+     * Getall
+     *
+     * @return tota la llista d'usuaries
+     */
+    public List<User> GetAll() {
 
         return this.repo.GetAll();
 
+    }
+
+    public boolean Modify(User user) {
+
+        if(user!= null){
+             return this.repo.Modify(user);
+        }
+        return false;
     }
 
 }

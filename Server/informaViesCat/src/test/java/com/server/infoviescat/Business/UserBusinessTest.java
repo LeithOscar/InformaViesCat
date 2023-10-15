@@ -9,13 +9,10 @@ import com.server.informaViesCat.Entities.User;
 import com.server.informaViesCat.Interfaces.IBusiness.IUserBusiness;
 import com.server.informaViesCat.Interfaces.IRepository.IUserRepository;
 import com.server.informaViesCat.Repository.UserRepository;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -39,18 +36,17 @@ public class UserBusinessTest {
         // Arrange
         String userName = "testuser";
         String password = "testpassword";
-        User mockUser = new User(1, 1, userName, password, true, "", "", "");
+        User mockUser = new User(1, 1, userName, password, false, "", "", "");
 
         when(repoMock.GetByUsernameAndPassword(userName, password)).thenReturn(mockUser);
         when(repoMock.UpdateIsLogged(mockUser, true)).thenReturn(mockUser);
 
         // Act
-        User result = userBusiness.login(userName, password);
+        User result = userBusiness.Login(userName, password);
 
         // Assert
-        assertNotNull(result);
-        assertTrue(result.isLogged());
-        //assertEquals(mockUser, result);
+        verify(repoMock).UpdateIsLogged(mockUser, true);
+
     }
 
     @Test
@@ -64,13 +60,13 @@ public class UserBusinessTest {
         when(repoMock.UpdateIsLogged(mockUser, true)).thenReturn(null);
 
         // Act
-        User result = userBusiness.login(userName, password);
+        User result = userBusiness.Login(userName, password);
 
         // Assert
         assertNull(result);
-       
+
     }
-  
+
     @Test
     public void testLogin_EmptyUserNameAndPassword() {
         // Arrange
@@ -78,12 +74,54 @@ public class UserBusinessTest {
         String password = "";
 
         // Act
-        User result = userBusiness.login(userName, password);
+        User result = userBusiness.Login(userName, password);
 
         // Assert
         assertNull(result);
     }
 
+    @Test
+    public void testLogoutWithValidUser() {
+        String userName = "validUser";
+        String password = "validPassword";
 
+        User mockUser = new User(1, 1, userName, password, true, "", "", "");
+
+        when(repoMock.GetByUsernameAndPassword(userName, password)).thenReturn(mockUser);
+
+        // Act
+        User result = userBusiness.Logout(userName, password);
+
+        // Assert
+        verify(repoMock).UpdateIsLogged(mockUser, false);
+
+    }
+
+    @Test
+    public void testLogoutWithInvalidUser() {
+        String userName = "";
+        String password = "";
+
+        // Act
+        User result = userBusiness.Logout(userName, password);
+        // Assert
+        assertNull(result);
+    }
+
+    @Test
+    public void testCreateNewUserWithValidUser() {
+        String userName = "validUser";
+        String password = "validPassword";
+
+        User mockUser = new User(1, 1, userName, password, true, "", "", "");
+
+        when(repoMock.Exist(mockUser.GetEmail())).thenReturn(0);
+        // Act
+        boolean result = userBusiness.CreateNewUser(mockUser);
+
+        // Assert
+        verify(repoMock).CreateNewUser(mockUser);
+
+    }
 
 }

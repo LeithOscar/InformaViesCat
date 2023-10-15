@@ -5,7 +5,6 @@ import com.server.informaViesCat.Entities.User;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,7 +40,7 @@ public class UserController {
 
         User userObtained = null;
 
-        userObtained = userBusiness.login(username, pass);
+        userObtained = userBusiness.Login(username, pass);
 
         return userObtained;
     }
@@ -71,7 +70,7 @@ public class UserController {
     @GetMapping("/getall")
     public List<User> getAll() {
 
-        return userBusiness.getAll();
+        return userBusiness.GetAll();
     }
 
     /**
@@ -85,7 +84,27 @@ public class UserController {
     @Produces("MediaType.APPLICATION_JSON")
     public ResponseEntity<String> create(@RequestBody User user) {
         if (userBusiness.CreateNewUser(user)) {
-            return ResponseEntity.ok("Usuario creado con éxito.");
+            return ResponseEntity.ok("Usuari creat.");
+
+        } else {
+            return (ResponseEntity<String>) ResponseEntity.badRequest();
+
+        }
+
+    }
+    
+      /**
+     * Crea el usuari
+     *
+     * @param user username del usuari
+     * @return Retorna missagte si ha creat OK o un badrequest
+     */
+    @PutMapping("/modify")
+    @Consumes("MediaType.APPLICATION_JSON")
+    @Produces("MediaType.APPLICATION_JSON")
+    public ResponseEntity<String> modify(@RequestBody User user) {
+        if (userBusiness.Modify(user)) {
+            return ResponseEntity.ok("Usuari modificat.");
 
         } else {
             return (ResponseEntity<String>) ResponseEntity.badRequest();

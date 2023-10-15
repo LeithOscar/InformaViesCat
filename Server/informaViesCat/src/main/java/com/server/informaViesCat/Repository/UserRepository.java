@@ -63,7 +63,7 @@ public class UserRepository implements IUserRepository {
                 User userUpdated = this.GetUser(user.getUserName(), user.getPassword());
 
                 return userUpdated;
-                
+
             } catch (SQLException ex) {
                 Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -149,6 +149,33 @@ public class UserRepository implements IUserRepository {
         }
 
         return users;
+    }
+
+    public boolean Modify(User user) {
+
+        try {
+            String consultaSQL = "UPDATE users\n"
+                    + "SET rolId = ?, name = ?, lastName = ?, userName = ?, password = ?, email = ?, islogged = ?\n"
+                    + "WHERE id = ?;";
+
+            PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
+
+            pstmt.setInt(1, user.getRolId());
+            pstmt.setString(2, user.getName());
+            pstmt.setString(3, user.getLastName());
+            pstmt.setString(4, user.getUserName());
+            pstmt.setString(5, user.getPassword());
+            pstmt.setString(6, user.GetEmail());
+            pstmt.setBoolean(7, user.isLogged());
+            pstmt.setInt(8, user.getId());
+
+            pstmt.executeUpdate();
+            return true;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     private User ExtractUserFromResult(ResultSet result) {

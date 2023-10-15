@@ -54,3 +54,8 @@ CREATE DATABASE "informaViesCat"
 	FROM Users u
 	JOIN Rol r ON u.RolId = r.id
 	WHERE u.UserName = 'juanperez' AND u.Password = '1234';
+
+	--modificació usuari
+	UPDATE users
+	SET rolId = 2, name = 'John', lastName = 'Doe', userName = 'johnDoe', password = '0000', email = 'john@example.com', islogged = true
+	WHERE id = 7;
