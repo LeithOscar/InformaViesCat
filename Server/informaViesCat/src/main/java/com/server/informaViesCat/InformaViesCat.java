@@ -17,6 +17,7 @@ public class InformaViesCat {
         System.out.println("Hello to InfoviesCat!");
 
         // Inicia la aplicación Spring Boot
+        // aplicar configuració springframework
         SpringApplication.run(InformaViesCat.class, args);
 
         ConnectionBD.conectar();

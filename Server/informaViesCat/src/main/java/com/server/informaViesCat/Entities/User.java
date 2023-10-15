@@ -8,14 +8,14 @@ package com.server.informaViesCat.Entities;
  */
 public class User {
 
-    public int id = 0;
-    public String name = null;
-    public String userName = null;
-    public String lastName = null;
-    public String email = null;
-    public String password = null;
-    public boolean logged;
-    public Integer rolId;
+    private int id = 0;
+    private String name = null;
+    private String userName = null;
+    private String lastName = null;
+    private String email = null;
+    private String password = null;
+    private boolean logged;
+    private Integer rolId;
 
     public User() {
     }

@@ -53,13 +53,18 @@ public class UserController {
      * @return Retorna una entitat user amb el seu estat
      */
     @GetMapping("/logout/{username}/{pass}")
-    public User logout(@PathVariable String username, @PathVariable String pass) {
+    public ResponseEntity<User> logout(@PathVariable String username, @PathVariable String pass) {
 
         User userObtained = null;
 
         userObtained = userBusiness.Logout(username, pass);
+        if(!userObtained.isLogged())
+        {
+         return ResponseEntity.ok(userObtained);
+        }
+        
 
-        return userObtained;
+      return  (ResponseEntity<User>) ResponseEntity.noContent();
     }
 
     /**
