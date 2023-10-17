@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.InformaViesCAT" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/blau_marino</item>
+        <item name="colorSecondary">@color/blau_clar</item>
+        <item name="android:statusBarColor">@color/blau_marino</item>
+
+    </style>
+</resources>
