@@ -178,6 +178,26 @@ public class UserRepository implements IUserRepository {
         return false;
     }
 
+  
+    public boolean Delete(int id) {
+        
+             try {
+             String consultaSQL = "DELETE FROM Users WHERE id=" + id;
+
+
+            PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
+
+            pstmt.execute();
+            return true;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+        
+    }
+    
+    
     private User ExtractUserFromResult(ResultSet result) {
 
         User user = null;
@@ -198,4 +218,5 @@ public class UserRepository implements IUserRepository {
         }
         return user;
     }
+
 }

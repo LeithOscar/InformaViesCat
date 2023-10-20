@@ -25,4 +25,6 @@ public interface IUserRepository {
 
     boolean Modify(User user);
 
+    boolean Delete(int id);
+
 }

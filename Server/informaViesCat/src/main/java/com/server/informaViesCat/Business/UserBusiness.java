@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.server.informaViesCat.Business;
 
 import com.server.informaViesCat.Entities.User;
@@ -115,6 +112,11 @@ public class UserBusiness implements IUserBusiness {
              return this.repo.Modify(user);
         }
         return false;
+    }
+
+    public boolean Delete(int id) {
+        
+          return this.repo.Delete(id);
     }
 
 }

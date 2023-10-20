@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.server.infoviescat.Business;
 
 import com.server.informaViesCat.Business.UserBusiness;
@@ -18,6 +15,11 @@ import static org.mockito.Mockito.when;
 /**
  *
  * @author leith
+ * Clase de test unitaris de la clase user Busines, testeja tota la logica del negoci referent
+ * amb l'usuari
+ * 
+ * frameWork JUnit
+ * Metodologia Assert
  */
 public class UserBusinessTest {
 

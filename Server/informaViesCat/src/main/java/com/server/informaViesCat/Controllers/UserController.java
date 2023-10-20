@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -117,5 +118,22 @@ public class UserController {
         }
 
     }
+ 
+      /**
+     * Elimina el usuari
+     *
+     * @param id id del usuari
+     * @return Retorna missagte si ha elimnat OK o un badrequest
+     */
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable int id) {
+        if (userBusiness.Delete(id)) {
+            return ResponseEntity.ok("Usuari eliminat.");
 
+        } else {
+            return (ResponseEntity<String>) ResponseEntity.badRequest();
+
+        }
+
+    }
 }
