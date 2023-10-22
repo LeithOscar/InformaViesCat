@@ -31,6 +31,27 @@ CREATE DATABASE "informaViesCat"
 		IsLogged BOOLEAN DEFAULT false
 	);
 	
+	
+	CREATE TABLE IncidentTypes (
+		id SERIAL PRIMARY KEY,
+		TypeName VARCHAR(255) NOT NULL
+	);
+
+	CREATE TABLE Incidents (
+		Id Serial PRIMARY KEY,
+		UserId INT REFERENCES Users(id),
+		tecnicId INT REFERENCES Users(id),
+		Carretera VARCHAR(255),
+		Km VARCHAR(20),
+		Geo VARCHAR(255),
+		Description TEXT,
+		StartDate Date,
+		EndDate Date,
+		Urgent BOOLEAN DEFAULT FALSE,
+		incidentTypeId INT REFERENCES IncidentTypes(id)
+	);
+
+	
 	-- Data --
 	-- Rol table
 	INSERT INTO Rol (RolName) VALUES
@@ -48,6 +69,17 @@ CREATE DATABASE "informaViesCat"
 		(3, 'Elena', 'Rodríguez', 'elenarodriguez', '1234', 'elena@example.com'); -- Rol: Usuario
 
 
+	INSERT INTO IncidentTypes  (TypeName) VALUES
+			('validating'),
+			('validated'),
+			('Assign'),
+			('Repaired'),
+			('close');
+
+	INSERT INTO Incidents (incidentTypeId, UserId, tecnicId, Carretera, Km, Geo, Description, StartDate, EndDate, Urgent)
+	VALUES (1, 3, 2, 'NombreCarretera', 'Km123', 'LatLong', 'Descripción del incidente', '2023-10-14 08:00:00', '2023-10-14 16:00:00', false);
+
+
 	-- Exemple Querys
 	-- Get user by username and pass
 		SELECT u.*, r.RolName
@@ -59,3 +91,7 @@ CREATE DATABASE "informaViesCat"
 	UPDATE users
 	SET rolId = 2, name = 'John', lastName = 'Doe', userName = 'johnDoe', password = '0000', email = 'john@example.com', islogged = true
 	WHERE id = 7;
+	
+	--incidents
+	SELECT * FROM Incidents WHERE UserId = 3;
+
