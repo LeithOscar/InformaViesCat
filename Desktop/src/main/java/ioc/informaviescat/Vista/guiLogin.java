@@ -1,20 +1,29 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package ioc.informaviescat.Vista;
+
+import ioc.informaviescat.Controller.AuthenticationService;
+import ioc.informaviescat.Controller.UserSaver;
+import ioc.informaviescat.Entities.User;
+import javax.swing.ImageIcon;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  *
- * @author pauel
+ * @author Pau Cors Bardolet
  */
 public class guiLogin extends javax.swing.JFrame {
 
+    ImageIcon img = new ImageIcon("ICONS/icon.png");
     /**
      * Creates new form guiLogin
      */
     public guiLogin() {
         initComponents();
+        
+        //Recupera usuari i contrasenya guardats.
+        String[] credentials = UserSaver.restoreCredentials();
+        textUser.setText(credentials[0]);
+        textPassword.setText(credentials[1]);
         
     }
 
@@ -30,7 +39,7 @@ public class guiLogin extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         textUser = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        checkSaveUser = new javax.swing.JCheckBox();
         botoEntrar = new javax.swing.JButton();
         textPassword = new javax.swing.JPasswordField();
         jPanel2 = new javax.swing.JPanel();
@@ -50,8 +59,8 @@ public class guiLogin extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel2.setText("Contrasenya:");
 
-        jCheckBox1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jCheckBox1.setText("Guardar usuari");
+        checkSaveUser.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        checkSaveUser.setText("Guardar usuari");
 
         botoEntrar.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         botoEntrar.setText("Entrar");
@@ -61,19 +70,17 @@ public class guiLogin extends javax.swing.JFrame {
             }
         });
 
-        textPassword.setText("jPasswordField1");
-
         jPanel2.setLayout(null);
 
-        jLabel3.setIcon(new javax.swing.ImageIcon("src\\main\\java\\ioc\\informaviescat\\logo_screen.png"));
+        jLabel3.setIcon(new javax.swing.ImageIcon("src\\main\\java\\ioc\\informaviescat\\Pictures\\logo_screen.png"));
         jPanel2.add(jLabel3);
         jLabel3.setBounds(70, 90, 260, 89);
 
-        jLabel6.setIcon(new javax.swing.ImageIcon("src\\main\\java\\ioc\\informaviescat\\banner_resized.png"));
+        jLabel6.setIcon(new javax.swing.ImageIcon("src\\main\\java\\ioc\\informaviescat\\Pictures\\banner_resized.png"));
         jPanel2.add(jLabel6);
         jLabel6.setBounds(30, 330, 340, 60);
 
-        jLabel4.setIcon(new javax.swing.ImageIcon("src\\main\\java\\ioc\\informaviescat\\autopistes_editada_resized.jpg"));
+        jLabel4.setIcon(new javax.swing.ImageIcon("src\\main\\java\\ioc\\informaviescat\\Pictures\\autopistes_editada_resized.jpg"));
         jLabel4.setAlignmentY(0.0F);
         jPanel2.add(jLabel4);
         jLabel4.setBounds(0, 0, 400, 400);
@@ -93,7 +100,7 @@ public class guiLogin extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jCheckBox1)
+                                .addComponent(checkSaveUser)
                                 .addGap(54, 54, 54)
                                 .addComponent(botoEntrar))
                             .addComponent(textUser, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -122,18 +129,65 @@ public class guiLogin extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(1, 1, 1)
-                        .addComponent(jCheckBox1))
+                        .addComponent(checkSaveUser))
                     .addComponent(botoEntrar)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Defineix l'acció del botó Entrar
+     *
+     */
     private void botoEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoEntrarActionPerformed
-        // TODO add your handling code here:
+        
+        //Si s'escull la opció, guarda l'usuari i contrasenya.
+        System.out.println("Guardar usuari: "+checkSaveUser.isSelected());
+        if(checkSaveUser.isSelected()){
+            UserSaver.saveCredentials(textUser.getText(), textPassword.getText());
+        }
+        else{
+            UserSaver.saveCredentials("", "");
+        }
+            
+        try{
+            User usuari = AuthenticationService.login(textUser.getText(), textPassword.getText());
+            System.out.println("S'intenta loguejar l'usuari "+ textUser.getText()+" amb contrasenya "+textPassword.getText());
+            System.out.println("    Nom: "+usuari.getName());
+            System.out.println("    Cognoms: "+usuari.getLastName());
+            System.out.println("    ID: "+usuari.getId());
+            System.out.println("    Email: "+usuari.GetEmail());
+            
+            if(usuari.getUserName().equals("")){
+                Exception i = new Exception();
+                throw i;
+            }
+            else{
+                if(usuari.getRolId()==3){
+                    AuthenticationService.logout(usuari.getUserName(), usuari.getPassword());
+                    showMessageDialog(null, "Un usuari/a normal no pot fer servir l'aplicació d'escriptori");
+                }
+                else{
+                    MainScreen mainScreen = new MainScreen();
+                    mainScreen.setLocationRelativeTo(null);
+                    mainScreen.setIconImage(img.getImage());
+                    mainScreen.setSessionType(usuari);
+                    mainScreen.setVisible(true);
+
+                    this.dispose();
+                }
+            }
+            
+            
+        } catch (Exception e) {
+            showMessageDialog(null, "Problema amb la connexió");
+        }
+        
     }//GEN-LAST:event_botoEntrarActionPerformed
 
     /**
+     * 
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -170,7 +224,7 @@ public class guiLogin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botoEntrar;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox checkSaveUser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

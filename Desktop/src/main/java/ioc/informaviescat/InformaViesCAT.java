@@ -1,5 +1,4 @@
 
-
 package ioc.informaviescat;
 
 import com.formdev.flatlaf.FlatLightLaf;
@@ -34,12 +33,5 @@ public class InformaViesCAT {
         guilogin.setVisible(true);
         
         
-        MainScreen gui = new MainScreen();
-        gui.setSessionType(0);
-        gui.setVisible(true);
-        
-        MainScreen gui2 = new MainScreen();
-        gui2.setSessionType(1);
-        gui2.setVisible(true);
     }
 }
