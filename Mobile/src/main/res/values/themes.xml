@@ -1,0 +1,22 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.InformaViesCAT" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/blau_marino</item>
+        <item name="colorSecondary">@color/blau_clar</item>
+        <item name="android:statusBarColor">@color/blau_marino</item>
+
+    </style>
+
+    <style name="Theme.InformaViesCAT" parent="Base.Theme.InformaViesCAT" />
+
+    <style name="Theme.InformaViesCAT.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.InformaViesCAT.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.InformaViesCAT.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>
