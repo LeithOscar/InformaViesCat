@@ -19,12 +19,16 @@ public interface IUserRepository {
 
     void CreateNewUser(User user);
 
-    int Exist(String email);
+    boolean Exist(String email);
+
+    boolean Exist(int id);
 
     List<User> GetAll();
 
     boolean Modify(User user);
 
     boolean Delete(int id);
+
+    public User GetByUsername(String username);
 
 }

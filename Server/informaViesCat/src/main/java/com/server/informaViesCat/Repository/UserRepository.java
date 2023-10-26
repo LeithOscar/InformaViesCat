@@ -117,7 +117,7 @@ public class UserRepository implements IUserRepository {
 
     }
 
-    public int Exist(String email) {
+    public boolean Exist(String email) {
         String consultaSQL = "SELECT Email"
                 + "	FROM Users \n"
                 + "	WHERE Email ='" + email + "';";
@@ -126,11 +126,27 @@ public class UserRepository implements IUserRepository {
         try {
             pstmt = bdConnection.prepareStatement(consultaSQL);
             pstmt.executeQuery();
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+    }
 
-        return 0;
+    public boolean Exist(int id) {
+        String consultaSQL = "SELECT Id"
+                + "	FROM Users \n"
+                + "	WHERE Id ='" + id + "';";
+
+        PreparedStatement pstmt;
+        try {
+            pstmt = bdConnection.prepareStatement(consultaSQL);
+            pstmt.executeQuery();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
 
     public List<User> GetAll() {
@@ -178,26 +194,54 @@ public class UserRepository implements IUserRepository {
         return false;
     }
 
-  
     public boolean Delete(int id) {
-        
-             try {
-             String consultaSQL = "DELETE FROM Users WHERE id=" + id;
 
+        try {
 
-            PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
+            if (this.Exist(id)) {
 
-            pstmt.execute();
-            return true;
+                String consultaSQL = "DELETE FROM Users WHERE id=" + id;
+
+                PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
+
+                pstmt.execute();
+                return true;
+            } else {
+                return false;
+            }
 
         } catch (SQLException ex) {
             Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
-        
+
     }
-    
-    
+
+    public User GetByUsername(String username) {
+
+        try {
+            String consultaSQL = "SELECT u.*"
+                    + "	FROM Users u\n"
+                    + "	WHERE u.UserName ='" + username + "';";
+
+            PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
+
+            ResultSet result = pstmt.executeQuery();
+
+            User user = null;
+
+            while (result.next()) {
+                user = ExtractUserFromResult(result);
+            }
+
+            return user;
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+
     private User ExtractUserFromResult(ResultSet result) {
 
         User user = null;

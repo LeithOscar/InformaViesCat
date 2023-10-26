@@ -117,12 +117,25 @@ public class UserBusinessTest {
 
         User mockUser = new User(1, 1, userName, password, true, "", "", "");
 
-        when(repoMock.Exist(mockUser.GetEmail())).thenReturn(0);
+        when(repoMock.Exist(mockUser.GetEmail())).thenReturn(false);
         // Act
         boolean result = userBusiness.CreateNewUser(mockUser);
 
         // Assert
         verify(repoMock).CreateNewUser(mockUser);
+
+    }
+    
+    @Test
+    public void testDeleteUserWithValidId() {
+        int userId = 12;
+
+
+        // Act
+        boolean result = userBusiness.Delete(userId);
+
+        // Assert
+        verify(repoMock).Delete(userId);
 
     }
 

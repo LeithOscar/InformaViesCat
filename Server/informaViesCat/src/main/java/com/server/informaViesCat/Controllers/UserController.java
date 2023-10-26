@@ -2,10 +2,13 @@ package com.server.informaViesCat.Controllers;
 
 import com.server.informaViesCat.Business.UserBusiness;
 import com.server.informaViesCat.Entities.User;
+import java.util.Base64;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,13 +40,17 @@ public class UserController {
      * @return Retorna una entitat user amb el seu estat
      */
     @GetMapping("/login/{username}/{pass}")
-    public User login(@PathVariable String username, @PathVariable String pass) {
+    public ResponseEntity<User> login(@PathVariable String username, @PathVariable String pass) {
 
         User userObtained = null;
 
         userObtained = userBusiness.Login(username, pass);
+        if (userObtained != null) {
+            return ResponseEntity.ok(userObtained);
+        }
 
-        return userObtained;
+        return (ResponseEntity<User>) ResponseEntity.badRequest();
+
     }
 
     /**
@@ -59,13 +66,11 @@ public class UserController {
         User userObtained = null;
 
         userObtained = userBusiness.Logout(username, pass);
-        if(!userObtained.isLogged())
-        {
-         return ResponseEntity.ok(userObtained);
+        if (!userObtained.isLogged()) {
+            return ResponseEntity.ok(userObtained);
         }
-        
 
-      return  (ResponseEntity<User>) ResponseEntity.noContent();
+        return (ResponseEntity<User>) ResponseEntity.noContent();
     }
 
     /**
@@ -74,9 +79,14 @@ public class UserController {
      * @return llistat dels usuarios
      */
     @GetMapping("/getall")
-    public List<User> getAll() {
+    public ResponseEntity<List<User>> getAll() {
 
-        return userBusiness.GetAll();
+        var userList = userBusiness.GetAll();
+        if (userList != null) {
+            return ResponseEntity.ok(userList);
+        }
+        return (ResponseEntity<List<User>>) ResponseEntity.noContent();
+
     }
 
     /**
@@ -93,13 +103,11 @@ public class UserController {
             return ResponseEntity.ok("Usuari creat.");
 
         } else {
-            return (ResponseEntity<String>) ResponseEntity.badRequest();
-
+           return ResponseEntity.status(HttpStatus.CONFLICT).body("El recurs ja existeix");
         }
-
     }
-    
-      /**
+
+    /**
      * Crea el usuari
      *
      * @param user username del usuari
@@ -113,13 +121,11 @@ public class UserController {
             return ResponseEntity.ok("Usuari modificat.");
 
         } else {
-            return (ResponseEntity<String>) ResponseEntity.badRequest();
-
+           return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("No es pot modificar");
         }
-
     }
- 
-      /**
+
+    /**
      * Elimina el usuari
      *
      * @param id id del usuari
@@ -131,9 +137,8 @@ public class UserController {
             return ResponseEntity.ok("Usuari eliminat.");
 
         } else {
-            return (ResponseEntity<String>) ResponseEntity.badRequest();
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No existeix");
 
         }
-
     }
 }

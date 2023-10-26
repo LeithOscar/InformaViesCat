@@ -12,7 +12,7 @@ public class User {
     private String name = null;
     private String userName = null;
     private String lastName = null;
-    private String email = null;
+    public String email = null;
     private String password = null;
     private boolean logged;
     private Integer rolId;

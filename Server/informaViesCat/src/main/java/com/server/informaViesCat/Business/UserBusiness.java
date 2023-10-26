@@ -81,7 +81,7 @@ public class UserBusiness implements IUserBusiness {
         if (user != null) {
 
             var userEmail = this.repo.Exist(user.GetEmail());
-            if (userEmail == 0) {
+            if (!userEmail) {
 
                 this.repo.CreateNewUser(user);
                 return true;

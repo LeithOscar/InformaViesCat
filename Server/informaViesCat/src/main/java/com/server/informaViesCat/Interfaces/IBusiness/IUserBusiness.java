@@ -22,5 +22,7 @@ public interface IUserBusiness {
     List<User> GetAll();
 
     boolean Modify(User user);
+    
+    boolean Delete (int id);
 
 }
