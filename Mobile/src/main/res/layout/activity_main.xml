@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_login"
+    tools:context=".MainActivity"
+    android:id="@+id/login_layout">
+
+    <!--Este es el layout azul transparente encima de la foto-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blau_marino"
+        android:alpha="0.6"/>
+
+    <!--Este es el layout con el icono y el nombre de la app-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="28dp"
+        android:layout_above="@id/card_view">
+
+        <!--Icono en color blanco-->
+        <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/icon_white"/>
+
+        <!--Nombre de la app-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/informavies_cat"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="32sp"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
+    <!--Este es el layout con el card de color blanco-->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:cardCornerRadius="28dp"
+        android:layout_marginBottom="-20dp"
+        android:id="@+id/card_view"
+        >
+
+        <!--Layout linear vertical dentro de la tarjeta de color blanco-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="28dp">
+
+            <!--Bienvenido-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/benvingut_uda"
+                android:textColor="@color/blau_marino"
+                android:textSize="32sp"
+                android:textStyle="bold"></TextView>
+
+            <!--Espacio 10dp-->
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"/>
+
+            <!--Instrucciones-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/si_us_plau_inicieu_la_sessi_amb_les_vostres_dades"
+                android:alpha="0.7"></TextView>
+
+            <!--Espacio 30dp-->
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"/>
+
+            <!--Rótulo username-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/username"
+                android:alpha="0.7"
+                style="bold"/>
+
+            <!--TextInput para el username-->
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/baseline_done_24"
+                android:inputType="textEmailAddress"
+                tools:ignore="SpeakableTextPresentCheck"
+                android:id="@+id/edit_username"></EditText>
+
+            <!--Espacio 20dp-->
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"/>
+
+            <!--Rótulo password-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/password"
+                android:alpha="0.7"
+                style="bold"/>
+
+            <!--TextInput para la contraseña-->
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/baseline_remove_red_eye_24"
+                android:inputType="textPassword"
+                tools:ignore="SpeakableTextPresentCheck"
+                android:id="@+id/edit_password"></EditText>
+
+            <!--Layout para el Recorda'm i contrasenya-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!--Checkbox-->
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recorda_m"
+                    android:layout_centerVertical="true"
+                    android:alpha="0.7"/>
+
+                <!--He oblidat la contrasenya-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/i_forgot_my_password"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"/>
+            </RelativeLayout>
+
+            <!--Espacio 20dp-->
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"/>
+
+            <!--Botón Login-->
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="@string/login"
+                app:cornerRadius="32dp"
+                android:id="@+id/button_login"></com.google.android.material.button.MaterialButton>
+
+            <!--Espacio 20dp-->
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"/>
+
+            <!--Layout para los logos inferiores-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+
+                <!--Logo del servei català de trànsit-->
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/logo_servei_catala_transit"
+                    android:contentDescription="@string/logo_del_servei_catal_de_tr_nsit"></ImageView>
+
+                <!--Espacio horizontal-->
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"/>
+
+                <!--Logo del IOC-->
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/logo_ioc"
+                    android:contentDescription="@string/logo_del_institut_obert_de_catalunya"></ImageView>
+
+                <!--Espacio horizontal-->
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"/>
+
+                <!--Logo del IOC-->
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/logo_generalitat"
+                    android:contentDescription="@string/logo_de_la_generalitat_de_catalunya"></ImageView>
+
+            </LinearLayout>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="5dp"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"/>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
