@@ -19,7 +19,7 @@ public class AESEncryptionService {
     private static final String formatUTF8 ="UTF-8";
     private static final String AES ="AES/CBC/PKCS5Padding"; //AES  Esquema d'omplitud
     
-     public static String Encrypt(String mensaje) {
+    public static String Encrypt(String mensaje) {
         try {
             IvParameterSpec iv = new IvParameterSpec(vector.getBytes(formatUTF8));
             SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(formatUTF8), "AES");

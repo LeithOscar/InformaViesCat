@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/incidents")
 public class IncidentController {
 
+    //TODO només els Admin les modificacions 
+    //TODO només els tecnic les modificacions el cambi d'estast
 
     public IncidentController() {
 
