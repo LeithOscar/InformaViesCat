@@ -114,7 +114,6 @@ public class UserController {
      * @return Retorna missagte si ha creat OK o un badrequest
      */
     
-    //TODO només els admins o tecnic o podem fer els cambis
     @PutMapping("/modify")
     @Consumes("MediaType.APPLICATION_JSON")
     @Produces("MediaType.APPLICATION_JSON")

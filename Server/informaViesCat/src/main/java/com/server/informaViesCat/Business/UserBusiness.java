@@ -1,7 +1,8 @@
-
 package com.server.informaViesCat.Business;
 
+import com.server.informaViesCat.Entities.RolTypes;
 import com.server.informaViesCat.Entities.User;
+import com.server.informaViesCat.Entities.UserValidations;
 import com.server.informaViesCat.Interfaces.IBusiness.IUserBusiness;
 import com.server.informaViesCat.Interfaces.IRepository.IUserRepository;
 import com.server.informaViesCat.Repository.UserRepository;
@@ -10,6 +11,7 @@ import java.util.List;
 public class UserBusiness implements IUserBusiness {
 
     private IUserRepository repo = null;
+    private UserValidations userValidations = new UserValidations();
 
     public UserBusiness() {
 
@@ -56,7 +58,7 @@ public class UserBusiness implements IUserBusiness {
 
         if (!UserName.isEmpty() & !password.isBlank()) {
             User user = this.repo.GetByUsernameAndPassword(UserName, password);
-           if (user != null && user.isLogged()) {
+            if (user != null && user.isLogged()) {
 
                 User UserUpdated = this.repo.UpdateIsLogged(user, false);
                 return UserUpdated;
@@ -95,7 +97,7 @@ public class UserBusiness implements IUserBusiness {
 
     }
 
-      /**
+    /**
      * Getall
      *
      * @return tota la llista d'usuaries
@@ -108,15 +110,18 @@ public class UserBusiness implements IUserBusiness {
 
     public boolean Modify(User user) {
 
-        if(user!= null){
-             return this.repo.Modify(user);
+        if (user != null) {
+
+            if (this.userValidations.IsAdmin(user.getRolId()) || this.userValidations.IsTecnic(user.getRolId())) {
+                return this.repo.Modify(user);
+            }
         }
         return false;
     }
 
     public boolean Delete(int id) {
-        
-          return this.repo.Delete(id);
+
+        return this.repo.Delete(id);
     }
 
 }
