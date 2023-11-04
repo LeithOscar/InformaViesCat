@@ -1,8 +1,8 @@
 package com.server.infoviescat.Business;
 
 import com.server.informaViesCat.Business.UserBusiness;
-import com.server.informaViesCat.Entities.User;
-import com.server.informaViesCat.Entities.UserValidations;
+import com.server.informaViesCat.Entities.User.User;
+import com.server.informaViesCat.Entities.User.UserValidations;
 import com.server.informaViesCat.Interfaces.IBusiness.IUserBusiness;
 import com.server.informaViesCat.Interfaces.IBusiness.IUserValidations;
 import com.server.informaViesCat.Interfaces.IRepository.IUserRepository;
@@ -179,7 +179,7 @@ public class UserBusinessTest {
 
         User mockUser = new User(1, 1, userName, password, true, "", "", "");
 
-        when(userValidationsMock.IsTecnic(mockUser.getRolId())).thenReturn(true);
+        when(userValidationsMock.isTechnician(mockUser.getRolId())).thenReturn(true);
         // Act
         boolean result = userBusiness.Modify(mockUser);
 

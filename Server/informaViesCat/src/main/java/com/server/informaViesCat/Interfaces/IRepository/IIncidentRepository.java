@@ -1,6 +1,6 @@
 package com.server.informaViesCat.Interfaces.IRepository;
 
-import com.server.informaViesCat.Entities.Incident;
+import com.server.informaViesCat.Entities.Incident.Incident;
 import java.util.List;
 
 /**
@@ -13,7 +13,7 @@ public interface IIncidentRepository {
 
     boolean Exist(int id);
 
-    List<Incident> GetAll();
+    List<Incident> GetAll(String filterCriteria);
 
     boolean Modify(Incident incident);
 

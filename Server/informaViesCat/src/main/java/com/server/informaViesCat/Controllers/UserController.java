@@ -1,7 +1,7 @@
 package com.server.informaViesCat.Controllers;
 
 import com.server.informaViesCat.Business.UserBusiness;
-import com.server.informaViesCat.Entities.User;
+import com.server.informaViesCat.Entities.User.User;
 import java.util.Base64;
 import java.util.List;
 import javax.ws.rs.Consumes;

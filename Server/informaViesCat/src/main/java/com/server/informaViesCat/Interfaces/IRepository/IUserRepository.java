@@ -4,7 +4,7 @@
  */
 package com.server.informaViesCat.Interfaces.IRepository;
 
-import com.server.informaViesCat.Entities.User;
+import com.server.informaViesCat.Entities.User.User;
 import java.util.List;
 
 /**

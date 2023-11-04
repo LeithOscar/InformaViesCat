@@ -1,8 +1,8 @@
 package com.server.informaViesCat.Business;
 
-import com.server.informaViesCat.Entities.RolTypes;
-import com.server.informaViesCat.Entities.User;
-import com.server.informaViesCat.Entities.UserValidations;
+import com.server.informaViesCat.Entities.Incident.RolTypes;
+import com.server.informaViesCat.Entities.User.User;
+import com.server.informaViesCat.Entities.User.UserValidations;
 import com.server.informaViesCat.Interfaces.IBusiness.IUserBusiness;
 import com.server.informaViesCat.Interfaces.IRepository.IUserRepository;
 import com.server.informaViesCat.Repository.UserRepository;
@@ -50,26 +50,23 @@ public class UserBusiness implements IUserBusiness {
     /**
      * login, desactiva la propiedad islogged a false
      *
-     * @param UserName username del usuari
+     * @param userName username del usuari
      * @param password Clau de pass.
      * @return Retorna una entitat user amb el seu estat
      */
-    public User Logout(String UserName, String password) {
+    public User Logout(String userName, String password) {
 
-        if (!UserName.isEmpty() & !password.isBlank()) {
-            User user = this.repo.GetByUsernameAndPassword(UserName, password);
-            if (user != null && user.isLogged()) {
-
-                User UserUpdated = this.repo.UpdateIsLogged(user, false);
-                return UserUpdated;
-
-            } else {
-                return null;
-            }
-
+        if (userName.isEmpty() || password.isBlank()) {
+            return null;
         }
-        return null;
 
+        User user = repo.GetByUsernameAndPassword(userName, password);
+
+        if (user != null && user.isLogged()) {
+            return repo.UpdateIsLogged(user, false);
+        }
+
+        return null;
     }
 
     /**
@@ -80,19 +77,10 @@ public class UserBusiness implements IUserBusiness {
      */
     public boolean CreateNewUser(User user) {
 
-        if (user != null) {
-
-            var userEmail = this.repo.Exist(user.GetEmail());
-            if (!userEmail) {
-
-                this.repo.CreateNewUser(user);
-                return true;
-
-            } else {
-                return false;
-            }
+        if (!repo.Exist(user.getId())) {
+            repo.CreateNewUser(user);
+            return true;
         }
-
         return false;
 
     }
@@ -110,11 +98,8 @@ public class UserBusiness implements IUserBusiness {
 
     public boolean Modify(User user) {
 
-        if (user != null) {
-
-            if (this.userValidations.IsAdmin(user.getRolId()) || this.userValidations.IsTecnic(user.getRolId())) {
-                return this.repo.Modify(user);
-            }
+        if (user != null && (userValidations.IsAdmin(user.getRolId()) || userValidations.isTechnician(user.getRolId()))) {
+            return repo.Modify(user);
         }
         return false;
     }

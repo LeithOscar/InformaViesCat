@@ -1,4 +1,4 @@
-package com.server.informaViesCat.Entities;
+package com.server.informaViesCat.Entities.User;
 
 /**
  *

@@ -1,5 +1,5 @@
 
-package com.server.informaViesCat.Entities;
+package com.server.informaViesCat.Entities.Incident;
 
 import java.util.Date;
 
@@ -9,17 +9,17 @@ import java.util.Date;
  */
 public class Incident {
 
-    public int id;
-    public int UserId;
-    public int TecnicId;
-    public int IncidentTypeId;
-    public String RoadName;
-    public String KM;
-    public String Geo;
-    public String Description;
-    public Date StartDate;
-    public Date EndDate;
-    public boolean Urgent;
+    private int id;
+    private int UserId;
+    private int TecnicId;
+    private int IncidentTypeId;
+    private String RoadName;
+    private String KM;
+    private String Geo;
+    private String Description;
+    private Date StartDate;
+    private Date EndDate;
+    private boolean Urgent;
 
     public Incident(int id, int userId, int tecnicId,int incidentTypeId, String roadName, String km, String geo, String description, Date startDate, Date endDate, boolean urgent) {
         this.id = id;
@@ -78,5 +78,13 @@ public class Incident {
 
     public boolean isUrgent() {
         return Urgent;
+    }
+    
+     @Override
+    public String toString() {
+        return "ObjetoDeCarretera{" +
+                "carretera='" + this.getRoadName() + '\'' +
+                ", longitud=" + this.getGeo() +
+                '}';
     }
 }

@@ -1,7 +1,7 @@
 package com.server.informaViesCat.Repository;
 
 import com.server.informaViesCat.Configuration.ConnectionBD;
-import com.server.informaViesCat.Entities.User;
+import com.server.informaViesCat.Entities.User.User;
 import com.server.informaViesCat.Interfaces.IRepository.IUserRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

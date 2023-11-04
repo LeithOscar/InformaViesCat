@@ -8,7 +8,7 @@ public interface IUserValidations {
 
     public boolean IsAdmin(int rolId);
 
-    public boolean IsTecnic(int rolId);
+    public boolean isTechnician(int rolId);
 
     public boolean IsUser(int rolId);
 }

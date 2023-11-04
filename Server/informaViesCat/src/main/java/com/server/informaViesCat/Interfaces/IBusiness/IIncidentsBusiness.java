@@ -1,7 +1,7 @@
 
 package com.server.informaViesCat.Interfaces.IBusiness;
 
-import com.server.informaViesCat.Entities.Incident;
+import com.server.informaViesCat.Entities.Incident.Incident;
 import java.util.List;
 
 /**
@@ -12,7 +12,7 @@ public interface IIncidentsBusiness {
     
        boolean CreateNewIncident(Incident incident);
 
-    List<Incident> GetAll();
+    List<Incident> GetAll(String filterCriteria);
 
     boolean Modify(Incident incident);
     
