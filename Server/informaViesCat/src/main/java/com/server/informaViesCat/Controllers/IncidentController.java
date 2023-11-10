@@ -61,7 +61,7 @@ public class IncidentController {
     @Produces("MediaType.APPLICATION_JSON")
     public ResponseEntity<String> create(@RequestBody Incident incident) {
         if (incientBusiness.CreateNewIncident(incident)) {
-            return ResponseEntity.ok("Usuari creat.");
+            return ResponseEntity.ok("Incident creat.");
 
         } else {
            return ResponseEntity.status(HttpStatus.CONFLICT).body("El recurs ja existeix");
@@ -88,9 +88,9 @@ public class IncidentController {
     }
 
     /**
-     * Elimina el usuari
+     * Elimina el incident
      *
-     * @param id id del usuari
+     * @param id id del incident
      * @return Retorna missagte si ha elimnat OK o un badrequest
      */
     @DeleteMapping("/delete/{id}")

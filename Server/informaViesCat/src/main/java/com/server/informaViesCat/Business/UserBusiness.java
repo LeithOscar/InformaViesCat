@@ -1,6 +1,5 @@
 package com.server.informaViesCat.Business;
 
-import com.server.informaViesCat.Entities.Incident.RolTypes;
 import com.server.informaViesCat.Entities.User.User;
 import com.server.informaViesCat.Entities.User.UserValidations;
 import com.server.informaViesCat.Interfaces.IBusiness.IUserBusiness;
@@ -50,17 +49,13 @@ public class UserBusiness implements IUserBusiness {
     /**
      * login, desactiva la propiedad islogged a false
      *
-     * @param userName username del usuari
-     * @param password Clau de pass.
+     * @param userId id del usuari
      * @return Retorna una entitat user amb el seu estat
      */
-    public User Logout(String userName, String password) {
+    public User Logout(int userId) {
 
-        if (userName.isEmpty() || password.isBlank()) {
-            return null;
-        }
-
-        User user = repo.GetByUsernameAndPassword(userName, password);
+       
+        User user = repo.GetById(userId);
 
         if (user != null && user.isLogged()) {
             return repo.UpdateIsLogged(user, false);

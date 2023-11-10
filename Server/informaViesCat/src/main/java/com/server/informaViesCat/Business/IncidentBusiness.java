@@ -22,8 +22,7 @@ public class IncidentBusiness implements IIncidentsBusiness {
     public boolean CreateNewIncident(Incident incident) {
 
         if (!repo.Exist(incident.getId())) {
-            this.repo.CreateIncident(incident);
-            return true;
+            return this.repo.CreateIncident(incident);
         }
         return false;
     }

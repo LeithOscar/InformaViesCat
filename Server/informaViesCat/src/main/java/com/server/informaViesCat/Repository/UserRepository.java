@@ -73,27 +73,6 @@ public class UserRepository implements IUserRepository {
 
     }
 
-    private User GetUser(String userName, String password) throws SQLException {
-
-        String consultaSQL = "SELECT u.*, r.RolName\n"
-                + "	FROM Users u\n"
-                + "	JOIN Rol r ON u.RolId = r.id\n"
-                + "	WHERE u.UserName ='" + userName + "' AND u.Password = '" + password + "';";
-
-        PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
-
-        ResultSet result = pstmt.executeQuery();
-
-        User user = null;
-
-        while (result.next()) {
-            user = ExtractUserFromResult(result);
-        }
-
-        return user;
-
-    }
-
     public void CreateNewUser(User user) {
 
         try {
@@ -257,6 +236,52 @@ public class UserRepository implements IUserRepository {
 
             user = new User(_id, _rolId, _name, _pass, _isLogged, _userName, _lastName, _email);
 
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return user;
+    }
+
+    
+    private User GetUser(String userName, String password) throws SQLException {
+
+        String consultaSQL = "SELECT u.*, r.RolName\n"
+                + "	FROM Users u\n"
+                + "	JOIN Rol r ON u.RolId = r.id\n"
+                + "	WHERE u.UserName ='" + userName + "' AND u.Password = '" + password + "';";
+
+        PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
+
+        ResultSet result = pstmt.executeQuery();
+
+        User user = null;
+
+        while (result.next()) {
+            user = ExtractUserFromResult(result);
+        }
+
+        return user;
+
+    }
+
+    public User GetById(int userId) {
+        User user = null;
+
+        try {
+            String consultaSQL = "SELECT u.*\n"
+                    + "	FROM Users u\n"
+                    + "	WHERE u.id ='" + userId + "';";
+            
+            PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
+            
+            ResultSet result = pstmt.executeQuery();
+            
+            
+            while (result.next()) {
+                user = ExtractUserFromResult(result);
+            }
+            
+            return user;
         } catch (SQLException ex) {
             Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
         }

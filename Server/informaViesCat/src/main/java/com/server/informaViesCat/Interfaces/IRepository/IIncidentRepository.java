@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface IIncidentRepository {
 
-    void CreateIncident(Incident incident);
+    boolean CreateIncident(Incident incident);
 
     boolean Exist(int id);
 

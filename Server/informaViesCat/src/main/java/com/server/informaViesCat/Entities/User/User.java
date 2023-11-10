@@ -1,5 +1,6 @@
 package com.server.informaViesCat.Entities.User;
 
+
 /**
  *
  * @author leith

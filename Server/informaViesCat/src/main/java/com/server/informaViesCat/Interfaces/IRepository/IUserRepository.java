@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
+
 package com.server.informaViesCat.Interfaces.IRepository;
 
 import com.server.informaViesCat.Entities.User.User;
@@ -30,5 +27,7 @@ public interface IUserRepository {
     boolean Delete(int id);
 
     public User GetByUsername(String username);
+
+    public User GetById(int userId);
 
 }

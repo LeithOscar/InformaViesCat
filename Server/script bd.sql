@@ -80,6 +80,12 @@ CREATE DATABASE "informaViesCat"
 	VALUES (1, 3, 2, 'NombreCarretera', 'Km123', 'LatLong', 'Descripción del incidente', '2023-10-14 08:00:00', '2023-10-14 16:00:00', false);
 
 
+	-- Taula per controlar les sesions
+	CREATE TABLE Session (
+		SessionId VARCHAR(50),
+		lastConnection VARCHAR(50)
+	);
+
 	-- Exemple Querys
 	-- Get user by username and pass
 		SELECT u.*, r.RolName

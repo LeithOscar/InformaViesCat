@@ -1,17 +1,13 @@
 package com.server.informaViesCat.Repository;
 
-import static com.fasterxml.jackson.databind.type.LogicalType.Collection;
-import com.fasterxml.jackson.databind.util.ClassUtil;
 import com.server.informaViesCat.Configuration.ConnectionBD;
 import com.server.informaViesCat.Entities.Incident.Incident;
-import com.server.informaViesCat.Entities.User.User;
 import com.server.informaViesCat.Interfaces.IRepository.IIncidentRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -34,20 +30,34 @@ public class IncidentRepository implements IIncidentRepository {
         bdConnection = ConnectionBD.conectar();
     }
 
-    public void CreateIncident(Incident incident) {
-         try {
-            String consultaSQL = "INSERT INTO incident (rolId, name, lastName, userName, password,email, islogged ) VALUES (?,?,?,?,?,?,?)";
+    public boolean CreateIncident(Incident incident) {
+        try {
+            String insertSQL = "INSERT INTO Incidents (UserId, tecnicId, Carretera, Km, Geo, Description, StartDate, "
+                    + "EndDate, Urgent, incidentTypeId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
+            PreparedStatement pstmt = bdConnection.prepareStatement(insertSQL);
 
-            //pstmt.setInt(1, user.getRolId());
+            pstmt.setInt(1, incident.getUserId());
+            pstmt.setInt(2, incident.getTecnicId());
+            pstmt.setString(3, incident.getRoadName());
+            pstmt.setString(4, incident.getKM());
+            pstmt.setString(5, incident.getGeo());
+            pstmt.setString(6, incident.getDescription());
+            
+            pstmt.setDate(7, (java.sql.Date) new Date(incident.getStartDate().getTime()));
+            pstmt.setDate(8, (java.sql.Date) new Date(incident.getEndDate().getTime()));
 
+            pstmt.setBoolean(9, incident.isUrgent());
+            pstmt.setInt(10, incident.getIncidentTypeId());
 
             pstmt.executeUpdate();
 
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        return false;
 
     }
 

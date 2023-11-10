@@ -2,7 +2,6 @@ package com.server.infoviescat.Business;
 
 import com.server.informaViesCat.Business.UserBusiness;
 import com.server.informaViesCat.Entities.User.User;
-import com.server.informaViesCat.Entities.User.UserValidations;
 import com.server.informaViesCat.Interfaces.IBusiness.IUserBusiness;
 import com.server.informaViesCat.Interfaces.IBusiness.IUserValidations;
 import com.server.informaViesCat.Interfaces.IRepository.IUserRepository;
@@ -88,13 +87,14 @@ public class UserBusinessTest {
     public void testLogoutWithValidUser() {
         String userName = "validUser";
         String password = "validPassword";
+        int userId = 0;
 
-        User mockUser = new User(1, 1, userName, password, true, "", "", "");
+        User mockUser = new User(userId, 1, userName, password, true, "", "", "");
 
-        when(repoMock.GetByUsernameAndPassword(userName, password)).thenReturn(mockUser);
+        when(repoMock.GetById(userId)).thenReturn(mockUser);
 
         // Act
-        User result = userBusiness.Logout(userName, password);
+        User result = userBusiness.Logout(userId);
 
         // Assert
         verify(repoMock).UpdateIsLogged(mockUser, false);
@@ -105,9 +105,10 @@ public class UserBusinessTest {
     public void testLogoutWithInvalidUser() {
         String userName = "";
         String password = "";
+        int userId = 0;
 
         // Act
-        User result = userBusiness.Logout(userName, password);
+        User result = userBusiness.Logout(userId);
         // Assert
         assertNull(result);
     }
@@ -117,6 +118,7 @@ public class UserBusinessTest {
         String userName = "validUser";
         String password = "validPassword";
 
+        
         User mockUser = new User(1, 1, userName, password, true, "", "", "");
 
         when(repoMock.Exist(mockUser.GetEmail())).thenReturn(false);
