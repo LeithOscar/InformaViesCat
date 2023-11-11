@@ -120,7 +120,7 @@ ALTER COLUMN StartDate TYPE VARCHAR(255);
 ALTER TABLE Incidents
 ALTER COLUMN EndDate TYPE VARCHAR(255);
 
--- Finalment, recreamos les restriccions 
+-- Finalment, recreem les restriccions 
 ALTER TABLE Incidents
 ADD CONSTRAINT incidents_userid_fkey FOREIGN KEY (UserId) REFERENCES Users(id);
 
