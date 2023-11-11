@@ -97,18 +97,26 @@ public class UserRepository implements IUserRepository {
     }
 
     public boolean Exist(String email) {
-        String consultaSQL = "SELECT Email"
-                + "	FROM Users \n"
-                + "	WHERE Email ='" + email + "';";
+
+        User user = null;
+        String consultaSQL = "SELECT * FROM Users WHERE Email = ?";
 
         PreparedStatement pstmt;
         try {
             pstmt = bdConnection.prepareStatement(consultaSQL);
-            pstmt.executeQuery();
-            return true;
+
+            pstmt.setString(1, email);
+            
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+
+                user = this.ExtractUserFromResult(result);
+            }
+            return user != null;
+            
         } catch (SQLException ex) {
             Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+            return true;
         }
     }
 
@@ -242,7 +250,6 @@ public class UserRepository implements IUserRepository {
         return user;
     }
 
-    
     private User GetUser(String userName, String password) throws SQLException {
 
         String consultaSQL = "SELECT u.*, r.RolName\n"
@@ -271,16 +278,15 @@ public class UserRepository implements IUserRepository {
             String consultaSQL = "SELECT u.*\n"
                     + "	FROM Users u\n"
                     + "	WHERE u.id ='" + userId + "';";
-            
+
             PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
-            
+
             ResultSet result = pstmt.executeQuery();
-            
-            
+
             while (result.next()) {
                 user = ExtractUserFromResult(result);
             }
-            
+
             return user;
         } catch (SQLException ex) {
             Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);

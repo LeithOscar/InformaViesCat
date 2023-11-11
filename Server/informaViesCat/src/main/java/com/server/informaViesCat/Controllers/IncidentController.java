@@ -51,7 +51,7 @@ public class IncidentController {
     }
     
      /**
-     * Crea el usuari
+     * Crea el incident
      *
      * @param incident
      * @return Retorna missagte si ha creat OK o un badrequest
@@ -61,7 +61,7 @@ public class IncidentController {
     @Produces("MediaType.APPLICATION_JSON")
     public ResponseEntity<String> create(@RequestBody Incident incident) {
         if (incientBusiness.CreateNewIncident(incident)) {
-            return ResponseEntity.ok("Incident creat.");
+            return ResponseEntity.ok("Incidencia creada.");
 
         } else {
            return ResponseEntity.status(HttpStatus.CONFLICT).body("El recurs ja existeix");
@@ -69,7 +69,7 @@ public class IncidentController {
     }
     
      /**
-     * Crea el usuari
+     * Modifica el incident
      *
      * @param incident
      * @return Retorna missagte si ha creat OK o un badrequest

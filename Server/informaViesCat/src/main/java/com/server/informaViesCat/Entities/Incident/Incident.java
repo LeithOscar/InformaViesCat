@@ -17,27 +17,29 @@ public class Incident {
     public String KM;
     public String Geo;
     public String Description;
-    public Date StartDate;
-    public Date EndDate;
+    public String StartDate;
+    public String EndDate;
     public boolean Urgent;
 
-    public Incident(int id, int userId, int tecnicId,int incidentTypeId, String roadName, String km, String geo, String description, Date startDate, Date endDate, boolean urgent) {
+    public Incident()
+    {}
+    public Incident(int id, int userId, int tecnicId,int incidentTypeId, String roadName, String km, String geo, String description, String startDate, String endDate, boolean urgent) {
         this.id = id;
-        UserId = userId;
-        TecnicId = tecnicId;
-        RoadName = roadName;
-        KM = km;
-        Geo = geo;
-        Description = description;
-        StartDate = startDate;
-        EndDate = endDate;
-        Urgent = urgent;
-        IncidentTypeId= incidentTypeId;
+        this.UserId = userId;
+        this.TecnicId = tecnicId;
+        this.RoadName = roadName;
+        this.KM = km;
+        this.Geo = geo;
+        this.Description = description;
+        this.StartDate = startDate;
+        this.EndDate = endDate;
+        this.Urgent = urgent;
+        this.IncidentTypeId= incidentTypeId;
     }
 
     // Getters para las propiedades
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public int getUserId() {
@@ -68,12 +70,12 @@ public class Incident {
         return Description;
     }
 
-    public Date getStartDate() {
-        return StartDate;
+    public String getStartDate() {
+        return this.StartDate;
     }
 
-    public Date getEndDate() {
-        return EndDate;
+    public String getEndDate() {
+        return this.EndDate;
     }
 
     public boolean isUrgent() {

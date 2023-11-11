@@ -72,7 +72,7 @@ public class UserBusiness implements IUserBusiness {
      */
     public boolean CreateNewUser(User user) {
 
-        if (!repo.Exist(user.getId())) {
+        if (!repo.Exist(user.GetEmail())) {
             repo.CreateNewUser(user);
             return true;
         }

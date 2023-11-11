@@ -101,3 +101,31 @@ CREATE DATABASE "informaViesCat"
 	--incidents
 	SELECT * FROM Incidents WHERE UserId = 3;
 
+
+-- cambiar el tipus de dada From Date to String 
+
+-- Primer, eliminem les restricciones 
+DROP CONSTRAINT IF EXISTS incidents_userid_fkey;
+
+ALTER TABLE Incidents
+DROP CONSTRAINT IF EXISTS incidents_tecnicid_fkey;
+
+ALTER TABLE Incidents
+DROP CONSTRAINT IF EXISTS incidents_incidenttypeid_fkey;
+
+-- Despres, modifiquem el tipo de dada
+ALTER TABLE Incidents
+ALTER COLUMN StartDate TYPE VARCHAR(255);
+
+ALTER TABLE Incidents
+ALTER COLUMN EndDate TYPE VARCHAR(255);
+
+-- Finalment, recreamos les restriccions 
+ALTER TABLE Incidents
+ADD CONSTRAINT incidents_userid_fkey FOREIGN KEY (UserId) REFERENCES Users(id);
+
+ALTER TABLE Incidents
+ADD CONSTRAINT incidents_tecnicid_fkey FOREIGN KEY (tecnicId) REFERENCES Users(id);
+
+ALTER TABLE Incidents
+ADD CONSTRAINT incidents_incidenttypeid_fkey FOREIGN KEY (incidentTypeId) REFERENCES IncidentTypes(id);

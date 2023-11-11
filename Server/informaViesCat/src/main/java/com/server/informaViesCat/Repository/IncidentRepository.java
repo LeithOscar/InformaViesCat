@@ -43,10 +43,8 @@ public class IncidentRepository implements IIncidentRepository {
             pstmt.setString(4, incident.getKM());
             pstmt.setString(5, incident.getGeo());
             pstmt.setString(6, incident.getDescription());
-            
-            pstmt.setDate(7, (java.sql.Date) new Date(incident.getStartDate().getTime()));
-            pstmt.setDate(8, (java.sql.Date) new Date(incident.getEndDate().getTime()));
-
+            pstmt.setString(7, incident.getStartDate());
+            pstmt.setString(8, incident.getEndDate());
             pstmt.setBoolean(9, incident.isUrgent());
             pstmt.setInt(10, incident.getIncidentTypeId());
 
@@ -83,22 +81,25 @@ public class IncidentRepository implements IIncidentRepository {
     }
 
     public List<Incident> GetAll(String filterCriteria) {
+        
         List<Incident> incidents = new ArrayList<>();
         String consultaSQL = "SELECT * FROM incidents";
         PreparedStatement pstmt;
+        
         try {
             pstmt = bdConnection.prepareStatement(consultaSQL);
             ResultSet result = pstmt.executeQuery();
             while (result.next()) {
-
                 incidents.add(ExtractIncidentFromResult(result));
             }
         } catch (SQLException ex) {
             Logger.getLogger(IncidentRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        //Apliquem el filtres a la consulta obtinguda
         Comparator<Incident> comparadorPorCarretera = GetFieldComparator(filterCriteria);
 
+        //Ordenació
         Collections.sort(incidents, comparadorPorCarretera);
 
         return incidents;
@@ -150,8 +151,8 @@ public class IncidentRepository implements IIncidentRepository {
             String km = result.getString("Km");
             String geo = result.getString("Geo");
             String description = result.getString("Description");
-            Date startDate = result.getDate("StartDate");
-            Date endDate = result.getDate("EndDate");
+            String startDate = result.getString("StartDate");
+            String endDate = result.getString("EndDate");
             boolean urgent = result.getBoolean("Urgent");
 
             incident = new Incident(_id, userId, tecnicId, IncidentTypeId, roadName, km, geo, description, startDate, endDate, urgent);
