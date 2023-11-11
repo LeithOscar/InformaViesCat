@@ -1,4 +1,3 @@
-
 package com.server.informaViesCat.Interfaces.IBusiness;
 
 import com.server.informaViesCat.Entities.Incident.Incident;
@@ -9,12 +8,12 @@ import java.util.List;
  * @author leith
  */
 public interface IIncidentsBusiness {
-    
-       boolean CreateNewIncident(Incident incident);
+
+    boolean CreateNewIncident(Incident incident);
 
     List<Incident> GetAll(String filterCriteria);
 
     boolean Modify(Incident incident);
-    
-    boolean Delete (int id);
+
+    boolean Delete(int id);
 }

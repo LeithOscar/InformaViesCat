@@ -18,6 +18,10 @@ public class IncidentBusiness implements IIncidentsBusiness {
 
         this.repo = new IncidentRepository();
     }
+    
+     public IncidentBusiness(IIncidentRepository repoMock) {
+        this.repo = repoMock;
+    }
 
     public boolean CreateNewIncident(Incident incident) {
 
