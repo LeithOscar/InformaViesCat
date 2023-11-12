@@ -23,6 +23,7 @@ public class IncidentBusinessTest {
     private IIncidentsBusiness incidentBusiness;
     private IncidentRepository repoMock;
 
+    
     public IncidentBusinessTest() {
 
         repoMock = mock(IncidentRepository.class);
