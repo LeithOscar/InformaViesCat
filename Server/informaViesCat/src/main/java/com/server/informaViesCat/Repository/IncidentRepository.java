@@ -61,8 +61,36 @@ public class IncidentRepository implements IIncidentRepository {
 
     public boolean Modify(Incident Incident) {
 
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            String consultaSQL = "UPDATE Incidents\n"
+                    + "SET Carretera = ?, Km = ?, Geo = ?, Description = ?, StartDate = ?, EndDate = ?, Urgent = ?, incidentTypeId = ?\n"
+                    + "WHERE Id = ?;";
 
+            PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
+
+            pstmt.setString(1, Incident.getRoadName());
+            pstmt.setString(2, Incident.getKM());
+            pstmt.setString(3, Incident.getGeo());
+            pstmt.setString(4, Incident.getDescription());
+            pstmt.setString(5, Incident.getStartDate());
+            pstmt.setString(6, Incident.getEndDate());
+            pstmt.setBoolean(7, Incident.isUrgent());
+            pstmt.setInt(8, Incident.getIncidentTypeId());
+            pstmt.setInt(9, Incident.getId());
+
+            pstmt.executeUpdate();
+            int filasAfectadas = pstmt.executeUpdate();
+
+            if (filasAfectadas > 0) {
+               return true;
+            } else {
+               return false;
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     public boolean Delete(int id) {
@@ -81,11 +109,11 @@ public class IncidentRepository implements IIncidentRepository {
     }
 
     public List<Incident> GetAll(String filterCriteria) {
-        
+
         List<Incident> incidents = new ArrayList<>();
         String consultaSQL = "SELECT * FROM incidents";
         PreparedStatement pstmt;
-        
+
         try {
             pstmt = bdConnection.prepareStatement(consultaSQL);
             ResultSet result = pstmt.executeQuery();

@@ -80,7 +80,7 @@ public class IncidentController {
     @Produces("MediaType.APPLICATION_JSON")
     public ResponseEntity<String> modify(@RequestBody Incident incident) {
         if (incientBusiness.Modify(incident)) {
-            return ResponseEntity.ok("Usuari modificat.");
+            return ResponseEntity.ok("incidencia modificada.");
 
         } else {
            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("No es pot modificar");

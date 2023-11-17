@@ -37,7 +37,11 @@ public class IncidentBusiness implements IIncidentsBusiness {
 
     @Override
     public boolean Modify(Incident incident) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+         if (incident != null) {
+            return repo.Modify(incident);
+        }
+        return false;
     }
 
     @Override
