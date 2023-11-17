@@ -85,13 +85,13 @@ public class UserController {
 
     /**
      * Obté tots els usuaris
-     *
+     * @param parentId
      * @return llistat dels usuarios
      */
-    @GetMapping("/getall")
-    public ResponseEntity<List<User>> getAll() {
+    @GetMapping("/getall/{parentId}")
+    public ResponseEntity<List<User>> getAll(@PathVariable int parentId) {
 
-        var userList = userBusiness.GetAll();
+        var userList = userBusiness.GetAll(parentId);
         if (userList != null) {
             return ResponseEntity.ok(userList);
         }

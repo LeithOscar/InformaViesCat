@@ -10,6 +10,7 @@ package com.server.informaViesCat.Entities.User;
 public class User {
 
     private int id = 0;
+    private int parentId = 0;
     private String name = null;
     private String userName = null;
     private String lastName = null;
@@ -22,7 +23,7 @@ public class User {
     }
 
     public User(int id, int rolId, String name, String password, Boolean connected, String userName,
-            String lastName, String email) {
+            String lastName, String email,int parentId) {
         this.id = id;
         this.rolId = rolId;
         this.name = name;
@@ -31,8 +32,13 @@ public class User {
         this.email = email;
         this.password = password;
         this.logged = connected;
+        this.parentId = parentId;
+     
     }
-
+    public int getParentId() {
+        return parentId;
+    }
+ 
     public int getId() {
         return id;
     }

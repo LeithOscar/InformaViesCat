@@ -129,3 +129,8 @@ ADD CONSTRAINT incidents_tecnicid_fkey FOREIGN KEY (tecnicId) REFERENCES Users(i
 
 ALTER TABLE Incidents
 ADD CONSTRAINT incidents_incidenttypeid_fkey FOREIGN KEY (incidentTypeId) REFERENCES IncidentTypes(id);
+
+
+/*afegir camp ParentId a la taula users*/
+ALTER TABLE Users
+ADD COLUMN ParentId INT;

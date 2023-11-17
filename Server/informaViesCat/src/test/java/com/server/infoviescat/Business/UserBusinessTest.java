@@ -39,7 +39,7 @@ public class UserBusinessTest {
         // Arrange
         String userName = "testuser";
         String password = "testpassword";
-        User mockUser = new User(1, 1, userName, password, false, "", "", "");
+        User mockUser = new User(1, 1, userName, password, false, "", "", "",1);
 
         when(repoMock.GetByUsernameAndPassword(userName, password)).thenReturn(mockUser);
         when(repoMock.UpdateIsLogged(mockUser, true)).thenReturn(mockUser);
@@ -57,7 +57,7 @@ public class UserBusinessTest {
         // Arrange
         String userName = "testuser";
         String password = "testpassword";
-        User mockUser = new User(1, 1, userName, password, true, "", "", "");
+        User mockUser = new User(1, 1, userName, password, true, "", "", "",1);
 
         when(repoMock.GetByUsernameAndPassword(userName, password)).thenReturn(null);
         when(repoMock.UpdateIsLogged(mockUser, true)).thenReturn(null);
@@ -89,7 +89,7 @@ public class UserBusinessTest {
         String password = "validPassword";
         int userId = 0;
 
-        User mockUser = new User(userId, 1, userName, password, true, "", "", "");
+        User mockUser = new User(userId, 1, userName, password, true, "", "", "",1);
 
         when(repoMock.GetById(userId)).thenReturn(mockUser);
 
@@ -119,7 +119,7 @@ public class UserBusinessTest {
         String password = "validPassword";
 
         
-        User mockUser = new User(1, 1, userName, password, true, "", "", "");
+        User mockUser = new User(1, 1, userName, password, true, "", "", "",1);
 
         when(repoMock.Exist(mockUser.GetEmail())).thenReturn(false);
         // Act
@@ -147,7 +147,7 @@ public class UserBusinessTest {
         String userName = "validUser";
         String password = "validPassword";
 
-        User mockUser = new User(1, 3, userName, password, true, "", "", "");
+        User mockUser = new User(1, 3, userName, password, true, "", "", "",1);
 
         when(userValidationsMock.IsUser(mockUser.getRolId())).thenReturn(true);
         // Act
@@ -163,7 +163,7 @@ public class UserBusinessTest {
         String userName = "validUser";
         String password = "validPassword";
 
-        User mockUser = new User(1, 1, userName, password, true, "", "", "");
+        User mockUser = new User(1, 1, userName, password, true, "", "", "",1);
 
         when(userValidationsMock.IsAdmin(mockUser.getRolId())).thenReturn(true);
         // Act
@@ -179,7 +179,7 @@ public class UserBusinessTest {
         String userName = "validUser";
         String password = "validPassword";
 
-        User mockUser = new User(1, 1, userName, password, true, "", "", "");
+        User mockUser = new User(1, 1, userName, password, true, "", "", "",1);
 
         when(userValidationsMock.isTechnician(mockUser.getRolId())).thenReturn(true);
         // Act

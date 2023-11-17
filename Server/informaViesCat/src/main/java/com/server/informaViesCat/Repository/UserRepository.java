@@ -76,7 +76,7 @@ public class UserRepository implements IUserRepository {
     public void CreateNewUser(User user) {
 
         try {
-            String consultaSQL = "INSERT INTO users (rolId, name, lastName, userName, password,email, islogged ) VALUES (?,?,?,?,?,?,?)";
+            String consultaSQL = "INSERT INTO users (rolId, name, lastName, userName, password,email, islogged, parentId ) VALUES (?,?,?,?,?,?,?,?)";
 
             PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
 
@@ -87,6 +87,7 @@ public class UserRepository implements IUserRepository {
             pstmt.setString(5, user.getPassword());
             pstmt.setString(6, user.GetEmail());
             pstmt.setBoolean(7, user.isLogged());
+            pstmt.setInt(8, user.getParentId());
 
             pstmt.executeUpdate();
 
@@ -106,14 +107,14 @@ public class UserRepository implements IUserRepository {
             pstmt = bdConnection.prepareStatement(consultaSQL);
 
             pstmt.setString(1, email);
-            
+
             ResultSet result = pstmt.executeQuery();
             while (result.next()) {
 
                 user = this.ExtractUserFromResult(result);
             }
             return user != null;
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
             return true;
@@ -136,9 +137,9 @@ public class UserRepository implements IUserRepository {
         }
     }
 
-    public List<User> GetAll() {
+    public List<User> GetAll(int parentId) {
         List<User> users = new ArrayList<>();
-        String consultaSQL = "SELECT * FROM users";
+        String consultaSQL = "SELECT * FROM users WHERE parentId =" + parentId + " ;";
         PreparedStatement pstmt;
         try {
             pstmt = bdConnection.prepareStatement(consultaSQL);
@@ -234,6 +235,7 @@ public class UserRepository implements IUserRepository {
         User user = null;
         try {
             int _id = result.getInt("id");
+            int parentId = result.getInt("parentId");
             String _name = result.getString("Name");
             String _lastName = result.getString("LastName");
             String _userName = result.getString("UserName");
@@ -242,7 +244,7 @@ public class UserRepository implements IUserRepository {
             int _rolId = result.getInt("rolId");
             boolean _isLogged = result.getBoolean("isLogged");
 
-            user = new User(_id, _rolId, _name, _pass, _isLogged, _userName, _lastName, _email);
+            user = new User(_id, _rolId, _name, _pass, _isLogged, _userName, _lastName, _email, parentId);
 
         } catch (SQLException ex) {
             Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
