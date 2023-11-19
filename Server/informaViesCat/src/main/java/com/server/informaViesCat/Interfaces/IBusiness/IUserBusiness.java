@@ -16,7 +16,7 @@ public interface IUserBusiness  {
 
     boolean CreateNewUser(User user);
 
-    List<User> GetAll(int parentId);
+    List<User> GetAll();
 
     boolean Modify(User user);
     

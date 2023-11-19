@@ -137,9 +137,9 @@ public class UserRepository implements IUserRepository {
         }
     }
 
-    public List<User> GetAll(int parentId) {
+    public List<User> GetAll() {
         List<User> users = new ArrayList<>();
-        String consultaSQL = "SELECT * FROM users WHERE parentId =" + parentId + " ;";
+        String consultaSQL = "SELECT * FROM users ;";
         PreparedStatement pstmt;
         try {
             pstmt = bdConnection.prepareStatement(consultaSQL);

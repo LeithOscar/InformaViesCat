@@ -20,7 +20,7 @@ public interface IUserRepository {
 
     boolean Exist(int id);
 
-    List<User> GetAll(int parentId);
+    List<User> GetAll();
 
     boolean Modify(User user);
 

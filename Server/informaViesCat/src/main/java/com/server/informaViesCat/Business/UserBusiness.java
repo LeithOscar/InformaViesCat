@@ -85,9 +85,9 @@ public class UserBusiness implements IUserBusiness {
      * @param parentId
      * @return tota la llista d'usuaries
      */
-    public List<User> GetAll(int parentId) {
+    public List<User> GetAll() {
 
-        return this.repo.GetAll(parentId);
+        return this.repo.GetAll();
 
     }
 
