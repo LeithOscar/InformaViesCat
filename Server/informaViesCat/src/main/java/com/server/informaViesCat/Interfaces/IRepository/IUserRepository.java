@@ -30,4 +30,6 @@ public interface IUserRepository {
 
     public User GetById(int userId);
 
+    boolean ModifyCitizen(User user);
+
 }

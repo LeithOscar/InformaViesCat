@@ -46,6 +46,21 @@ public class IncidentBusinessTest {
         verify(repoMock).CreateIncident(mockIncident);
 
     }
+     @Test
+    public void testModify_Success() {
+        // Arrange
+      
+        Incident mockIncident = new Incident(1,1,2,3,"","","","","","",false);
+
+        when(repoMock.Modify(mockIncident)).thenReturn(true);
+
+        // Act
+        boolean result = incidentBusiness.Modify(mockIncident);
+
+        // Assert
+        verify(repoMock).Modify(mockIncident);
+
+    }
     
     @Test
     public void testGetAll_Success() {

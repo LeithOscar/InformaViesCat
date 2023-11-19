@@ -54,7 +54,6 @@ public class UserBusiness implements IUserBusiness {
      */
     public User Logout(int userId) {
 
-       
         User user = repo.GetById(userId);
 
         if (user != null && user.isLogged()) {
@@ -94,9 +93,16 @@ public class UserBusiness implements IUserBusiness {
 
     public boolean Modify(User user) {
 
-        if (user != null && (userValidations.IsAdmin(user.getRolId()) || userValidations.isTechnician(user.getRolId()))) {
-            return repo.Modify(user);
+        if (user != null) {
+
+            if ((userValidations.IsAdmin(user.getRolId()) || userValidations.isTechnician(user.getRolId()))) {
+                return repo.Modify(user);
+            }
+            else{
+                return repo.ModifyCitizen(user);
+            }
         }
+
         return false;
     }
 

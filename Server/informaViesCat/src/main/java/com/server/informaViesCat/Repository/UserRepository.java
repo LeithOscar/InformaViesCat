@@ -230,6 +230,55 @@ public class UserRepository implements IUserRepository {
         return null;
     }
 
+    public User GetById(int userId) {
+        User user = null;
+
+        try {
+            String consultaSQL = "SELECT u.*\n"
+                    + "	FROM Users u\n"
+                    + "	WHERE u.id ='" + userId + "';";
+
+            PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
+
+            ResultSet result = pstmt.executeQuery();
+
+            while (result.next()) {
+                user = ExtractUserFromResult(result);
+            }
+
+            return user;
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return user;
+    }
+
+    @Override
+    public boolean ModifyCitizen(User user) {
+        try {
+            String consultaSQL = "UPDATE users\n"
+                    + "SET  name = ?, lastName = ?, userName = ?, password = ?, email = ?, islogged = ?\n"
+                    + "WHERE id = ?;";
+
+            PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
+
+            pstmt.setString(1, user.getName());
+            pstmt.setString(2, user.getLastName());
+            pstmt.setString(3, user.getUserName());
+            pstmt.setString(4, user.getPassword());
+            pstmt.setString(5, user.GetEmail());
+            pstmt.setBoolean(6, user.isLogged());
+            pstmt.setInt(7, user.getId());
+
+            pstmt.executeUpdate();
+            return true;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
     private User ExtractUserFromResult(ResultSet result) {
 
         User user = null;
@@ -271,29 +320,6 @@ public class UserRepository implements IUserRepository {
 
         return user;
 
-    }
-
-    public User GetById(int userId) {
-        User user = null;
-
-        try {
-            String consultaSQL = "SELECT u.*\n"
-                    + "	FROM Users u\n"
-                    + "	WHERE u.id ='" + userId + "';";
-
-            PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
-
-            ResultSet result = pstmt.executeQuery();
-
-            while (result.next()) {
-                user = ExtractUserFromResult(result);
-            }
-
-            return user;
-        } catch (SQLException ex) {
-            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return user;
     }
 
 }

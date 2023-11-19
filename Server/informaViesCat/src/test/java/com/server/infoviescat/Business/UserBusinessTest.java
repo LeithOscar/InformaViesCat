@@ -103,8 +103,7 @@ public class UserBusinessTest {
 
     @Test
     public void testLogoutWithInvalidUser() {
-        String userName = "";
-        String password = "";
+
         int userId = 0;
 
         // Act
@@ -187,6 +186,22 @@ public class UserBusinessTest {
 
         // Assert
         verify(repoMock).Modify(mockUser);
+
+    }
+    
+     @Test
+    public void testModifyCitizenUserWithValidRolUser() {
+        String userName = "validUser";
+        String password = "validPassword";
+
+        User mockUser = new User(1, 3, userName, password, true, "", "", "",1);
+
+        when(userValidationsMock.IsUser(mockUser.getRolId())).thenReturn(true);
+        // Act
+        boolean result = userBusiness.Modify(mockUser);
+
+        // Assert
+        verify(repoMock).ModifyCitizen(mockUser);
 
     }
 

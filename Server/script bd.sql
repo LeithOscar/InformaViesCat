@@ -134,3 +134,12 @@ ADD CONSTRAINT incidents_incidenttypeid_fkey FOREIGN KEY (incidentTypeId) REFERE
 /*afegir camp ParentId a la taula users*/
 ALTER TABLE Users
 ADD COLUMN ParentId INT;
+
+
+/* campos que poden ser nuls*/
+
+ALTER TABLE Incidents
+ALTER COLUMN Km DROP NOT NULL,
+ALTER COLUMN Geo DROP NOT NULL,
+ALTER COLUMN Description DROP NOT NULL,
+ALTER COLUMN EndDate DROP NOT NULL
