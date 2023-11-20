@@ -2,13 +2,13 @@ package com.server.informaViesCat.Repository;
 
 import com.server.informaViesCat.Configuration.ConnectionBD;
 import com.server.informaViesCat.Entities.Incident.Incident;
+import com.server.informaViesCat.Entities.Incident.IncidentRequest;
 import com.server.informaViesCat.Interfaces.IRepository.IIncidentRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
@@ -94,8 +94,24 @@ public class IncidentRepository implements IIncidentRepository {
 
     public boolean Delete(int id) {
 
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
 
+            if (this.Exist(id)) {
+
+                String consultaSQL = "DELETE FROM Incidents WHERE id=" + id;
+
+                PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
+
+                pstmt.execute();
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     public boolean Exist(int id) {
@@ -107,7 +123,7 @@ public class IncidentRepository implements IIncidentRepository {
         return false;
     }
 
-    public List<Incident> GetAll(String filterCriteria) {
+    public List<Incident> GetAll(IncidentRequest incidentRequest) {
 
         List<Incident> incidents = new ArrayList<>();
         String consultaSQL = "SELECT * FROM incidents";
@@ -124,16 +140,16 @@ public class IncidentRepository implements IIncidentRepository {
         }
 
         //Apliquem el filtres a la consulta obtinguda
-        Comparator<Incident> comparadorPorCarretera = GetFieldComparator(filterCriteria);
+        //Comparator<Incident> comparadorPorCarretera = GetFieldComparator(incidentRequest);
 
         //Ordenació
-        Collections.sort(incidents, comparadorPorCarretera);
+        //Collections.sort(incidents, comparadorPorCarretera);
 
         return incidents;
     }
 
-    private Comparator<Incident> GetFieldComparator(String field) {
-        switch (field) {
+    private Comparator<Incident> GetFieldComparator(IncidentRequest incidentRequest) {
+       /* switch (field) {
             case "UserId":
                 return Comparator.comparing(Incident::getUserId);
             case "RoadNames":
@@ -142,7 +158,9 @@ public class IncidentRepository implements IIncidentRepository {
                 return Comparator.comparing(Incident::getStartDate);
             default:
                 throw new IllegalArgumentException("no válido: " + field);
-        }
+        }*/
+       // return Comparator.comparing(Incident::getStartDate);
+       return null;
     }
 
     private Incident GetIncident(int id) throws SQLException {

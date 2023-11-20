@@ -2,6 +2,7 @@ package com.server.infoviescat.Business;
 
 import com.server.informaViesCat.Business.IncidentBusiness;
 import com.server.informaViesCat.Entities.Incident.Incident;
+import com.server.informaViesCat.Entities.Incident.IncidentRequest;
 import com.server.informaViesCat.Interfaces.IBusiness.IIncidentsBusiness;
 import com.server.informaViesCat.Repository.IncidentRepository;
 import java.util.ArrayList;
@@ -68,13 +69,15 @@ public class IncidentBusinessTest {
       
          List<Incident> incidentList =  new ArrayList<>();
          
-        when(repoMock.GetAll("UserId")).thenReturn(incidentList);
+         IncidentRequest incidentRequest = new IncidentRequest();
+         
+        when(repoMock.GetAll(incidentRequest)).thenReturn(incidentList);
 
         // Act
-         List<Incident> result = incidentBusiness.GetAll("UserId");
+         List<Incident> result = incidentBusiness.GetAll(incidentRequest);
 
         // Assert
-        verify(repoMock).GetAll("UserId");
+        verify(repoMock).GetAll(incidentRequest);
 
     }
 }

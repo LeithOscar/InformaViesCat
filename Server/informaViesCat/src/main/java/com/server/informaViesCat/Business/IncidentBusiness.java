@@ -1,6 +1,7 @@
 package com.server.informaViesCat.Business;
 
 import com.server.informaViesCat.Entities.Incident.Incident;
+import com.server.informaViesCat.Entities.Incident.IncidentRequest;
 import com.server.informaViesCat.Interfaces.IBusiness.IIncidentsBusiness;
 import com.server.informaViesCat.Interfaces.IRepository.IIncidentRepository;
 import com.server.informaViesCat.Repository.IncidentRepository;
@@ -29,8 +30,8 @@ public class IncidentBusiness implements IIncidentsBusiness {
         
     }
 
-    public List<Incident> GetAll(String filterCriteria) {
-        return this.repo.GetAll(filterCriteria);
+    public List<Incident> GetAll(IncidentRequest incidentRequest) {
+        return this.repo.GetAll(incidentRequest);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class IncidentBusiness implements IIncidentsBusiness {
 
     @Override
     public boolean Delete(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       return this.repo.Delete(id);
     }
 
 }

@@ -2,6 +2,7 @@ package com.server.informaViesCat.Controllers;
 
 import com.server.informaViesCat.Business.IncidentBusiness;
 import com.server.informaViesCat.Entities.Incident.Incident;
+import com.server.informaViesCat.Entities.Incident.IncidentRequest;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author leith Controlador d'incidencies
  */
-
 @RestController
 @RequestMapping("/api/incidents")
 public class IncidentController {
@@ -29,28 +29,31 @@ public class IncidentController {
     private IncidentBusiness incientBusiness = null;
 
     public IncidentController() {
-        
+
         this.incientBusiness = new IncidentBusiness();
     }
 
-        /**
+    /**
      * Obté tots els incidents
      *
      * @return llistat dels Incidenciesss
      */
-    @GetMapping("/getall/{filter}")
-    public ResponseEntity<List<Incident>> getAll(@PathVariable String filter) {
+    @GetMapping("/getall")
+    //@Consumes("MediaType.APPLICATION_JSON")
+    //@Produces("MediaType.APPLICATION_JSON")
+    public ResponseEntity<List<Incident>> getAll() {
 
-        var incidentList = incientBusiness.GetAll(filter);
+        IncidentRequest incidentRequest = new IncidentRequest();
+        
+        var incidentList = incientBusiness.GetAll(incidentRequest);
         if (incidentList != null) {
             return ResponseEntity.ok(incidentList);
         }
         return (ResponseEntity<List<Incident>>) ResponseEntity.noContent();
 
-    
     }
-    
-     /**
+
+    /**
      * Crea el incident
      *
      * @param incident
@@ -64,17 +67,16 @@ public class IncidentController {
             return ResponseEntity.ok("Incidencia creada.");
 
         } else {
-           return ResponseEntity.status(HttpStatus.CONFLICT).body("El recurs ja existeix");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("El recurs ja existeix");
         }
     }
-    
-     /**
+
+    /**
      * Modifica el incident
      *
      * @param incident
      * @return Retorna missagte si ha creat OK o un badrequest
      */
-    
     @PutMapping("/modify")
     @Consumes("MediaType.APPLICATION_JSON")
     @Produces("MediaType.APPLICATION_JSON")
@@ -83,7 +85,7 @@ public class IncidentController {
             return ResponseEntity.ok("incidencia modificada.");
 
         } else {
-           return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("No es pot modificar");
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("No es pot modificar");
         }
     }
 
@@ -99,10 +101,9 @@ public class IncidentController {
             return ResponseEntity.ok("Incident eliminat.");
 
         } else {
-           return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No existeix");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No existeix");
 
         }
     }
-
 
 }
