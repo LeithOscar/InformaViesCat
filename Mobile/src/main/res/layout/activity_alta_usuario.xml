@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_login"
     tools:context=".MainActivity"
-    android:id="@+id/login_layout">
+    android:id="@+id/alta_layout">
 
     <!--Este es el layout azul transparente encima de la foto-->
     <RelativeLayout
@@ -19,7 +19,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:gravity="center"
         android:padding="28dp"
         android:layout_above="@id/card_view">
@@ -57,11 +57,11 @@
             android:orientation="vertical"
             android:padding="28dp">
 
-            <!--Bienvenido-->
+            <!--Titulo Alta d'usuari-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/benvingut_uda"
+                android:text="@string/alta_d_usuari_a"
                 android:textColor="@color/blau_marino"
                 android:textSize="32sp"
                 android:textStyle="bold"/>
@@ -75,13 +75,53 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/si_us_plau_inicieu_la_sessi_amb_les_vostres_dades"
+                android:text="Si us plau proporciona les seguents dades"
                 android:alpha="0.7"/>
 
-            <!--Espacio 30dp-->
+            <!--Espacio-->
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"/>
+                android:layout_height="15dp"/>
+
+            <!--Rótulo nom-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nom"
+                android:alpha="0.7"
+                style="bold"/>
+
+            <!--TextInput para el nom-->
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="SpeakableTextPresentCheck"
+                android:id="@+id/edit_nom"/>
+
+            <!--Espacio-->
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"/>
+
+            <!--Rótulo cognom-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cognom"
+                android:alpha="0.7"
+                style="bold"/>
+
+            <!--TextInput para el cognom-->
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="SpeakableTextPresentCheck"
+                android:id="@+id/edit_cognom"/>
+
+            <!--Espacio-->
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"/>
 
             <!--Rótulo username-->
             <TextView
@@ -92,25 +132,39 @@
                 style="bold"/>
 
             <!--TextInput para el username-->
-            <com.google.android.material.textfield.TextInputLayout
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:endIconMode="clear_text">
+                tools:ignore="SpeakableTextPresentCheck"
+                android:id="@+id/edit_username"/>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:id="@+id/edit_username"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!--Espacio 20dp-->
+            <!--Espacio-->
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"/>
+                android:layout_height="10dp"/>
 
-            <!--Rótulo password-->
+            <!--Rótulo email-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/email"
+                android:alpha="0.7"
+                style="bold"/>
+
+            <!--TextInput para la contraseña-->
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="SpeakableTextPresentCheck"
+                android:id="@+id/edit_email"/>
+
+            <!--Espacio-->
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"/>
+
+
+            <!--Rotulo password-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -119,107 +173,38 @@
                 style="bold"/>
 
             <!--TextInput para la contraseña-->
-            <com.google.android.material.textfield.TextInputLayout
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:passwordToggleEnabled="true"
-                app:passwordToggleDrawable="@drawable/baseline_remove_red_eye_24"
-                app:passwordToggleTint="@color/blau_clar">
+                android:drawableEnd="@drawable/baseline_remove_red_eye_24"
+                android:inputType="textPassword"
+                tools:ignore="SpeakableTextPresentCheck"
+                android:id="@+id/edit_password"/>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:id="@+id/edit_password"
-                    android:imeOptions="actionDone"
-                    android:imeActionLabel="Done"/>
 
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!--Layout para el Recorda'm i contrasenya-->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
                 <!--Checkbox-->
                 <CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/recorda_m"
+                    android:text="@string/accepto_els_termes_i_condicions"
                     android:layout_centerVertical="true"
                     android:alpha="0.7"
-                    android:id="@+id/recordam"/>
-
-                <!--Crear uun compte-->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/crear_un_compte"
-                    android:id="@+id/crear_un_compte"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:clickable="true"
-                    android:onClick="abrirAltaUsuario"/>
-            </RelativeLayout>
+                    android:id="@+id/eula"/>
 
             <!--Espacio 20dp-->
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="20dp"/>
+                android:layout_height="10dp"/>
 
-            <!--Botón Login-->
+            <!--Botón Registre-->
             <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="@string/login"
+                android:text="@string/registre"
                 app:cornerRadius="32dp"
-                android:id="@+id/button_login"/>
+                android:id="@+id/button_registre"/>
 
-            <!--Espacio 20dp-->
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"/>
-
-            <!--Layout para los logos inferiores-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                >
-
-                <!--Logo del servei català de trànsit-->
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/logo_servei_catala_transit"
-                    android:contentDescription="@string/logo_del_servei_catal_de_tr_nsit"/>
-
-                <!--Espacio horizontal-->
-                <View
-                    android:layout_width="20dp"
-                    android:layout_height="match_parent"/>
-
-                <!--Logo del IOC-->
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/logo_ioc"
-                    android:contentDescription="@string/logo_del_institut_obert_de_catalunya"/>
-
-                <!--Espacio horizontal-->
-                <View
-                    android:layout_width="20dp"
-                    android:layout_height="match_parent"/>
-
-                <!--Logo del IOC-->
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/logo_generalitat"
-                    android:contentDescription="@string/logo_de_la_generalitat_de_catalunya"/>
-
-            </LinearLayout>
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="5dp"/>

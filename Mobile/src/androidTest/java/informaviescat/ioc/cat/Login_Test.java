@@ -81,7 +81,7 @@ public class Login_Test {
         SystemClock.sleep(10000);
 
         //Comprueba que se haya abierto el intent que deja pasar a Incidencies Home
-        Intents.intended(IntentMatchers.hasComponent(Home.class.getName()));
+        Intents.intended(IntentMatchers.hasComponent(Seccion_Home.class.getName()));
     }
 
     /**

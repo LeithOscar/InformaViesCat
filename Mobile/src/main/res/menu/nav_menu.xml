@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn = "navigation_view">
+
+
+    <group
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/nav_home"
+            android:title="@string/home"/>
+
+        <item
+            android:id="@+id/nav_reportar"
+            android:icon="@drawable/baseline_add_alert_24"
+            android:title="@string/reportar_nova_incid_ncia"/>
+
+        <item
+            android:id="@+id/nav_per_validar"
+            android:icon="@drawable/nav_per_validar"
+            android:title="@string/incidencies_per_validar"/>
+
+        <item
+            android:id="@+id/nav_oberta"
+            android:icon="@drawable/nav_oberta"
+            android:title="@string/incidencies_obertes"/>
+
+        <item
+            android:id="@+id/nav_en_progress"
+            android:icon="@drawable/nav_en_progress"
+            android:title="@string/incidencies_en_progress"/>
+
+        <item
+            android:id="@+id/nav_resolta"
+            android:icon="@drawable/nav_resolta"
+            android:title="@string/incidencies_resoltes"/>
+
+        <item
+            android:id="@+id/nav_tancada"
+            android:icon="@drawable/nav_tancada"
+            android:title="@string/incidencies_tancades"/>
+
+
+
+    </group>
+
+
+    <item android:title="">
+
+        <menu>
+
+            <item
+                android:id="@+id/nav_usuari"
+                android:icon="@drawable/nav_usuari"
+                android:title="@string/el_meu_compte_d_usuari" />
+
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/nav_logout"
+                android:title="@string/logout" />
+
+        </menu>
+
+    </item>
+
+</menu>

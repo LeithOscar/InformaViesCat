@@ -22,9 +22,28 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="username">Username</string>
+    <string name="obre_menu">Obre el menu</string>
+    <string name="tanca_menu">Tanca el menu</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="crear_un_compte">Crear un compte</string>
+    <string name="alta_d_usuari_a">Alta d\'usuari/a</string>
+    <string name="nom">Nom</string>
+    <string name="accepto_els_termes_i_condicions">Accepto els termes i condicions</string>
+    <string name="registre">Registre</string>
+    <string name="cognom">Cognom</string>
+    <string name="incidencies_per_validar">Incidencies per validar</string>
+    <string name="incidencies_obertes">Incidencies obertes</string>
+    <string name="incidencies_en_progress">Incidencies en progress</string>
+    <string name="incidencies_resoltes">Incidencies resoltes</string>
+    <string name="incidencies_tancades">Incidencies tancades</string>
+    <string name="home">Home</string>
+    <string name="el_meu_compte_d_usuari">El meu compte d\'usuari</string>
+    <string name="logout">Logout</string>
+    <string name="reportar_una_incidencia">Reportar una incidencia</string>
+    <string name="reportar_nova_incid_ncia">Reportar nova incidència</string>
 </resources>
