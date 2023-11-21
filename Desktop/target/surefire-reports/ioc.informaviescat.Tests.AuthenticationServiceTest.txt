@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: ioc.informaviescat.Tests.AuthenticationServiceTest
 -------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.702 sec
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.943 sec

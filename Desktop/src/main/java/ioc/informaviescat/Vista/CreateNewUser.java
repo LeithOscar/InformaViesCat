@@ -1,6 +1,10 @@
 
 package ioc.informaviescat.Vista;
 
+import ioc.informaviescat.Controller.UsersManagement;
+import ioc.informaviescat.Entities.User;
+import static javax.swing.JOptionPane.showMessageDialog;
+
 /**
  *
  * @author Pau Cors Bardolet
@@ -33,13 +37,13 @@ public class CreateNewUser extends javax.swing.JFrame {
         textLastname = new javax.swing.JTextField();
         textUsername = new javax.swing.JTextField();
         textMail = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        comboRol = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         textPassword = new javax.swing.JPasswordField();
         textConfirmPassword = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        buttonCreate = new javax.swing.JButton();
+        botoCancela = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -70,8 +74,8 @@ public class CreateNewUser extends javax.swing.JFrame {
 
         textMail.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
 
-        jComboBox1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Usuari normal", "Tècnic", "Administrador" }));
+        comboRol.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        comboRol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Tècnic", "Usuari normal" }));
 
         jLabel8.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel8.setText("Contrasenya:");
@@ -83,19 +87,19 @@ public class CreateNewUser extends javax.swing.JFrame {
 
         textConfirmPassword.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
 
-        jButton1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jButton1.setText("Crear usuari");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        buttonCreate.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        buttonCreate.setText("Crear usuari");
+        buttonCreate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                buttonCreateActionPerformed(evt);
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jButton2.setText("Cancel·la");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        botoCancela.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        botoCancela.setText("Cancel·la");
+        botoCancela.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                botoCancelaActionPerformed(evt);
             }
         });
 
@@ -124,15 +128,15 @@ public class CreateNewUser extends javax.swing.JFrame {
                             .addComponent(textLastname)
                             .addComponent(textUsername)
                             .addComponent(textMail)
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(comboRol, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(textPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(28, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addComponent(botoCancela)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(buttonCreate)
                 .addGap(14, 14, 14))
         );
         layout.setVerticalGroup(
@@ -159,7 +163,7 @@ public class CreateNewUser extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
@@ -170,21 +174,36 @@ public class CreateNewUser extends javax.swing.JFrame {
                     .addComponent(textConfirmPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(buttonCreate)
+                    .addComponent(botoCancela))
                 .addGap(15, 15, 15))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void buttonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateActionPerformed
+        String password = textPassword.getText();
+        if(password.equals(textConfirmPassword.getText())){
+            User newUser = new User();
+            newUser.setEmail(textMail.getText());
+            newUser.setName(textName.getText());
+            newUser.setLastName(textLastname.getText());
+            newUser.setUserName(textUsername.getText());
+            newUser.setPassword(password);
+            newUser.setRolId(comboRol.getSelectedIndex()+1);
+            
+            UsersManagement.createUser(newUser);
+            this.dispose();
+        }
+        else{
+            showMessageDialog(null, "Has escrit malament la contrasenya");
+        }
+    }//GEN-LAST:event_buttonCreateActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void botoCancelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoCancelaActionPerformed
         this.dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_botoCancelaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -222,9 +241,9 @@ public class CreateNewUser extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton botoCancela;
+    private javax.swing.JButton buttonCreate;
+    private javax.swing.JComboBox<String> comboRol;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

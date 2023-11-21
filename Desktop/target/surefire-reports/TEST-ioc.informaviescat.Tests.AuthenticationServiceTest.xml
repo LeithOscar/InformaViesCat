@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="7" failures="0" name="ioc.informaviescat.Tests.AuthenticationServiceTest" time="0.671" errors="0" skipped="0">
+<testsuite tests="7" failures="0" name="ioc.informaviescat.Tests.AuthenticationServiceTest" time="2.91" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="20.0.1+9-29"/>
@@ -63,11 +63,11 @@
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="ioc.informaviescat.Tests.AuthenticationServiceTest" name="testLoginTechnician_Success" time="0.178"/>
-  <testcase classname="ioc.informaviescat.Tests.AuthenticationServiceTest" name="testLogoutTechnician_Success" time="0.063"/>
-  <testcase classname="ioc.informaviescat.Tests.AuthenticationServiceTest" name="testLogoutUser_Success" time="0.112"/>
-  <testcase classname="ioc.informaviescat.Tests.AuthenticationServiceTest" name="testLogin_Failure" time="0.127"/>
-  <testcase classname="ioc.informaviescat.Tests.AuthenticationServiceTest" name="testLoginUser_Success" time="0.066"/>
-  <testcase classname="ioc.informaviescat.Tests.AuthenticationServiceTest" name="testLoginAdministrator_Success" time="0.064"/>
-  <testcase classname="ioc.informaviescat.Tests.AuthenticationServiceTest" name="testLogoutAdministrator_Success" time="0.061"/>
+  <testcase classname="ioc.informaviescat.Tests.AuthenticationServiceTest" name="testLoginTechnician_Success" time="0.18"/>
+  <testcase classname="ioc.informaviescat.Tests.AuthenticationServiceTest" name="testLogoutTechnician_Success" time="0.095"/>
+  <testcase classname="ioc.informaviescat.Tests.AuthenticationServiceTest" name="testLogoutUser_Success" time="0.132"/>
+  <testcase classname="ioc.informaviescat.Tests.AuthenticationServiceTest" name="testLogin_Failure" time="2.231"/>
+  <testcase classname="ioc.informaviescat.Tests.AuthenticationServiceTest" name="testLoginUser_Success" time="0.135"/>
+  <testcase classname="ioc.informaviescat.Tests.AuthenticationServiceTest" name="testLoginAdministrator_Success" time="0.08"/>
+  <testcase classname="ioc.informaviescat.Tests.AuthenticationServiceTest" name="testLogoutAdministrator_Success" time="0.057"/>
 </testsuite>
