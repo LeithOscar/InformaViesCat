@@ -17,4 +17,6 @@ public interface IIncidentsBusiness {
     boolean Modify(Incident incident);
 
     boolean Delete(int id);
+    
+    int GetAllCount();
 }

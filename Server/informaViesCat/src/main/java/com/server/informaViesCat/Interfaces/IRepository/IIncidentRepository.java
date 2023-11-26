@@ -19,4 +19,6 @@ public interface IIncidentRepository {
     boolean Modify(Incident incident);
 
     boolean Delete(int id);
+    
+    int GetAllCount();
 }

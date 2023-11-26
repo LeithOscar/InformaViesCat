@@ -48,4 +48,8 @@ public class IncidentBusiness implements IIncidentsBusiness {
        return this.repo.Delete(id);
     }
 
+    public int GetAllCount() {
+        return this.repo.GetAllCount();
+    }
+
 }

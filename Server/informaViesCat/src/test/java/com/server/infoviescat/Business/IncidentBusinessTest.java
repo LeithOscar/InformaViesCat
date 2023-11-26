@@ -80,4 +80,22 @@ public class IncidentBusinessTest {
         verify(repoMock).GetAll(incidentRequest);
 
     }
+    
+      @Test
+    public void testGetAllCount_Success() {
+        // Arrange
+      
+         int incidentListCount = 0;
+         
+         IncidentRequest incidentRequest = new IncidentRequest();
+         
+        when(repoMock.GetAllCount()).thenReturn(incidentListCount);
+
+        // Act
+         var items =  incidentBusiness.GetAllCount();
+
+        // Assert
+        verify(repoMock).GetAllCount();
+
+    }
 }

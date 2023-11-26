@@ -36,20 +36,35 @@ public class IncidentController {
     /**
      * Obté tots els incidents
      *
+     * @param incidentRequest
      * @return llistat dels Incidenciesss
      */
     @GetMapping("/getall")
-    //@Consumes("MediaType.APPLICATION_JSON")
-    //@Produces("MediaType.APPLICATION_JSON")
-    public ResponseEntity<List<Incident>> getAll() {
+    @Consumes("MediaType.APPLICATION_JSON")
+    @Produces("MediaType.APPLICATION_JSON")
+    public ResponseEntity<List<Incident>> getAll(@RequestBody IncidentRequest incidentRequest) {
 
-        IncidentRequest incidentRequest = new IncidentRequest();
-        
         var incidentList = incientBusiness.GetAll(incidentRequest);
         if (incidentList != null) {
             return ResponseEntity.ok(incidentList);
         }
         return (ResponseEntity<List<Incident>>) ResponseEntity.noContent();
+
+    }
+
+    /**
+     * Obté tots els incidents
+     *
+     * @return llistat dels Incidenciesss
+     */
+    @GetMapping("/getAllCount")
+    @Consumes("MediaType.APPLICATION_JSON")
+    @Produces("MediaType.APPLICATION_JSON")
+    public ResponseEntity<Integer> getAllCount() {
+
+        int incidentListCount = incientBusiness.GetAllCount();
+
+        return ResponseEntity.ok(incidentListCount);
 
     }
 

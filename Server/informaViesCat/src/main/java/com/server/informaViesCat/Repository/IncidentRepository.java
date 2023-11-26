@@ -81,9 +81,9 @@ public class IncidentRepository implements IIncidentRepository {
             int filasAfectadas = pstmt.executeUpdate();
 
             if (filasAfectadas > 0) {
-               return true;
+                return true;
             } else {
-               return false;
+                return false;
             }
 
         } catch (SQLException ex) {
@@ -141,15 +141,32 @@ public class IncidentRepository implements IIncidentRepository {
 
         //Apliquem el filtres a la consulta obtinguda
         //Comparator<Incident> comparadorPorCarretera = GetFieldComparator(incidentRequest);
-
         //Ordenació
         //Collections.sort(incidents, comparadorPorCarretera);
-
         return incidents;
     }
 
+    @Override
+    public int GetAllCount() {
+         List<Incident> incidents = new ArrayList<>();
+        String consultaSQL = "SELECT * FROM incidents";
+        PreparedStatement pstmt;
+
+        try {
+            pstmt = bdConnection.prepareStatement(consultaSQL);
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+                incidents.add(ExtractIncidentFromResult(result));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(IncidentRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return incidents.size();
+    }
+
     private Comparator<Incident> GetFieldComparator(IncidentRequest incidentRequest) {
-       /* switch (field) {
+        /* switch (field) {
             case "UserId":
                 return Comparator.comparing(Incident::getUserId);
             case "RoadNames":
@@ -159,8 +176,8 @@ public class IncidentRepository implements IIncidentRepository {
             default:
                 throw new IllegalArgumentException("no válido: " + field);
         }*/
-       // return Comparator.comparing(Incident::getStartDate);
-       return null;
+        // return Comparator.comparing(Incident::getStartDate);
+        return null;
     }
 
     private Incident GetIncident(int id) throws SQLException {
