@@ -1,8 +1,8 @@
 
 package ioc.informaviescat.Vista;
 
-import ioc.informaviescat.Controller.AuthenticationService;
 import ioc.informaviescat.Controller.UserSaver;
+import ioc.informaviescat.Controller.UsersManagement;
 import ioc.informaviescat.Entities.User;
 import javax.swing.ImageIcon;
 import static javax.swing.JOptionPane.showMessageDialog;
@@ -67,6 +67,12 @@ public class guiLogin extends javax.swing.JFrame {
         botoEntrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botoEntrarActionPerformed(evt);
+            }
+        });
+
+        textPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textPasswordActionPerformed(evt);
             }
         });
 
@@ -152,12 +158,13 @@ public class guiLogin extends javax.swing.JFrame {
         }
             
         try{
-            User usuari = AuthenticationService.login(textUser.getText(), textPassword.getText());
+            User usuari = UsersManagement.login(textUser.getText(), textPassword.getText());
             System.out.println("S'intenta loguejar l'usuari "+ textUser.getText()+" amb contrasenya "+textPassword.getText());
             System.out.println("    Nom: "+usuari.getName());
             System.out.println("    Cognoms: "+usuari.getLastName());
             System.out.println("    ID: "+usuari.getId());
             System.out.println("    Email: "+usuari.GetEmail());
+            System.out.println("    Username: "+usuari.getUserName());
             
             if(usuari.getUserName().equals("")){
                 Exception i = new Exception();
@@ -165,14 +172,66 @@ public class guiLogin extends javax.swing.JFrame {
             }
             else{
                 if(usuari.getRolId()==3){
-                    AuthenticationService.logout(usuari.getUserName(), usuari.getPassword());
+                    UsersManagement.logout(usuari.getSessionId(), usuari.getId());
                     showMessageDialog(null, "Un usuari/a normal no pot fer servir l'aplicació d'escriptori");
                 }
                 else{
+                    System.out.println("Ha arribat aquí");
                     MainScreen mainScreen = new MainScreen();
                     mainScreen.setLocationRelativeTo(null);
                     mainScreen.setIconImage(img.getImage());
+                    System.out.println("Ha arribat aquí 2");
                     mainScreen.setSessionType(usuari);
+                    System.out.println("Ha arribat aquí 3");
+                    mainScreen.setVisible(true);
+
+                    this.dispose();
+                }
+            }
+        } catch (Exception e) {
+            showMessageDialog(null, "Problema amb la connexió");
+        }
+    }//GEN-LAST:event_botoEntrarActionPerformed
+
+    /**
+     * Quan s'apreta enter al escriure la contrasenya, també intenta fer login
+     *
+     */
+    private void textPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textPasswordActionPerformed
+        System.out.println("Guardar usuari: "+checkSaveUser.isSelected());
+        if(checkSaveUser.isSelected()){
+            UserSaver.saveCredentials(textUser.getText(), textPassword.getText());
+        }
+        else{
+            UserSaver.saveCredentials("", "");
+        }
+            
+        try{
+            User usuari = UsersManagement.login(textUser.getText(), textPassword.getText());
+            System.out.println("S'intenta loguejar l'usuari "+ textUser.getText()+" amb contrasenya "+textPassword.getText());
+            System.out.println("    Nom: "+usuari.getName());
+            System.out.println("    Cognoms: "+usuari.getLastName());
+            System.out.println("    ID: "+usuari.getId());
+            System.out.println("    Email: "+usuari.GetEmail());
+            System.out.println("    Username: "+usuari.getUserName());
+            
+            if(usuari.getUserName().equals("")){
+                Exception i = new Exception();
+                throw i;
+            }
+            else{
+                if(usuari.getRolId()==3){
+                    UsersManagement.logout(usuari.getSessionId(), usuari.getId());
+                    showMessageDialog(null, "Un usuari/a normal no pot fer servir l'aplicació d'escriptori");
+                }
+                else{
+                    System.out.println("Ha arribat aquí");
+                    MainScreen mainScreen = new MainScreen();
+                    mainScreen.setLocationRelativeTo(null);
+                    mainScreen.setIconImage(img.getImage());
+                    System.out.println("Ha arribat aquí 2");
+                    mainScreen.setSessionType(usuari);
+                    System.out.println("Ha arribat aquí 3");
                     mainScreen.setVisible(true);
 
                     this.dispose();
@@ -183,8 +242,7 @@ public class guiLogin extends javax.swing.JFrame {
         } catch (Exception e) {
             showMessageDialog(null, "Problema amb la connexió");
         }
-        
-    }//GEN-LAST:event_botoEntrarActionPerformed
+    }//GEN-LAST:event_textPasswordActionPerformed
 
     /**
      * 

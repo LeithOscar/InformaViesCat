@@ -18,6 +18,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import android.os.SystemClock;
+import androidx.test.espresso.contrib.DrawerActions;
+
 
 @RunWith(AndroidJUnit4.class)
 public class Logout_Test {
@@ -73,12 +75,16 @@ public class Logout_Test {
         SystemClock.sleep(5000);
 
         //Comprueba que se haya abierto el intent que deja pasar a Home
-        Intents.intended(IntentMatchers.hasComponent(Home.class.getName()));
+        Intents.intended(IntentMatchers.hasComponent(Seccion_Home.class.getName()));
         SystemClock.sleep(2000);
 
-        //Se hace click en el botón de Logout
-        Espresso.onView(ViewMatchers.withId(R.id.buttonLogout)).perform(ViewActions.click());
-        SystemClock.sleep(5000);
+        //Abre el menú
+        Espresso.onView(ViewMatchers.withId(R.id.drawer_layout))
+                .perform(DrawerActions.open());
+
+        //Hace click en la opción de Logout
+        Espresso.onView(ViewMatchers.withId(R.id.nav_logout))
+                .perform(ViewActions.click());
 
         //Comprueba que se haya abierto el intent que deja pasar de nuevo a la WelcomePage
         Intents.intended(IntentMatchers.hasComponent(MainActivity.class.getName()));

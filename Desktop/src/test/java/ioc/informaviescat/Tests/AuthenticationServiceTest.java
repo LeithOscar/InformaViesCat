@@ -1,7 +1,7 @@
 
 package ioc.informaviescat.Tests;
 
-import ioc.informaviescat.Controller.AuthenticationService;
+import ioc.informaviescat.Controller.UsersManagement;
 import ioc.informaviescat.Entities.User;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -19,17 +19,19 @@ public class AuthenticationServiceTest {
      * 
      * Aquest test comprova si un usuari Administrador es loggeja de forma correcta
      */
+    User usuariTest = new User();
+    
     @Test
     public void testLoginAdministrator_Success() {
         //Es comprova login per un usuari Administrador
         String username = "analopez";
         String password = "1234";
 
-        User resultUser = AuthenticationService.login(username, password);
+        usuariTest = UsersManagement.login(username, password);
 
-        assertNotNull(resultUser);
-        assertTrue(resultUser.isLogged());
-        assertEquals(username, resultUser.getUserName());
+        assertNotNull(usuariTest);
+        assertTrue(usuariTest.isLogged());
+        assertEquals(username, usuariTest.getUserName());
     }
     
     /**
@@ -40,10 +42,8 @@ public class AuthenticationServiceTest {
     @Test
     public void testLogoutAdministrator_Success() {
         //Es comprova logout per un usuari Administrador
-        String username = "analopez";
-        String password = "1234";
 
-        AuthenticationService.logout(username, password);
+        UsersManagement.logout(usuariTest.getSessionId(), usuariTest.getId());
     }
     
     /**
@@ -57,11 +57,11 @@ public class AuthenticationServiceTest {
         String username = "luismartinez";
         String password = "1234";
 
-        User resultUser = AuthenticationService.login(username, password);
+         usuariTest = UsersManagement.login(username, password);
 
-        assertNotNull(resultUser);
-        assertTrue(resultUser.isLogged());
-        assertEquals(username, resultUser.getUserName());
+        assertNotNull(usuariTest);
+        assertTrue(usuariTest.isLogged());
+        assertEquals(username, usuariTest.getUserName());
     }
     
     /**
@@ -71,11 +71,9 @@ public class AuthenticationServiceTest {
      */
     @Test
     public void testLogoutTechnician_Success() {
-        //Es comprova logout per un usuari Administrador
-        String username = "luismartinez";
-        String password = "1234";
+        //Es comprova logout per un usuari Tècnic
 
-        AuthenticationService.logout(username, password);
+        UsersManagement.logout(usuariTest.getSessionId(), usuariTest.getId());
     }
     
     /**
@@ -89,11 +87,11 @@ public class AuthenticationServiceTest {
         String username = "pedrosanchez";
         String password = "1234";
 
-        User resultUser = AuthenticationService.login(username, password);
+         usuariTest = UsersManagement.login(username, password);
 
-        assertNotNull(resultUser);
-        assertTrue(resultUser.isLogged());
-        assertEquals(username, resultUser.getUserName());
+        assertNotNull(usuariTest);
+        assertTrue(usuariTest.isLogged());
+        assertEquals(username, usuariTest.getUserName());
     }
     
     /**
@@ -103,11 +101,9 @@ public class AuthenticationServiceTest {
      */
     @Test
     public void testLogoutUser_Success() {
-        //Es comprova logout per un usuari Administrador
-        String username = "pedrosanchez";
-        String password = "1234";
+        //Es comprova logout per un usuari Ciutadà
 
-        AuthenticationService.logout(username, password);
+        UsersManagement.logout(usuariTest.getSessionId(), usuariTest.getId());
     }
 
     /**
@@ -121,7 +117,7 @@ public class AuthenticationServiceTest {
         String username = "testUser";
         String password = "wrongPassword";
 
-        User resultUser = AuthenticationService.login(username, password);
+        User resultUser = UsersManagement.login(username, password);
 
         assertNull(resultUser);
     }

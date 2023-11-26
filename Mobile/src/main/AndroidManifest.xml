@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
@@ -19,22 +21,47 @@
         android:theme="@style/Theme.InformaViesCAT"
         tools:targetApi="31">
         <activity
-            android:name=".Home"
+            android:name=".Seccion_Usuario"
             android:exported="false" />
         <activity
-            android:name=".Incidencies_Home"
+            android:name=".Seccion_Tancades"
+            android:exported="false" />
+        <activity
+            android:name=".Seccion_Resoltes"
+            android:exported="false" />
+        <activity
+            android:name=".Seccion_En_Progress"
+            android:exported="false" />
+        <activity
+            android:name=".Seccion_Obertes"
+            android:exported="false" />
+        <activity
+            android:name=".Seccion_Per_Validar"
+            android:exported="false" />
+        <activity
+            android:name=".Seccion_Reportar"
+            android:exported="false" />
+        <activity
+            android:name=".AltaUsuario"
             android:exported="false"
-            android:label="@string/title_activity_incidencies_home"
+            android:theme="@style/Theme.InformaViesCAT.NoActionBar" />
+        <activity
+            android:name=".Seccion_Home"
+            android:exported="false"
             android:theme="@style/Theme.InformaViesCAT.NoActionBar" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.InformaViesCAT.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDSjOR9160-ZRZU1jn1_dqK6_BQvflYnsU" />
     </application>
 
 </manifest>

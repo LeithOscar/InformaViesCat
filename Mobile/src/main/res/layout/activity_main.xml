@@ -64,7 +64,7 @@
                 android:text="@string/benvingut_uda"
                 android:textColor="@color/blau_marino"
                 android:textSize="32sp"
-                android:textStyle="bold"></TextView>
+                android:textStyle="bold"/>
 
             <!--Espacio 10dp-->
             <View
@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/si_us_plau_inicieu_la_sessi_amb_les_vostres_dades"
-                android:alpha="0.7"></TextView>
+                android:alpha="0.7"/>
 
             <!--Espacio 30dp-->
             <View
@@ -92,13 +92,18 @@
                 style="bold"/>
 
             <!--TextInput para el username-->
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/baseline_done_24"
-                android:inputType="textEmailAddress"
-                tools:ignore="SpeakableTextPresentCheck"
-                android:id="@+id/edit_username"></EditText>
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:id="@+id/edit_username"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!--Espacio 20dp-->
             <View
@@ -114,13 +119,22 @@
                 style="bold"/>
 
             <!--TextInput para la contraseña-->
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/baseline_remove_red_eye_24"
-                android:inputType="textPassword"
-                tools:ignore="SpeakableTextPresentCheck"
-                android:id="@+id/edit_password"></EditText>
+                app:passwordToggleEnabled="true"
+                app:passwordToggleDrawable="@drawable/baseline_remove_red_eye_24"
+                app:passwordToggleTint="@color/blau_clar">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:id="@+id/edit_password"
+                    android:imeOptions="actionDone"
+                    android:imeActionLabel="Done"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!--Layout para el Recorda'm i contrasenya-->
             <RelativeLayout
@@ -133,15 +147,19 @@
                     android:layout_height="wrap_content"
                     android:text="@string/recorda_m"
                     android:layout_centerVertical="true"
-                    android:alpha="0.7"/>
+                    android:alpha="0.7"
+                    android:id="@+id/recordam"/>
 
-                <!--He oblidat la contrasenya-->
+                <!--Crear uun compte-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/i_forgot_my_password"
+                    android:text="@string/crear_un_compte"
+                    android:id="@+id/crear_un_compte"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"/>
+                    android:layout_centerVertical="true"
+                    android:clickable="true"
+                    android:onClick="abrirAltaUsuario"/>
             </RelativeLayout>
 
             <!--Espacio 20dp-->
@@ -155,7 +173,7 @@
                 android:layout_height="60dp"
                 android:text="@string/login"
                 app:cornerRadius="32dp"
-                android:id="@+id/button_login"></com.google.android.material.button.MaterialButton>
+                android:id="@+id/button_login"/>
 
             <!--Espacio 20dp-->
             <View
@@ -175,7 +193,7 @@
                     android:layout_width="120dp"
                     android:layout_height="25dp"
                     android:src="@drawable/logo_servei_catala_transit"
-                    android:contentDescription="@string/logo_del_servei_catal_de_tr_nsit"></ImageView>
+                    android:contentDescription="@string/logo_del_servei_catal_de_tr_nsit"/>
 
                 <!--Espacio horizontal-->
                 <View
@@ -187,7 +205,7 @@
                     android:layout_width="30dp"
                     android:layout_height="25dp"
                     android:src="@drawable/logo_ioc"
-                    android:contentDescription="@string/logo_del_institut_obert_de_catalunya"></ImageView>
+                    android:contentDescription="@string/logo_del_institut_obert_de_catalunya"/>
 
                 <!--Espacio horizontal-->
                 <View
@@ -199,7 +217,7 @@
                     android:layout_width="120dp"
                     android:layout_height="25dp"
                     android:src="@drawable/logo_generalitat"
-                    android:contentDescription="@string/logo_de_la_generalitat_de_catalunya"></ImageView>
+                    android:contentDescription="@string/logo_de_la_generalitat_de_catalunya"/>
 
             </LinearLayout>
             <View

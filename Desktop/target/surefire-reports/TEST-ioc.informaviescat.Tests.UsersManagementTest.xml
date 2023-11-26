@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="3" failures="0" name="ioc.informaviescat.Tests.UsersManagementTest" time="0.005" errors="0" skipped="0">
+<testsuite tests="3" failures="0" name="ioc.informaviescat.Tests.UsersManagementTest" time="0.008" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="20.0.1+9-29"/>
@@ -37,17 +37,20 @@
     <property name="java.class.version" value="64.0"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="jpda.listen" value="true"/>
     <property name="os.version" value="10.0"/>
     <property name="library.jansi.path" value="C:\Program Files\NetBeans-17\netbeans\java\maven\lib\jansi-native"/>
+    <property name="jpda.address" value="51092"/>
     <property name="user.home" value="C:\Users\pauel"/>
     <property name="user.timezone" value="Europe/Madrid"/>
     <property name="file.encoding" value="UTF-8"/>
     <property name="java.specification.version" value="20"/>
     <property name="user.name" value="pauel"/>
     <property name="java.class.path" value="C:\Program Files\NetBeans-17\netbeans\java\maven\boot\plexus-classworlds-2.6.0.jar"/>
+    <property name="maven.surefire.debug" value="-agentlib:jdwp=transport=dt_socket,server=n,address=51092"/>
     <property name="java.vm.specification.version" value="20"/>
     <property name="sun.arch.data.model" value="64"/>
-    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher -Dtest=ioc.informaviescat.Tests.UsersManagementTest -Dmaven.ext.class.path=C:\Program Files\NetBeans-17\netbeans\java\maven-nblib\netbeans-eventspy.jar --no-transfer-progress surefire:test"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher -Dtest=ioc.informaviescat.Tests.UsersManagementTest -DforkMode=once -Dmaven.surefire.debug=-agentlib:jdwp=transport=dt_socket,server=n,address=51092 -Djpda.listen=true -Djpda.address=51092 -Dmaven.ext.class.path=C:\Program Files\NetBeans-17\netbeans\java\maven-nblib\netbeans-eventspy.jar --no-transfer-progress surefire:test"/>
     <property name="java.home" value="C:\Program Files\Java\jdk-20"/>
     <property name="user.language" value="es"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
@@ -59,11 +62,12 @@
     <property name="file.separator" value="\"/>
     <property name="java.version.date" value="2023-04-18"/>
     <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
+    <property name="forkMode" value="once"/>
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="ioc.informaviescat.Tests.UsersManagementTest" name="testGetRole_Administrator" time="0.005"/>
+  <testcase classname="ioc.informaviescat.Tests.UsersManagementTest" name="testGetRole_Administrator" time="0.008"/>
   <testcase classname="ioc.informaviescat.Tests.UsersManagementTest" name="testGetRole_User" time="0"/>
   <testcase classname="ioc.informaviescat.Tests.UsersManagementTest" name="testGetRole_Technician" time="0"/>
 </testsuite>
