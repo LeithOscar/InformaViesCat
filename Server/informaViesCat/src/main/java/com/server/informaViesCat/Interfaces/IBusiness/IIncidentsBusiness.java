@@ -12,7 +12,7 @@ public interface IIncidentsBusiness {
 
     boolean CreateNewIncident(Incident incident);
 
-    List<Incident> GetAll(IncidentRequest incidentRequest);
+    List<Incident> GetAll(String userId, int rolId);
 
     boolean Modify(Incident incident);
 

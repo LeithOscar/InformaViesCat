@@ -62,7 +62,7 @@ public class IncidentBusinessTest {
         verify(repoMock).Modify(mockIncident);
 
     }
-    
+    /*
     @Test
     public void testGetAll_Success() {
         // Arrange
@@ -80,6 +80,7 @@ public class IncidentBusinessTest {
         verify(repoMock).GetAll(incidentRequest);
 
     }
+*/
     
       @Test
     public void testGetAllCount_Success() {

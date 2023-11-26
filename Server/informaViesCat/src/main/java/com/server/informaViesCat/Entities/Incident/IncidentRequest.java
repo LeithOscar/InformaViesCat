@@ -10,4 +10,5 @@ public class IncidentRequest {
     public String UserId;
     
     public IncidentCriteria Criteria;
+                
 }

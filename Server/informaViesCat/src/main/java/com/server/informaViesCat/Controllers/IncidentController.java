@@ -2,6 +2,7 @@ package com.server.informaViesCat.Controllers;
 
 import com.server.informaViesCat.Business.IncidentBusiness;
 import com.server.informaViesCat.Entities.Incident.Incident;
+import com.server.informaViesCat.Entities.Incident.IncidentCriteriaBuilder;
 import com.server.informaViesCat.Entities.Incident.IncidentRequest;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/incidents")
 public class IncidentController {
 
+    private final IncidentCriteriaBuilder incidentCriteriaBuilder;
+
     //TODO només els Admin les modificacions 
     //TODO només els tecnic les modificacions el cambi d'estast
     private IncidentBusiness incientBusiness = null;
@@ -31,20 +34,24 @@ public class IncidentController {
     public IncidentController() {
 
         this.incientBusiness = new IncidentBusiness();
+        this.incidentCriteriaBuilder = new IncidentCriteriaBuilder();
     }
 
     /**
      * Obté tots els incidents
      *
-     * @param incidentRequest
+     * @param userId
+     * @param rolId
      * @return llistat dels Incidenciesss
      */
-    @GetMapping("/getall")
+    @GetMapping("/getall/{userId}/{rolId}")
     @Consumes("MediaType.APPLICATION_JSON")
     @Produces("MediaType.APPLICATION_JSON")
-    public ResponseEntity<List<Incident>> getAll(@RequestBody IncidentRequest incidentRequest) {
+    //public ResponseEntity<List<Incident>> getAll(@RequestBody IncidentRequest incidentRequest) { //pendent filtro
+    public ResponseEntity<List<Incident>> getAll(@PathVariable String userId,@PathVariable  int rolId ) {
 
-        var incidentList = incientBusiness.GetAll(incidentRequest);
+        IncidentRequest incidentRequest = new IncidentRequest();
+        var incidentList = incientBusiness.GetAll(userId,rolId);
         if (incidentList != null) {
             return ResponseEntity.ok(incidentList);
         }
@@ -119,6 +126,17 @@ public class IncidentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No existeix");
 
         }
+    }
+
+    private String BuilderQuery(IncidentRequest incidentRequest) {
+
+        // Construir la consulta SQL base
+        StringBuilder query = new StringBuilder("SELECT * FROM Incidents WHERE ");
+
+        // Añadir condiciones según los criterios proporcionados
+        query.append(this.incidentCriteriaBuilder.buildConditions(incidentRequest.Criteria));
+
+        return "";
     }
 
 }

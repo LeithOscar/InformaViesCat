@@ -123,7 +123,30 @@ public class IncidentRepository implements IIncidentRepository {
         return false;
     }
 
-    public List<Incident> GetAll(IncidentRequest incidentRequest) {
+    public List<Incident> GetAll(String userId) {
+
+        List<Incident> incidents = new ArrayList<>();
+        String consultaSQL = "SELECT * FROM incidents WHERE userId = " + userId + ";";
+        PreparedStatement pstmt;
+
+        try {
+            pstmt = bdConnection.prepareStatement(consultaSQL);
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+                incidents.add(ExtractIncidentFromResult(result));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(IncidentRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //Apliquem el filtres a la consulta obtinguda
+        //Comparator<Incident> comparadorPorCarretera = GetFieldComparator(incidentRequest);
+        //Ordenació
+        //Collections.sort(incidents, comparadorPorCarretera);
+        return incidents;
+    }
+    
+      public List<Incident> GetAll() {
 
         List<Incident> incidents = new ArrayList<>();
         String consultaSQL = "SELECT * FROM incidents";

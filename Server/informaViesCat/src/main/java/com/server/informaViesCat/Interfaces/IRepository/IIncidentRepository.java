@@ -14,11 +14,13 @@ public interface IIncidentRepository {
 
     boolean Exist(int id);
 
-    List<Incident> GetAll(IncidentRequest incidentRequest);
+    List<Incident> GetAll(String userId);
+
+    List<Incident> GetAll();
 
     boolean Modify(Incident incident);
 
     boolean Delete(int id);
-    
+
     int GetAllCount();
 }
