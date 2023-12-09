@@ -13,9 +13,9 @@ import java.util.UUID;
 public class UserResponse implements Serializable {
 
     public User user;
-    public UUID sessionId;
+    public String sessionId;
 
-    public UserResponse(User user, UUID sessionId) {
+    public UserResponse(User user, String sessionId) {
         this.user = user;
         this.sessionId = sessionId;
     }

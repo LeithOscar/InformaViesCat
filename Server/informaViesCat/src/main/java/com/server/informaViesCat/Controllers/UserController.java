@@ -53,7 +53,7 @@ public class UserController {
         if (userObtained != null) {
 
             String sessionId = UUID.randomUUID().toString();
-            UserResponse userResponse = new UserResponse(userObtained, UUID.randomUUID());
+            UserResponse userResponse = new UserResponse(userObtained, sessionId);
             this.sessionRepo.AddSession(sessionId, userObtained.getId());
 
             String encryptedObject = AESEncryptionService.encryptObject(userResponse);
