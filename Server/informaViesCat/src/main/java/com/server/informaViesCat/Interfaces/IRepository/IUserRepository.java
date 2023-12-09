@@ -12,7 +12,7 @@ public interface IUserRepository {
 
     User GetByUsernameAndPassword(String userName, String password);
 
-    User UpdateIsLogged(User user, boolean state);
+    Boolean UpdateIsLogged(int userId, boolean state);
 
     void CreateNewUser(User user);
 

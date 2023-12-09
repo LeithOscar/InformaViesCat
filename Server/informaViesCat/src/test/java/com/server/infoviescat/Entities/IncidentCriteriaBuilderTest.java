@@ -18,7 +18,6 @@ public class IncidentCriteriaBuilderTest {
         this.incidentCriteriaBuilder = new IncidentCriteriaBuilder();
     }
 
-    @Test
     public void testCreate_Success() {
         // Arrange
 

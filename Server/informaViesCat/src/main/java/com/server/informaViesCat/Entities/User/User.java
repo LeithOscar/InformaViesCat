@@ -1,5 +1,7 @@
 package com.server.informaViesCat.Entities.User;
 
+import java.io.Serializable;
+
 
 /**
  *
@@ -7,7 +9,7 @@ package com.server.informaViesCat.Entities.User;
  *
  * Clase user, defineix les propietat que te un usuari y si esta o no conectat
  */
-public class User {
+public class User implements Serializable {
 
     private int id = 0;
     private int parentId = 0;
@@ -79,5 +81,9 @@ public class User {
         logged = false;
     }
     
+    public void SetStatusLogging(boolean  state)
+    {
+        this.logged = state;
+    }
 
 }

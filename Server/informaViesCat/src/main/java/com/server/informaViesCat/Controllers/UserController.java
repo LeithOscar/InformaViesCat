@@ -1,6 +1,7 @@
 package com.server.informaViesCat.Controllers;
 
 import com.server.informaViesCat.Business.UserBusiness;
+import com.server.informaViesCat.Entities.AESEncryptionService;
 import com.server.informaViesCat.Entities.User.User;
 import com.server.informaViesCat.Entities.User.UserResponse;
 import com.server.informaViesCat.Interfaces.IRepository.ISessionRepository;
@@ -44,8 +45,8 @@ public class UserController {
      * @return Retorna una entitat user amb el seu estat
      */
     @GetMapping("/login/{username}/{pass}")
-    public ResponseEntity<UserResponse> login(@PathVariable String username, @PathVariable String pass) {
-
+    public ResponseEntity<String> login(@PathVariable String username, @PathVariable String pass) {
+        
         User userObtained = null;
 
         userObtained = userBusiness.Login(username, pass);
@@ -54,7 +55,10 @@ public class UserController {
             String sessionId = UUID.randomUUID().toString();
             UserResponse userResponse = new UserResponse(userObtained, UUID.randomUUID());
             this.sessionRepo.AddSession(sessionId, userObtained.getId());
-            return new ResponseEntity<>(userResponse, HttpStatus.OK);
+
+            String encryptedObject = AESEncryptionService.encryptObject(userResponse);
+
+            return new ResponseEntity<>(encryptedObject, HttpStatus.OK);
         }
 
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -73,9 +77,9 @@ public class UserController {
 
         User userObtained = null;
 
-        userObtained = userBusiness.Logout(userId);
-        if (!userObtained.isLogged()) {
-            ResponseEntity.ok(userObtained);
+        boolean logoutSucces = userBusiness.Logout(userId);
+        if (logoutSucces) {
+            ResponseEntity.ok(logoutSucces);
             boolean closed = this.sessionRepo.CloseSession(sessionId);
             return new ResponseEntity<>(closed, HttpStatus.OK);
         }
@@ -85,10 +89,12 @@ public class UserController {
 
     /**
      * Obté tots els usuaris
+     *
+     * @param sessionId
      * @return llistat dels usuarios
      */
-    @GetMapping("/getall")
-    public ResponseEntity<List<User>> getAll() {
+    @GetMapping("/getall/{sessionId}")
+    public ResponseEntity<List<User>> getAll(@PathVariable String sessionId) {
 
         var userList = userBusiness.GetAll();
         if (userList != null) {
@@ -102,12 +108,14 @@ public class UserController {
      * Crea el usuari
      *
      * @param user username del usuari
+     * @param sessionId
      * @return Retorna missagte si ha creat OK o un badrequest
      */
-    @PutMapping("/create")
+    @PutMapping("/create/{sessionId}")
     @Consumes("MediaType.APPLICATION_JSON")
     @Produces("MediaType.APPLICATION_JSON")
-    public ResponseEntity<String> create(@RequestBody User user) {
+    public ResponseEntity<String> create(@RequestBody User user, @PathVariable String sessionId) {
+                
         if (userBusiness.CreateNewUser(user)) {
             return ResponseEntity.ok("Usuari creat.");
 
@@ -122,7 +130,7 @@ public class UserController {
      * @param user username del usuari
      * @return Retorna missagte si ha creat OK o un badrequest
      */
-    @PutMapping("/modify")
+    @PutMapping("/modify/{sessionId}")
     @Consumes("MediaType.APPLICATION_JSON")
     @Produces("MediaType.APPLICATION_JSON")
     public ResponseEntity<String> modify(@RequestBody User user) {
@@ -140,7 +148,7 @@ public class UserController {
      * @param id id del usuari
      * @return Retorna missagte si ha elimnat OK o un badrequest
      */
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}/{sessionId}")
     public ResponseEntity<String> delete(@PathVariable int id) {
         if (userBusiness.Delete(id)) {
             return ResponseEntity.ok("Usuari eliminat.");
@@ -149,5 +157,35 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No existeix");
 
         }
+    }
+
+    /**
+     * Decrypta una entitat user (proves)s
+     *
+     * @param userEncrypted
+     * @param sessionId
+     * @return usuari encriptat
+     */
+    @GetMapping("/decrypt/{sessionId}")
+    public ResponseEntity<UserResponse> decrypt(@RequestBody  String userEncrypted, @PathVariable String sessionId) {
+
+        UserResponse user = (UserResponse) AESEncryptionService.decryptObject(userEncrypted, UserResponse.class);
+        return ResponseEntity.ok(user);
+
+    }
+    
+     /**
+     * Decrypta una entitat user (proves)
+     *
+     * @param text
+     * @param sessionId
+     * @return text encriptat
+     */
+    @GetMapping("/encript/{text}/{sessionId}")
+    public ResponseEntity<String> encript(@PathVariable  String text,  @PathVariable String sessionId) {
+
+        String txt =  AESEncryptionService.Encrypt(text);
+        return ResponseEntity.ok(txt);
+
     }
 }

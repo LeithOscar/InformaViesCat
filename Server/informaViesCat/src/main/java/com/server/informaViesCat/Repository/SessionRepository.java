@@ -4,6 +4,7 @@ import com.server.informaViesCat.Configuration.ConnectionBD;
 import com.server.informaViesCat.Interfaces.IRepository.ISessionRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Level;
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author leith
- * 
+ *
  * Repositori per el acces a les taula session
  */
 public class SessionRepository implements ISessionRepository {
@@ -57,6 +58,30 @@ public class SessionRepository implements ISessionRepository {
             pstmt.setString(1, sessionId);
 
             pstmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean IsActive(String sessionId) {
+        
+        boolean isActive = false;
+       
+        try {
+            String consultaSQL = "SELECT * FROM session WHERE sessionId = '" + sessionId + "';";
+
+            PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
+
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+                    
+                return isActive = true;
+            }
+            return isActive;
 
         } catch (SQLException ex) {
             Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);

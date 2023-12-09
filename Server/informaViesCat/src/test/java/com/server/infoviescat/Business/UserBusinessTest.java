@@ -42,13 +42,13 @@ public class UserBusinessTest {
         User mockUser = new User(1, 1, userName, password, false, "", "", "",1);
 
         when(repoMock.GetByUsernameAndPassword(userName, password)).thenReturn(mockUser);
-        when(repoMock.UpdateIsLogged(mockUser, true)).thenReturn(mockUser);
+        when(repoMock.UpdateIsLogged(mockUser.getId(), true)).thenReturn(true);
 
         // Act
         User result = userBusiness.Login(userName, password);
 
         // Assert
-        verify(repoMock).UpdateIsLogged(mockUser, true);
+        verify(repoMock).UpdateIsLogged(mockUser.getId(), true);
 
     }
 
@@ -60,7 +60,7 @@ public class UserBusinessTest {
         User mockUser = new User(1, 1, userName, password, true, "", "", "",1);
 
         when(repoMock.GetByUsernameAndPassword(userName, password)).thenReturn(null);
-        when(repoMock.UpdateIsLogged(mockUser, true)).thenReturn(null);
+        when(repoMock.UpdateIsLogged(mockUser.getId(), true)).thenReturn(false);
 
         // Act
         User result = userBusiness.Login(userName, password);
@@ -94,10 +94,10 @@ public class UserBusinessTest {
         when(repoMock.GetById(userId)).thenReturn(mockUser);
 
         // Act
-        User result = userBusiness.Logout(userId);
+        boolean result = userBusiness.Logout(userId);
 
         // Assert
-        verify(repoMock).UpdateIsLogged(mockUser, false);
+        verify(repoMock).UpdateIsLogged(mockUser.getId(), false);
 
     }
 
@@ -107,9 +107,9 @@ public class UserBusinessTest {
         int userId = 0;
 
         // Act
-        User result = userBusiness.Logout(userId);
+        Boolean result = userBusiness.Logout(userId);
         // Assert
-        assertNull(result);
+        assertFalse(result);
     }
 
     @Test

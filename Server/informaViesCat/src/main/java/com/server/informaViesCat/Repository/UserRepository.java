@@ -1,6 +1,7 @@
 package com.server.informaViesCat.Repository;
 
 import com.server.informaViesCat.Configuration.ConnectionBD;
+import com.server.informaViesCat.Entities.AESEncryptionService;
 import com.server.informaViesCat.Entities.User.User;
 import com.server.informaViesCat.Interfaces.IRepository.IUserRepository;
 import java.sql.Connection;
@@ -47,29 +48,24 @@ public class UserRepository implements IUserRepository {
     /**
      * Actualitza islogged al argument state indicat
      *
-     * @param user username del usuari
-     * @param state Clau de pass.
-     * @return Retorna una entitat user amb el seu estat
+     * @param userId
+     * @param state
+     * @return Retorna true si esta actualizat o false en cas contrari
      */
-    public User UpdateIsLogged(User user, boolean state) {
+    public Boolean UpdateIsLogged(int userId, boolean state) {
 
-        if (user != null) {
+        try {
+            String updateUser = "UPDATE Users SET isLogged = " + state + " WHERE Id =" + userId;
+            PreparedStatement updateStmt = bdConnection.prepareStatement(updateUser);
+            updateStmt.executeUpdate();
 
-            try {
-                String updateUser = "UPDATE Users SET isLogged = " + state + " WHERE Id =" + user.getId();
-                PreparedStatement updateStmt = bdConnection.prepareStatement(updateUser);
-                updateStmt.executeUpdate();
+            return true;
 
-                User userUpdated = this.GetUser(user.getUserName(), user.getPassword());
-
-                return userUpdated;
-
-            } catch (SQLException ex) {
-                Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return user;
+        return false;
 
     }
 
@@ -80,12 +76,15 @@ public class UserRepository implements IUserRepository {
 
             PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
 
+            String password = AESEncryptionService.Encrypt(user.getPassword());
+            String email = AESEncryptionService.Encrypt(user.GetEmail());
+
             pstmt.setInt(1, user.getRolId());
             pstmt.setString(2, user.getName());
             pstmt.setString(3, user.getLastName());
             pstmt.setString(4, user.getUserName());
-            pstmt.setString(5, user.getPassword());
-            pstmt.setString(6, user.GetEmail());
+            pstmt.setString(5, email);
+            pstmt.setString(6, password);
             pstmt.setBoolean(7, user.isLogged());
             pstmt.setInt(8, user.getParentId());
 
@@ -164,12 +163,15 @@ public class UserRepository implements IUserRepository {
 
             PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
 
+            String password = AESEncryptionService.Encrypt(user.getPassword());
+            String email = AESEncryptionService.Encrypt(user.GetEmail());
+
             pstmt.setInt(1, user.getRolId());
             pstmt.setString(2, user.getName());
             pstmt.setString(3, user.getLastName());
             pstmt.setString(4, user.getUserName());
-            pstmt.setString(5, user.getPassword());
-            pstmt.setString(6, user.GetEmail());
+            pstmt.setString(5, password);
+            pstmt.setString(6, email);
             pstmt.setBoolean(7, user.isLogged());
             pstmt.setInt(8, user.getId());
 
@@ -261,12 +263,16 @@ public class UserRepository implements IUserRepository {
                     + "WHERE id = ?;";
 
             PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
+            
+            String password = AESEncryptionService.Encrypt(user.getPassword());
+            String email = AESEncryptionService.Encrypt(user.GetEmail());
 
+            
             pstmt.setString(1, user.getName());
             pstmt.setString(2, user.getLastName());
             pstmt.setString(3, user.getUserName());
-            pstmt.setString(4, user.getPassword());
-            pstmt.setString(5, user.GetEmail());
+            pstmt.setString(4, password);
+            pstmt.setString(5, email);
             pstmt.setBoolean(6, user.isLogged());
             pstmt.setInt(7, user.getId());
 
@@ -288,8 +294,8 @@ public class UserRepository implements IUserRepository {
             String _name = result.getString("Name");
             String _lastName = result.getString("LastName");
             String _userName = result.getString("UserName");
-            String _email = result.getString("Email");
-            String _pass = result.getString("Password");
+            String _email = AESEncryptionService.Decrypt(result.getString("Email"));
+            String _pass = AESEncryptionService.Decrypt(result.getString("Password"));
             int _rolId = result.getInt("rolId");
             boolean _isLogged = result.getBoolean("isLogged");
 
@@ -303,9 +309,8 @@ public class UserRepository implements IUserRepository {
 
     private User GetUser(String userName, String password) throws SQLException {
 
-        String consultaSQL = "SELECT u.*, r.RolName\n"
+        String consultaSQL = "SELECT u.*"
                 + "	FROM Users u\n"
-                + "	JOIN Rol r ON u.RolId = r.id\n"
                 + "	WHERE u.UserName ='" + userName + "' AND u.Password = '" + password + "';";
 
         PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);

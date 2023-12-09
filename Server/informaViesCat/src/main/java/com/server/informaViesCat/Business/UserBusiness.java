@@ -35,8 +35,9 @@ public class UserBusiness implements IUserBusiness {
             User user = this.repo.GetByUsernameAndPassword(UserName, password);
             if (user != null) {
 
-                User UserUpdated = this.repo.UpdateIsLogged(user, true);
-                return UserUpdated;
+                user.SetStatusLogging(this.repo.UpdateIsLogged(user.getId(), true));
+
+                return user;
 
             } else {
                 return null;
@@ -52,15 +53,15 @@ public class UserBusiness implements IUserBusiness {
      * @param userId id del usuari
      * @return Retorna una entitat user amb el seu estat
      */
-    public User Logout(int userId) {
+    public boolean Logout(int userId) {
 
         User user = repo.GetById(userId);
 
         if (user != null && user.isLogged()) {
-            return repo.UpdateIsLogged(user, false);
+            return repo.UpdateIsLogged(user.getId(), false);
         }
 
-        return null;
+        return false;
     }
 
     /**
@@ -97,8 +98,7 @@ public class UserBusiness implements IUserBusiness {
 
             if ((userValidations.IsAdmin(user.getRolId()) || userValidations.isTechnician(user.getRolId()))) {
                 return repo.Modify(user);
-            }
-            else{
+            } else {
                 return repo.ModifyCitizen(user);
             }
         }

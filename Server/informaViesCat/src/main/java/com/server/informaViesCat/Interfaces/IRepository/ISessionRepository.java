@@ -10,5 +10,6 @@ package com.server.informaViesCat.Interfaces.IRepository;
 public interface ISessionRepository {
      boolean AddSession(String sessionId,int userId);
      boolean CloseSession(String sessionId);
+     boolean IsActive(String sessionId);
 
 }

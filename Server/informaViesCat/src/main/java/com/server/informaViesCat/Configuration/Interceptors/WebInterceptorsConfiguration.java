@@ -1,7 +1,7 @@
 
 package com.server.informaViesCat.Configuration.Interceptors;
 
-import com.server.informaViesCat.Configuration.Interceptors.Crypto.EncryptionInterceptor;
+import com.server.informaViesCat.Configuration.Interceptors.SessionValidation.SessionValidationInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -17,6 +17,6 @@ public class WebInterceptorsConfiguration implements WebMvcConfigurer {
    
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new EncryptionInterceptor());
+        registry.addInterceptor(new SessionValidationInterceptor());
     }
 }
