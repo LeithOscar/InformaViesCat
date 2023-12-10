@@ -76,15 +76,12 @@ public class UserRepository implements IUserRepository {
 
             PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
 
-            String password = AESEncryptionService.Encrypt(user.getPassword());
-            String email = AESEncryptionService.Encrypt(user.GetEmail());
-
             pstmt.setInt(1, user.getRolId());
             pstmt.setString(2, user.getName());
             pstmt.setString(3, user.getLastName());
             pstmt.setString(4, user.getUserName());
-            pstmt.setString(5, email);
-            pstmt.setString(6, password);
+            pstmt.setString(5, user.getPassword());
+            pstmt.setString(6, user.GetEmail());
             pstmt.setBoolean(7, user.isLogged());
             pstmt.setInt(8, user.getParentId());
 
@@ -164,14 +161,14 @@ public class UserRepository implements IUserRepository {
             PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
 
             String password = AESEncryptionService.Encrypt(user.getPassword());
-            String email = AESEncryptionService.Encrypt(user.GetEmail());
 
+            
             pstmt.setInt(1, user.getRolId());
             pstmt.setString(2, user.getName());
             pstmt.setString(3, user.getLastName());
             pstmt.setString(4, user.getUserName());
             pstmt.setString(5, password);
-            pstmt.setString(6, email);
+            pstmt.setString(6, user.GetEmail());
             pstmt.setBoolean(7, user.isLogged());
             pstmt.setInt(8, user.getId());
 
@@ -263,16 +260,14 @@ public class UserRepository implements IUserRepository {
                     + "WHERE id = ?;";
 
             PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
-            
-            String password = AESEncryptionService.Encrypt(user.getPassword());
-            String email = AESEncryptionService.Encrypt(user.GetEmail());
 
-            
+            String password = AESEncryptionService.Encrypt(user.getPassword());
+
             pstmt.setString(1, user.getName());
             pstmt.setString(2, user.getLastName());
             pstmt.setString(3, user.getUserName());
             pstmt.setString(4, password);
-            pstmt.setString(5, email);
+            pstmt.setString(5, user.GetEmail());
             pstmt.setBoolean(6, user.isLogged());
             pstmt.setInt(7, user.getId());
 
@@ -293,8 +288,8 @@ public class UserRepository implements IUserRepository {
             int parentId = result.getInt("parentId");
             String _name = result.getString("Name");
             String _lastName = result.getString("LastName");
-            String _userName = result.getString("UserName");
-            String _email = AESEncryptionService.Decrypt(result.getString("Email"));
+            String _userName =result.getString("UserName");
+            String _email =result.getString("Email");
             String _pass = AESEncryptionService.Decrypt(result.getString("Password"));
             int _rolId = result.getInt("rolId");
             boolean _isLogged = result.getBoolean("isLogged");
@@ -311,7 +306,7 @@ public class UserRepository implements IUserRepository {
 
         String consultaSQL = "SELECT u.*"
                 + "	FROM Users u\n"
-                + "	WHERE u.UserName ='" + userName + "' AND u.Password = '" + password + "';";
+                + "	WHERE u.UserName ='" +  AESEncryptionService.Decrypt(userName) + "' AND u.Password = '" + password + "';";
 
         PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
 

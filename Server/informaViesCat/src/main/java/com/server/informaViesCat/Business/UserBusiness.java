@@ -57,7 +57,7 @@ public class UserBusiness implements IUserBusiness {
 
         User user = repo.GetById(userId);
 
-        if (user != null && !user.isLogged()) {
+        if (user != null && user.isLogged()) {
             return repo.UpdateIsLogged(user.getId(), false);
         }
 
