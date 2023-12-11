@@ -1,11 +1,7 @@
 package com.server.informaViesCat.Configuration.Interceptors.SessionValidation;
 
-import com.server.informaViesCat.Interfaces.IRepository.ISessionRepository;
-import com.server.informaViesCat.Repository.SessionRepository;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,15 +14,13 @@ public class SessionValidationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
+        /*
         String uri = request.getRequestURI();
         String sessionId = request.getParameter("sessionId");
-        
-        if (uri.contains("/login/") || uri.contains("/logout/")|| uri.contains("/encript")|| uri.contains("/UserLoginRequestEncript")|| uri.contains("/decrypt")|| uri.contains("/loginByRequest")) {
-            return true;
-        } else {
 
-           
+        if ( uri.contains("/logout")) {
+            
+            
             ISessionRepository repo = new SessionRepository();
             boolean isActive = repo.IsActive(sessionId);
 
@@ -36,8 +30,11 @@ public class SessionValidationInterceptor implements HandlerInterceptor {
                 throw new UnauthorizedException(mensajeRechazo);
 
             }
-        }
+        } else {
+            return true;
 
+        }
+         */
         return true;
     }
 
@@ -46,21 +43,4 @@ public class SessionValidationInterceptor implements HandlerInterceptor {
 
     }
 
-    public static String extractIdFromString(String inputString) {
-        int lastSlashIndex = inputString.lastIndexOf("/");
-
-        String idWithSlash = inputString.substring(lastSlashIndex);
-
-        String id = idWithSlash.substring(1);
-
-        return id;
-    }
-
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public class UnauthorizedException extends RuntimeException {
-
-        public UnauthorizedException(String mensaje) {
-            super(mensaje);
-        }
-    }
 }

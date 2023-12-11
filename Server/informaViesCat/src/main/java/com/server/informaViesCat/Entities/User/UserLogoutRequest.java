@@ -7,15 +7,15 @@ import java.io.Serializable;
  * @author leith
  * 
  */
-public class UserLoginRequest implements Serializable {
+public class UserLogoutRequest implements Serializable {
 
-    public String  UserName;
-    public String Password;
+    public String  sessionId;
+    public int userId;
 
-    public UserLoginRequest(){}
-    public UserLoginRequest(String UserName, String password) {
-        this.UserName = UserName;
-        this.Password = password;
+    public UserLogoutRequest(){}
+    public UserLogoutRequest(int userId, String sessionId) {
+        this.sessionId = sessionId;
+        this.userId = userId;
     }
 
 }
