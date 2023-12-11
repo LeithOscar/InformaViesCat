@@ -20,14 +20,15 @@ public class SessionValidationInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String uri = request.getRequestURI();
-
-        if (uri.contains("/login/") || uri.contains("/logout/")) {
+        String sessionId = request.getParameter("sessionId");
+        
+        if (uri.contains("/login/") || uri.contains("/logout/")|| uri.contains("/encript")|| uri.contains("/UserLoginRequestEncript")|| uri.contains("/decrypt")|| uri.contains("/loginByRequest")) {
             return true;
         } else {
 
-            String id = extractIdFromString(uri);
+           
             ISessionRepository repo = new SessionRepository();
-            boolean isActive = repo.IsActive(id);
+            boolean isActive = repo.IsActive(sessionId);
 
             if (!isActive) {
 

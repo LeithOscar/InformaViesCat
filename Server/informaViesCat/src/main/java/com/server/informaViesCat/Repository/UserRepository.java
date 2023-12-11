@@ -160,9 +160,8 @@ public class UserRepository implements IUserRepository {
 
             PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
 
-            String password = AESEncryptionService.Encrypt(user.getPassword());
+            String password = AESEncryptionService.EncryptFixed(user.getPassword());
 
-            
             pstmt.setInt(1, user.getRolId());
             pstmt.setString(2, user.getName());
             pstmt.setString(3, user.getLastName());
@@ -261,7 +260,7 @@ public class UserRepository implements IUserRepository {
 
             PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
 
-            String password = AESEncryptionService.Encrypt(user.getPassword());
+            String password = AESEncryptionService.EncryptFixed(user.getPassword());
 
             pstmt.setString(1, user.getName());
             pstmt.setString(2, user.getLastName());
@@ -288,9 +287,9 @@ public class UserRepository implements IUserRepository {
             int parentId = result.getInt("parentId");
             String _name = result.getString("Name");
             String _lastName = result.getString("LastName");
-            String _userName =result.getString("UserName");
-            String _email =result.getString("Email");
-            String _pass = AESEncryptionService.Decrypt(result.getString("Password"));
+            String _userName = result.getString("UserName");
+            String _email = result.getString("Email");
+            String _pass = AESEncryptionService.DecryptFixed(result.getString("Password"));
             int _rolId = result.getInt("rolId");
             boolean _isLogged = result.getBoolean("isLogged");
 
@@ -304,9 +303,11 @@ public class UserRepository implements IUserRepository {
 
     private User GetUser(String userName, String password) throws SQLException {
 
+        String passWordEncrypted = AESEncryptionService.EncryptFixed(password);
+
         String consultaSQL = "SELECT u.*"
                 + "	FROM Users u\n"
-                + "	WHERE u.UserName ='" +  AESEncryptionService.Decrypt(userName) + "' AND u.Password = '" + password + "';";
+                + "	WHERE u.UserName ='" + userName + "' AND u.Password = '" + passWordEncrypted + "';";
 
         PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
 

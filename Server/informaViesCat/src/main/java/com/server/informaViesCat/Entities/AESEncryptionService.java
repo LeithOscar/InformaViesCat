@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.security.SecureRandom;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -15,16 +16,28 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class AESEncryptionService {
 
-    private static final String secretKey = "abcdefghijklmnop"; // Clave de 16 bytes
+    private static final String secretKey_ = "abcdefghijklmnop"; // Clave de 16 bytes
     private static final String vector = "1234567890123456"; // Vector de inicialización de 16 bytes
 
+    private static final String secretKey = "abcdefghijklmnop"; // Clave de 16 bytes
+
+    // vector aleatori
     public static String encryptObject(Object object) {
         try {
-            IvParameterSpec iv = new IvParameterSpec(vector.getBytes("UTF-8"));
+            // Genera un IV aleatorio
+            byte[] salt = new byte[16];
+            SecureRandom random = new SecureRandom();
+            random.nextBytes(salt);
+
+            // Genera un IV aleatorio
+            byte[] iv = new byte[16];
+            random.nextBytes(iv);
+
+            IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
             SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes("UTF-8"), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, keySpec, iv);
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivParameterSpec);
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
@@ -32,23 +45,44 @@ public class AESEncryptionService {
             }
 
             byte[] encryptedData = cipher.doFinal(outputStream.toByteArray());
-            return Base64.getEncoder().encodeToString(encryptedData);
+
+            // Concatena salt e IV al inicio del texto cifrado
+            byte[] result = new byte[salt.length + iv.length + encryptedData.length];
+            System.arraycopy(salt, 0, result, 0, salt.length);
+            System.arraycopy(iv, 0, result, salt.length, iv.length);
+            System.arraycopy(encryptedData, 0, result, salt.length + iv.length, encryptedData.length);
+
+            return Base64.getEncoder().encodeToString(result);
 
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+
     }
 
+    // vector aleatori
     public static Object decryptObject(String encryptedData, Class<?> objectClass) {
         try {
-            IvParameterSpec iv = new IvParameterSpec(vector.getBytes("UTF-8"));
+            // Decodifica el texto cifrado
+            byte[] decodedData = Base64.getDecoder().decode(encryptedData);
+
+            // Extrae el salt, IV y resto del texto cifrado
+            byte[] salt = new byte[16];
+            byte[] iv = new byte[16];
+            byte[] encryptedBytes = new byte[decodedData.length - salt.length - iv.length];
+
+            System.arraycopy(decodedData, 0, salt, 0, salt.length);
+            System.arraycopy(decodedData, salt.length, iv, 0, iv.length);
+            System.arraycopy(decodedData, salt.length + iv.length, encryptedBytes, 0, encryptedBytes.length);
+
+            IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
             SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes("UTF-8"), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, keySpec, iv);
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivParameterSpec);
 
-            byte[] decryptedData = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
+            byte[] decryptedData = cipher.doFinal(encryptedBytes);
 
             ByteArrayInputStream inputStream = new ByteArrayInputStream(decryptedData);
             try (ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
@@ -66,10 +100,11 @@ public class AESEncryptionService {
         }
     }
 
-    public static String Encrypt(String mensaje) {
+    // vector Fixa, per BBDD
+    public static String EncryptFixed(String mensaje) {
         try {
             IvParameterSpec iv = new IvParameterSpec(vector.getBytes("UTF-8"));
-            SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes("UTF-8"), "AES");
+            SecretKeySpec keySpec = new SecretKeySpec(secretKey_.getBytes("UTF-8"), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, keySpec, iv);
@@ -82,11 +117,11 @@ public class AESEncryptionService {
             return null;
         }
     }
-
-    public static String Decrypt(String mensajeEncriptado) {
+    // vector Fixa, per BBDD
+    public static String DecryptFixed(String mensajeEncriptado) {
         try {
             IvParameterSpec iv = new IvParameterSpec(vector.getBytes("UTF-8"));
-            SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes("UTF-8"), "AES");
+            SecretKeySpec keySpec = new SecretKeySpec(secretKey_.getBytes("UTF-8"), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, keySpec, iv);

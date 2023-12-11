@@ -28,13 +28,13 @@ public class AESEncryptionServiceTest {
         try {
             when(cipher.doFinal(any(byte[].class))).thenReturn(txtEncrypted.getBytes("UTF-8"));
 
-            String mensajeEncriptadoActual = AESEncryptionService.Encrypt(Original);
+            String mensajeEncriptadoActual = AESEncryptionService.EncryptFixed(Original);
 
             assertEquals(txtEncrypted, mensajeEncriptadoActual);
 
             when(cipher.doFinal(any(byte[].class))).thenReturn(txtDencrypted.getBytes("UTF-8"));
 
-            String mensajeDesencriptadoActual = AESEncryptionService.Decrypt(txtEncrypted);
+            String mensajeDesencriptadoActual = AESEncryptionService.DecryptFixed(txtEncrypted);
 
             assertEquals(txtDencrypted, mensajeDesencriptadoActual);
         } catch (Exception e) {
