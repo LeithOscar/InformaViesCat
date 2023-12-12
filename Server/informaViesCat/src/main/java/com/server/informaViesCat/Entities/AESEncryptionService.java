@@ -4,11 +4,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import org.json.JSONObject;
 
 /**
  *
@@ -117,6 +119,7 @@ public class AESEncryptionService {
             return null;
         }
     }
+
     // vector Fixa, per BBDD
     public static String DecryptFixed(String mensajeEncriptado) {
         try {
@@ -128,6 +131,64 @@ public class AESEncryptionService {
 
             byte[] mensajeDesencriptado = cipher.doFinal(Base64.getDecoder().decode(mensajeEncriptado));
             return new String(mensajeDesencriptado, "UTF-8");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /* for app mobile*/
+    public static String encryptFromJSONObject(JSONObject jsonObject) {
+        try {
+            // Genera un IV aleatorio
+            byte[] iv = new byte[16];
+            SecureRandom random = new SecureRandom();
+            random.nextBytes(iv);
+
+            IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+            SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes("UTF-8"), "AES");
+
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivParameterSpec);
+
+            byte[] jsonData = jsonObject.toString().getBytes("UTF-8");
+            byte[] encryptedData = cipher.doFinal(jsonData);
+
+            // Concatena IV al inicio del texto cifrado
+            byte[] result = new byte[iv.length + encryptedData.length];
+            System.arraycopy(iv, 0, result, 0, iv.length);
+            System.arraycopy(encryptedData, 0, result, iv.length, encryptedData.length);
+
+            return Base64.getEncoder().encodeToString(result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static JSONObject decryptToJSONObject(String encryptedData) {
+        try {
+            byte[] decodedData = Base64.getDecoder().decode(encryptedData);
+
+            // Extrae el IV y resto del texto cifrado
+            byte[] iv = new byte[16];
+            byte[] encryptedBytes = new byte[decodedData.length - iv.length];
+
+            System.arraycopy(decodedData, 0, iv, 0, iv.length);
+            System.arraycopy(decodedData, iv.length, encryptedBytes, 0, encryptedBytes.length);
+
+            IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+            SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes("UTF-8"), "AES");
+
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivParameterSpec);
+
+            byte[] decryptedData = cipher.doFinal(encryptedBytes);
+            String jsonString = new String(decryptedData, "UTF-8");
+
+            return new JSONObject(jsonString);
 
         } catch (Exception e) {
             e.printStackTrace();

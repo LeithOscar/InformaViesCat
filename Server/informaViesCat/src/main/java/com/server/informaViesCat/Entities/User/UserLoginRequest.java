@@ -9,13 +9,13 @@ import java.io.Serializable;
  */
 public class UserLoginRequest implements Serializable {
 
-    public String  UserName;
-    public String Password;
+    public String  username;
+    public String password;
 
     public UserLoginRequest(){}
-    public UserLoginRequest(String UserName, String password) {
-        this.UserName = UserName;
-        this.Password = password;
+    public UserLoginRequest(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
 }
