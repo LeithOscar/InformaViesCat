@@ -52,7 +52,7 @@ public class AESEncryptionServiceTest {
         JSONObject jsonObject = new JSONObject();
 
         // Agregar propiedades al JsonObject
-        jsonObject.put("sessionId", "c0019366-2101-4746-a5d6-dce4eb569925");
+        jsonObject.put("sessionId", "394c2c31-31fb-40e9-a8e7-189c386fbc16");
         jsonObject.put("userId", 26);
         
          String textEncrypted = AESEncryptionService.encryptFromJSONObject(jsonObject);

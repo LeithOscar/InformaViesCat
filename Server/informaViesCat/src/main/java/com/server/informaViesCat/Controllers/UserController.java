@@ -49,35 +49,6 @@ public class UserController {
     /**
      * Conecta el usuari
      *
-     * @param username username del usuari
-     * @param pass Clau de pass.
-     * @return Retorna una entitat user amb el seu estat
-     */
-    /*
-    @GetMapping("/login/{username}/{pass}")
-    public ResponseEntity<String> login(@PathVariable String username, @PathVariable String pass) {
-        
-        User userObtained = null;
-
-        userObtained = userBusiness.Login(username, pass);
-        if (userObtained != null) {
-
-            String sessionId = UUID.randomUUID().toString();
-            UserResponse userResponse = new UserResponse(userObtained, sessionId);
-            this.sessionRepo.AddSession(sessionId, userObtained.getId());
-
-            String encryptedObject = AESEncryptionService.encryptFromJSONObject(userResponse);
-
-            return new ResponseEntity<>(encryptedObject, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-
-    }
-     */
-    /**
-     * Conecta el usuari
-     *
      * @param userLoginRequest
      * @return Retorna una entitat user amb el seu estat
      */
@@ -86,12 +57,15 @@ public class UserController {
     public ResponseEntity<String> login(@RequestBody String userLoginRequest) {
 
         User userObtained = null;
-  
+
         //map from client
         JSONObject requestJson = AESEncryptionService.decryptToJSONObject(userLoginRequest);
-        
+
+        if (requestJson == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
         //Build new Object server
-        UserLoginRequest request = new UserLoginRequest(requestJson.getString("username"),requestJson.getString("password"));
+        UserLoginRequest request = new UserLoginRequest(requestJson.getString("username"), requestJson.getString("password"));
 
         userObtained = userBusiness.Login(request.username, request.password);
         if (userObtained != null) {
@@ -109,15 +83,18 @@ public class UserController {
 
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
+    @CrossOrigin
     public ResponseEntity<Boolean> logout(@RequestBody String userLogoutRequest) {
 
-                
-         //map from client
+        //map from client
         JSONObject requestJson = AESEncryptionService.decryptToJSONObject(userLogoutRequest);
-        
+
+        if (requestJson == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
         //Build new Object server
-        UserLogoutRequest request = new UserLogoutRequest(requestJson.getInt("userId"),requestJson.getString("sessionId"));
+        UserLogoutRequest request = new UserLogoutRequest(requestJson.getInt("userId"), requestJson.getString("sessionId"));
 
         if (isSessionActive(request.sessionId)) {
 
