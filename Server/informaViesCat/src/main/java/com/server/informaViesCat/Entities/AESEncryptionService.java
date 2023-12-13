@@ -18,12 +18,15 @@ import org.json.JSONObject;
  */
 public class AESEncryptionService {
 
-    private static final String secretKey_ = "abcdefghijklmnop"; // Clave de 16 bytes
-    private static final String vector = "1234567890123456"; // Vector de inicialización de 16 bytes
+    private static final String secretKey_fix = "abcdefghijklmnop"; 
+    private static final String vector = "1234567890123456"; 
+    private static final String secretKey = "abcdefghijklmnop"; 
 
-    private static final String secretKey = "abcdefghijklmnop"; // Clave de 16 bytes
-
-    // vector aleatori
+    /**
+     *
+     * @author leith Clase que encripta i desencripta format AES aleatori
+     * @return
+     */
     public static String encryptObject(Object object) {
         try {
             // Genera un IV aleatorio
@@ -63,13 +66,17 @@ public class AESEncryptionService {
 
     }
 
-    // vector aleatori
+    /**
+     *
+     * @author leith Clase que encripta i desencripta format AES aleatori
+     * @return
+     */
     public static Object decryptObject(String encryptedData, Class<?> objectClass) {
         try {
             // Decodifica el texto cifrado
             byte[] decodedData = Base64.getDecoder().decode(encryptedData);
 
-            // Extrae el salt, IV y resto del texto cifrado
+            // Extrae el salt
             byte[] salt = new byte[16];
             byte[] iv = new byte[16];
             byte[] encryptedBytes = new byte[decodedData.length - salt.length - iv.length];
@@ -102,11 +109,16 @@ public class AESEncryptionService {
         }
     }
 
-    // vector Fixa, per BBDD
+    /**
+     *
+     * @author leith Clase que encripta i desencripta format AES de mode fix
+     * @param mensaje
+     * @return
+     */
     public static String EncryptFixed(String mensaje) {
         try {
             IvParameterSpec iv = new IvParameterSpec(vector.getBytes("UTF-8"));
-            SecretKeySpec keySpec = new SecretKeySpec(secretKey_.getBytes("UTF-8"), "AES");
+            SecretKeySpec keySpec = new SecretKeySpec(secretKey_fix.getBytes("UTF-8"), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, keySpec, iv);
@@ -120,11 +132,16 @@ public class AESEncryptionService {
         }
     }
 
-    // vector Fixa, per BBDD
+    /**
+     *
+     * @author leith Clase que encripta i desencripta format AES de mode fix
+     * @param mensajeEncriptado
+     * @return
+     */
     public static String DecryptFixed(String mensajeEncriptado) {
         try {
             IvParameterSpec iv = new IvParameterSpec(vector.getBytes("UTF-8"));
-            SecretKeySpec keySpec = new SecretKeySpec(secretKey_.getBytes("UTF-8"), "AES");
+            SecretKeySpec keySpec = new SecretKeySpec(secretKey_fix.getBytes("UTF-8"), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, keySpec, iv);
@@ -138,10 +155,14 @@ public class AESEncryptionService {
         }
     }
 
-    /* for app mobile*/
+    /**
+     *
+     * @author leith Clase que encripta i desencripta format AES de mode
+     * aleatori per ObjectesJson
+     * @return
+     */
     public static String encryptFromJSONObject(JSONObject jsonObject) {
         try {
-            // Genera un IV aleatorio
             byte[] iv = new byte[16];
             SecureRandom random = new SecureRandom();
             random.nextBytes(iv);
@@ -168,6 +189,12 @@ public class AESEncryptionService {
         }
     }
 
+    /**
+     *
+     * @author leith Clase que encripta i desencripta format AES de mode
+     * aleatori per ObjectesJson
+     * @return
+     */
     public static JSONObject decryptToJSONObject(String encryptedData) {
         try {
             byte[] decodedData = Base64.getDecoder().decode(encryptedData);

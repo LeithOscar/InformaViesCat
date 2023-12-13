@@ -74,7 +74,7 @@ public class UserController {
             UserResponse userResponse = new UserResponse(userObtained, sessionId);
             this.sessionRepo.AddSession(sessionId, userObtained.getId());
 
-            String encryptedObject = AESEncryptionService.encryptObject(userResponse);
+            String encryptedObject = AESEncryptionService.encryptFromJSONObject(userResponse.convertObjectToJson());
 
             return new ResponseEntity<>(encryptedObject, HttpStatus.OK);
         }
@@ -85,7 +85,7 @@ public class UserController {
 
     @PostMapping("/logout")
     @CrossOrigin
-    public ResponseEntity<Boolean> logout(@RequestBody String userLogoutRequest) {
+    public ResponseEntity logout(@RequestBody String userLogoutRequest) {
 
         //map from client
         JSONObject requestJson = AESEncryptionService.decryptToJSONObject(userLogoutRequest);
@@ -94,7 +94,7 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         //Build new Object server
-        UserLogoutRequest request = new UserLogoutRequest(requestJson.getInt("userId"), requestJson.getString("sessionId"));
+        UserLogoutRequest request = new UserLogoutRequest(requestJson.getInt("userid"), requestJson.getString("sessionid"));
 
         if (isSessionActive(request.sessionId)) {
 
@@ -104,7 +104,6 @@ public class UserController {
                 boolean closed = this.sessionRepo.CloseSession(request.sessionId);
                 return new ResponseEntity<>(closed, HttpStatus.OK);
             }
-
             return (ResponseEntity<Boolean>) ResponseEntity.noContent();
 
         } else {
@@ -194,20 +193,6 @@ public class UserController {
 
         UserResponse user = (UserResponse) AESEncryptionService.decryptObject(userEncrypted, UserResponse.class);
         return ResponseEntity.ok(user);
-
-    }
-
-    /**
-     * Decrypta una entitat user (proves)
-     *
-     * @param text
-     * @return text encriptat
-     */
-    @GetMapping("/encript/{text}")
-    public ResponseEntity<String> encript(@PathVariable String text) {
-
-        String txt = AESEncryptionService.EncryptFixed(text);
-        return ResponseEntity.ok(txt);
 
     }
 
