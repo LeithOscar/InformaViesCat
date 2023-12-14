@@ -5,8 +5,11 @@ import com.server.informaViesCat.Business.UserBusiness;
 import com.server.informaViesCat.Entities.AESEncryptionService;
 import com.server.informaViesCat.Entities.UnauthorizedException;
 import com.server.informaViesCat.Entities.User.User;
+import com.server.informaViesCat.Entities.User.UserListResponse;
 import com.server.informaViesCat.Entities.User.UserLoginRequest;
 import com.server.informaViesCat.Entities.User.UserLogoutRequest;
+import com.server.informaViesCat.Entities.User.UserRemoveRequest;
+import com.server.informaViesCat.Entities.User.UserRequest;
 import com.server.informaViesCat.Entities.User.UserResponse;
 import com.server.informaViesCat.Interfaces.IRepository.ISessionRepository;
 import com.server.informaViesCat.Repository.SessionRepository;
@@ -114,72 +117,119 @@ public class UserController {
     /**
      * Obté tots els usuaris
      *
-     * @param sessionId
      * @return llistat dels usuarios
      */
-    @GetMapping("/getall")
-    public ResponseEntity<List<User>> getAll() {
+    @PostMapping("/getall")
+    public ResponseEntity<String> getAll(@RequestBody String sessionId) {
 
-        var userList = userBusiness.GetAll();
-        if (userList != null) {
-            return ResponseEntity.ok(userList);
+        //map from client
+        JSONObject requestJSON = AESEncryptionService.decryptToJSONObject(sessionId);
+
+        if (requestJSON == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        return (ResponseEntity<List<User>>) ResponseEntity.noContent();
+
+        if (isSessionActive(requestJSON.getString("sessionid"))) {
+            var userList = userBusiness.GetAll();
+            if (userList != null) {
+
+                UserListResponse response = new UserListResponse(userList, requestJSON.getString("sessionid"));
+
+                return ResponseEntity.ok(AESEncryptionService.encryptFromJSONObject(response.convertObjectToJson()));
+            }
+            return (ResponseEntity<String>) ResponseEntity.noContent();
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
 
     }
 
     /**
      * Crea el usuari
      *
-     * @param user username del usuari
+     * @param UserRequest
      * @return Retorna missagte si ha creat OK o un badrequest
      */
     @PutMapping("/create")
     @Consumes("MediaType.APPLICATION_JSON")
     @Produces("MediaType.APPLICATION_JSON")
-    public ResponseEntity<String> create(@RequestBody User user) {
+    public ResponseEntity<String> create(@RequestBody String UserRequest) {
 
-        if (userBusiness.CreateNewUser(user)) {
-            return ResponseEntity.ok("Usuari creat.");
+        UserRequest request = this.parseUserRequest(UserRequest);
 
+        if (request == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        if (isSessionActive(request.sessionId)) {
+
+            if (userBusiness.CreateNewUser(request.user)) {
+
+                return ResponseEntity.ok("");
+
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("El recurs ja existeix");
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("El recurs ja existeix");
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
     }
 
     /**
      * Crea el usuari
      *
-     * @param user username del usuari
      * @return Retorna missagte si ha creat OK o un badrequest
      */
     @PutMapping("/modify")
     @Consumes("MediaType.APPLICATION_JSON")
     @Produces("MediaType.APPLICATION_JSON")
-    public ResponseEntity<String> modify(@RequestBody User user) {
-        if (userBusiness.Modify(user)) {
-            return ResponseEntity.ok("Usuari modificat.");
+    public ResponseEntity<String> modify(@RequestBody String UserRequest) {
 
+        UserRequest request = this.parseUserRequest(UserRequest);
+
+        if (request == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        if (isSessionActive(request.sessionId)) {
+            if (userBusiness.Modify(request.user)) {
+                return ResponseEntity.ok(" ");
+
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("No es pot modificar");
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("No es pot modificar");
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
     }
 
     /**
      * Elimina el usuari
      *
-     * @param id id del usuari
      * @return Retorna missagte si ha elimnat OK o un badrequest
      */
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable int id) {
-        if (userBusiness.Delete(id)) {
-            return ResponseEntity.ok("Usuari eliminat.");
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> delete(@RequestBody String userRemoveRequest) {
 
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No existeix");
+        JSONObject requestJSON = AESEncryptionService.decryptToJSONObject(userRemoveRequest);
 
+        if (requestJSON == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+        //Build new Object server
+        UserRemoveRequest request = new UserRemoveRequest(requestJSON.getString("sessionid"), requestJSON.getInt("userid"));
+
+        if (isSessionActive(request.sessionId)) {
+            if (userBusiness.Delete(request.userId)) {
+                return ResponseEntity.ok("");
+
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No existeix");
+
+            }
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
     }
 
     /**
@@ -257,5 +307,26 @@ public class UserController {
         boolean isActive = sessionRepo.IsActive(sessionId);
 
         return isActive;
+    }
+
+    private UserRequest parseUserRequest(String userRequestString) {
+        // Map from the client
+        JSONObject requestJSON = AESEncryptionService.decryptToJSONObject(userRequestString);
+
+        if (requestJSON == null) {
+            return null;
+        }
+
+        // Extract the user object from the JSON
+        JSONObject userObject = requestJSON.getJSONObject("user");
+
+        // Convert the user JSON to a User object
+        User user = User.convertJsonToObject(userObject.toString());
+
+        // Create a UserRequest object
+        UserRequest request = new UserRequest(requestJSON.getString("sessionid"), user);
+
+        // Return request
+        return request;
     }
 }

@@ -2,9 +2,9 @@ package com.server.informaViesCat.Entities.User;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.io.Serializable;
 import org.json.JSONObject;
-
 
 /**
  *
@@ -28,7 +28,7 @@ public class User implements Serializable {
     }
 
     public User(int id, int rolId, String name, String password, Boolean connected, String userName,
-            String lastName, String email,int parentId) {
+            String lastName, String email, int parentId) {
         this.id = id;
         this.rolId = rolId;
         this.name = name;
@@ -38,12 +38,13 @@ public class User implements Serializable {
         this.password = password;
         this.logged = connected;
         this.parentId = parentId;
-     
+
     }
+
     public int getParentId() {
         return parentId;
     }
- 
+
     public int getId() {
         return id;
     }
@@ -83,18 +84,27 @@ public class User implements Serializable {
     public void Disconnect() {
         logged = false;
     }
-    
-    public void SetStatusLogging(boolean  state)
-    {
+
+    public void SetStatusLogging(boolean state) {
         this.logged = state;
     }
-    
-     public JSONObject convertObjectToJson() {
+
+    public JSONObject convertObjectToJson() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonString = objectMapper.writeValueAsString(this);
             return new JSONObject(jsonString);
         } catch (JsonProcessingException e) {
+            e.printStackTrace(); // Maneja la excepción según tus necesidades
+            return null;
+        }
+    }
+
+    public static User convertJsonToObject(String jsonString) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonString, User.class);
+        } catch (IOException e) {
             e.printStackTrace(); // Maneja la excepción según tus necesidades
             return null;
         }

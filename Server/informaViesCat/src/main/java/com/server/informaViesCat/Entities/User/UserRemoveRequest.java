@@ -1,6 +1,9 @@
 package com.server.informaViesCat.Entities.User;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.Serializable;
+import org.json.JSONObject;
 
 /**
  *
@@ -21,4 +24,5 @@ public class UserRemoveRequest implements Serializable {
         this.userId = userId;
     }
 
+   
 }

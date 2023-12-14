@@ -23,7 +23,6 @@ public class AESEncryptionServiceTest {
         String txtEncrypted = "MensajeEncriptado"; // Simulem el resultat de la encriptació
         String txtDencrypted = "MensajeDesencriptado"; // Simulem el resultat de la desencriptació
 
-
         Cipher cipher = mock(Cipher.class);
 
         try {
@@ -48,10 +47,12 @@ public class AESEncryptionServiceTest {
 
         JSONObject jsonObject = new JSONObject();
 
+        //jsonObject.put("userid",  new User(2, 1, "", "1234", true, "zzzz", "dazzzda", "z@gmail.com", 0).convertObjectToJson());
+        jsonObject.put("userid", 40);
 
-        jsonObject.put("sessionid", "d487762c-96f8-4555-81d9-6c4a4cfeacdc");
-        jsonObject.put("userId", 26);
+        jsonObject.put("sessionid", "d4ebc623-eafa-418e-b775-eec2426148a4");
 
+        //jsonObject.put("userId", 26);
         String textEncrypted = AESEncryptionService.encryptFromJSONObject(jsonObject);
 
         assertNotNull(textEncrypted);
@@ -60,7 +61,7 @@ public class AESEncryptionServiceTest {
 
     @Test
     public void testConvertObjectToJSONObject() {
-        
+
         User user = new User(1, 1, "", "", true, "", "", "", 1);
         UserResponse userResponse = new UserResponse(user, "sessionId456");
 
