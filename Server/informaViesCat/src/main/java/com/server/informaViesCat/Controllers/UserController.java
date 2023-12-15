@@ -1,9 +1,7 @@
 package com.server.informaViesCat.Controllers;
 
-import com.google.gson.JsonObject;
 import com.server.informaViesCat.Business.UserBusiness;
 import com.server.informaViesCat.Entities.AESEncryptionService;
-import com.server.informaViesCat.Entities.UnauthorizedException;
 import com.server.informaViesCat.Entities.User.User;
 import com.server.informaViesCat.Entities.User.UserListResponse;
 import com.server.informaViesCat.Entities.User.UserLoginRequest;
@@ -13,7 +11,6 @@ import com.server.informaViesCat.Entities.User.UserRequest;
 import com.server.informaViesCat.Entities.User.UserResponse;
 import com.server.informaViesCat.Interfaces.IRepository.ISessionRepository;
 import com.server.informaViesCat.Repository.SessionRepository;
-import java.util.List;
 import java.util.UUID;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -23,12 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -234,7 +229,7 @@ public class UserController {
         UserRemoveRequest request = new UserRemoveRequest(requestJSON.getString("sessionid"), requestJSON.getInt("userid"));
 
         if (isSessionActive(request.sessionId)) {
-            if (userBusiness.Delete(request.userId)) {
+            if (userBusiness.Delete(request.userid)) {
                 return ResponseEntity.ok("");
 
             } else {

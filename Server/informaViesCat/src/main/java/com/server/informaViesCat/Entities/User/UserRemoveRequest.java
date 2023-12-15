@@ -13,15 +13,15 @@ import org.json.JSONObject;
 public class UserRemoveRequest implements Serializable {
 
     public String sessionId;
-    public int userId;
+    public int userid;
 
     public UserRemoveRequest() {
     }
 
-    public UserRemoveRequest(String sessionId, int userId) {
+    public UserRemoveRequest(String sessionid, int userid) {
 
-        this.sessionId = sessionId;
-        this.userId = userId;
+        this.sessionId = sessionid;
+        this.userid = userid;
     }
 
    

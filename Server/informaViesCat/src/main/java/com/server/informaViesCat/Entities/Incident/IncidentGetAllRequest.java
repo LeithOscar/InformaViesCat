@@ -2,23 +2,25 @@ package com.server.informaViesCat.Entities.Incident;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.Serializable;
-import java.util.List;
 import org.json.JSONObject;
 
 /**
  *
- * @author leith Entitat que es retorna amb la peticio Login Retorna Entitat
- * incidents i el ID de la sesió
+ * @author leith
  */
-public class IncidentListResponse implements Serializable {
+public class IncidentGetAllRequest {
 
-    public List<Incident> incidents;
+    public int rolid;
+    public int userid;
     public String sessionid;
 
-    public IncidentListResponse(List<Incident> incidents, String sessionId) {
-        this.incidents = incidents;
-        this.sessionid = sessionId;
+    public IncidentGetAllRequest() {
+    }
+
+    public IncidentGetAllRequest(int userid, int rolid, String sessionid) {
+        this.sessionid = sessionid;
+        this.userid = userid;
+        this.rolid = rolid;
     }
 
     public JSONObject convertObjectToJson() {
@@ -27,9 +29,8 @@ public class IncidentListResponse implements Serializable {
             String jsonString = objectMapper.writeValueAsString(this);
             return new JSONObject(jsonString);
         } catch (JsonProcessingException e) {
-            e.printStackTrace(); 
+            e.printStackTrace(); // Maneja la excepción según tus necesidades
             return null;
         }
     }
-
 }

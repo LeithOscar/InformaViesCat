@@ -47,13 +47,15 @@ public class AESEncryptionServiceTest {
 
         JSONObject jsonObject = new JSONObject();
 
-        //jsonObject.put("userid",  new User(2, 1, "", "1234", true, "zzzz", "dazzzda", "z@gmail.com", 0).convertObjectToJson());
-        jsonObject.put("userid", 40);
-
+        //jsonObject.put("user",  new User(45, 1, " nou usuario", "1234", false, "nouUsername", "nou lastname", "nouUser@gmail.com", 0).convertObjectToJson());
+        jsonObject.put("userid", 39);
+        jsonObject.put("rolid", 2);
         jsonObject.put("sessionid", "d4ebc623-eafa-418e-b775-eec2426148a4");
 
         //jsonObject.put("userId", 26);
         String textEncrypted = AESEncryptionService.encryptFromJSONObject(jsonObject);
+        System.out.println(jsonObject);
+        System.out.println(textEncrypted);
 
         assertNotNull(textEncrypted);
 
