@@ -79,12 +79,12 @@ public class UserRepository implements IUserRepository {
             String psswordEncrypted = AESEncryptionService.EncryptFixed( user.getPassword());
             pstmt.setInt(1, user.getRolId());
             pstmt.setString(2, user.getName());
-            pstmt.setString(3, user.getLastName());
-            pstmt.setString(4, user.getUserName());
+            pstmt.setString(3, user.getLastname());
+            pstmt.setString(4, user.getUsername());
             pstmt.setString(5,  psswordEncrypted);
             pstmt.setString(6, user.GetEmail());
-            pstmt.setBoolean(7, user.isLogged());
-            pstmt.setInt(8, user.getParentId());
+            pstmt.setBoolean(7, user.isIslogged());
+            pstmt.setInt(8, user.getParentid());
 
             pstmt.executeUpdate();
 
@@ -165,11 +165,11 @@ public class UserRepository implements IUserRepository {
 
             pstmt.setInt(1, user.getRolId());
             pstmt.setString(2, user.getName());
-            pstmt.setString(3, user.getLastName());
-            pstmt.setString(4, user.getUserName());
+            pstmt.setString(3, user.getLastname());
+            pstmt.setString(4, user.getUsername());
             pstmt.setString(5, password);
             pstmt.setString(6, user.GetEmail());
-            pstmt.setBoolean(7, user.isLogged());
+            pstmt.setBoolean(7, user.isIslogged());
             pstmt.setInt(8, user.getId());
 
             pstmt.executeUpdate();
@@ -264,11 +264,11 @@ public class UserRepository implements IUserRepository {
             String password = AESEncryptionService.EncryptFixed(user.getPassword());
 
             pstmt.setString(1, user.getName());
-            pstmt.setString(2, user.getLastName());
-            pstmt.setString(3, user.getUserName());
+            pstmt.setString(2, user.getLastname());
+            pstmt.setString(3, user.getUsername());
             pstmt.setString(4, password);
             pstmt.setString(5, user.GetEmail());
-            pstmt.setBoolean(6, user.isLogged());
+            pstmt.setBoolean(6, user.isIslogged());
             pstmt.setInt(7, user.getId());
 
             pstmt.executeUpdate();

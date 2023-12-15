@@ -15,13 +15,13 @@ import org.json.JSONObject;
 public class User implements Serializable {
 
     private int id = 0;
-    private int parentId = 0;
+    private int parentid = 0;
     private String name = null;
-    private String userName = null;
-    private String lastName = null;
+    private String username = null;
+    private String lastname = null;
     public String email = null;
     private String password = null;
-    private boolean logged;
+    private boolean islogged;
     private Integer rolId;
 
     public User() {
@@ -32,17 +32,17 @@ public class User implements Serializable {
         this.id = id;
         this.rolId = rolId;
         this.name = name;
-        this.userName = userName;
-        this.lastName = lastName;
+        this.username = userName;
+        this.lastname = lastName;
         this.email = email;
         this.password = password;
-        this.logged = connected;
-        this.parentId = parentId;
+        this.islogged = connected;
+        this.parentid = parentId;
 
     }
 
-    public int getParentId() {
-        return parentId;
+    public int getParentid() {
+        return parentid;
     }
 
     public int getId() {
@@ -57,24 +57,24 @@ public class User implements Serializable {
         return name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLastname() {
+        return lastname;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public boolean isLogged() {
-        return logged;
+    public boolean isIslogged() {
+        return islogged;
     }
 
     public void Connect() {
-        logged = true;
+        islogged = true;
     }
 
     public String GetEmail() {
@@ -82,11 +82,11 @@ public class User implements Serializable {
     }
 
     public void Disconnect() {
-        logged = false;
+        islogged = false;
     }
 
     public void SetStatusLogging(boolean state) {
-        this.logged = state;
+        this.islogged = state;
     }
 
     public JSONObject convertObjectToJson() {

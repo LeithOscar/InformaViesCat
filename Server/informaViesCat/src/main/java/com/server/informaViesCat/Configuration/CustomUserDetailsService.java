@@ -29,7 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         // Crea un objeto UserDetails amb els detalls de l'usuari
         return org.springframework.security.core.userdetails.User
-                .withUsername(user.getUserName())
+                .withUsername(user.getUsername())
                 .password(user.getPassword())
                 .build();
     }

@@ -180,18 +180,14 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
-        if (isSessionActive(request.sessionId)) {
+        if (userBusiness.CreateNewUser(request.user)) {
 
-            if (userBusiness.CreateNewUser(request.user)) {
+            return ResponseEntity.ok("");
 
-                return ResponseEntity.ok("");
-
-            } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("El recurs ja existeix");
-            }
         } else {
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("El recurs ja existeix");
         }
+
     }
 
     /**
@@ -311,7 +307,6 @@ public class UserController {
     /**
      * Decrypta una entitat user (proves)
      *
-     * @param json
      * @return text encriptat
      */
     @PostMapping("/decrytFromJSONObject")
