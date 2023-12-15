@@ -145,6 +145,25 @@ public class UserController {
     }
 
     /**
+     * Obté tots els usuaris
+     *
+     * @return llistat dels usuarios
+     */
+    @PostMapping("/getall/proves")
+    public ResponseEntity<UserListResponse> getAllProves() {
+
+        var userList = userBusiness.GetAll();
+        if (userList != null) {
+
+            UserListResponse response = new UserListResponse(userList, "proves");
+
+            return ResponseEntity.ok(response);
+        }
+        return (ResponseEntity<UserListResponse>) ResponseEntity.noContent();
+
+    }
+
+    /**
      * Crea el usuari
      *
      * @param UserRequest
@@ -241,7 +260,8 @@ public class UserController {
     @GetMapping("/decrypt")
     public ResponseEntity<UserResponse> decrypt(@RequestBody String userEncrypted) {
 
-        UserResponse user = (UserResponse) AESEncryptionService.decryptObject(userEncrypted, UserResponse.class);
+        UserResponse user = (UserResponse) AESEncryptionService.decryptObject(userEncrypted, UserResponse.class
+        );
         return ResponseEntity.ok(user);
 
     }
