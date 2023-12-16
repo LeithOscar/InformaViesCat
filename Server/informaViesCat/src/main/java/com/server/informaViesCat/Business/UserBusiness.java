@@ -95,7 +95,7 @@ public class UserBusiness implements IUserBusiness {
 
         if (user != null) {
 
-            if ((userValidations.IsAdmin(user.getRolId()) || userValidations.isTechnician(user.getRolId()))) {
+            if ((userValidations.IsAdmin(user.getrolid()) || userValidations.isTechnician(user.getrolid()))) {
                 return repo.Modify(user);
             } else {
                 return repo.ModifyCitizen(user);

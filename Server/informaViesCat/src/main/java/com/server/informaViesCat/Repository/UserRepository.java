@@ -77,7 +77,7 @@ public class UserRepository implements IUserRepository {
             PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
 
             String psswordEncrypted = AESEncryptionService.EncryptFixed( user.getPassword());
-            pstmt.setInt(1, user.getRolId());
+            pstmt.setInt(1, user.getrolid());
             pstmt.setString(2, user.getName());
             pstmt.setString(3, user.getLastname());
             pstmt.setString(4, user.getUsername());
@@ -163,7 +163,7 @@ public class UserRepository implements IUserRepository {
 
             String password = AESEncryptionService.EncryptFixed(user.getPassword());
 
-            pstmt.setInt(1, user.getRolId());
+            pstmt.setInt(1, user.getrolid());
             pstmt.setString(2, user.getName());
             pstmt.setString(3, user.getLastname());
             pstmt.setString(4, user.getUsername());

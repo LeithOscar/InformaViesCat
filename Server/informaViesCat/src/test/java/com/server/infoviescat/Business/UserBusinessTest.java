@@ -148,7 +148,7 @@ public class UserBusinessTest {
 
         User mockUser = new User(1, 3, userName, password, true, "", "", "",1);
 
-        when(userValidationsMock.IsUser(mockUser.getRolId())).thenReturn(true);
+        when(userValidationsMock.IsUser(mockUser.getrolid())).thenReturn(true);
         // Act
         boolean result = userBusiness.Modify(mockUser);
 
@@ -164,7 +164,7 @@ public class UserBusinessTest {
 
         User mockUser = new User(1, 1, userName, password, true, "", "", "",1);
 
-        when(userValidationsMock.IsAdmin(mockUser.getRolId())).thenReturn(true);
+        when(userValidationsMock.IsAdmin(mockUser.getrolid())).thenReturn(true);
         // Act
         boolean result = userBusiness.Modify(mockUser);
 
@@ -180,7 +180,7 @@ public class UserBusinessTest {
 
         User mockUser = new User(1, 1, userName, password, true, "", "", "",1);
 
-        when(userValidationsMock.isTechnician(mockUser.getRolId())).thenReturn(true);
+        when(userValidationsMock.isTechnician(mockUser.getrolid())).thenReturn(true);
         // Act
         boolean result = userBusiness.Modify(mockUser);
 
@@ -196,7 +196,7 @@ public class UserBusinessTest {
 
         User mockUser = new User(1, 3, userName, password, true, "", "", "",1);
 
-        when(userValidationsMock.IsUser(mockUser.getRolId())).thenReturn(true);
+        when(userValidationsMock.IsUser(mockUser.getrolid())).thenReturn(true);
         // Act
         boolean result = userBusiness.Modify(mockUser);
 

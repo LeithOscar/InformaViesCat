@@ -49,7 +49,7 @@ public class User implements Serializable {
         return id;
     }
 
-    public int getRolId() {
+    public int getrolid() {
         return rolid;
     }
 
