@@ -4,14 +4,15 @@ import com.server.informaViesCat.Business.IncidentBusiness;
 import com.server.informaViesCat.Entities.AESEncryptionService;
 import com.server.informaViesCat.Entities.Incident.Incident;
 import com.server.informaViesCat.Entities.Incident.IncidentCriteriaBuilder;
+import com.server.informaViesCat.Entities.Incident.IncidentGetAllCount;
+import com.server.informaViesCat.Entities.Incident.IncidentGetAllCountResponse;
 import com.server.informaViesCat.Entities.Incident.IncidentGetAllRequest;
 import com.server.informaViesCat.Entities.Incident.IncidentListResponse;
-import com.server.informaViesCat.Entities.Incident.IncidentRequest;
-import com.server.informaViesCat.Entities.User.UserListResponse;
-import com.server.informaViesCat.Entities.User.UserLogoutRequest;
+import com.server.informaViesCat.Entities.Incident.IncidentCriteriaRequest;
+import com.server.informaViesCat.Entities.Incident.IncidentEntityRequest;
+import com.server.informaViesCat.Entities.User.UserRequest;
 import com.server.informaViesCat.Interfaces.IRepository.ISessionRepository;
 import com.server.informaViesCat.Repository.SessionRepository;
-import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import org.json.JSONObject;
@@ -92,29 +93,58 @@ public class IncidentController {
     @GetMapping("/getAllCount")
     @Consumes("MediaType.APPLICATION_JSON")
     @Produces("MediaType.APPLICATION_JSON")
-    public ResponseEntity<Integer> getAllCount() {
+    public ResponseEntity<String> getAllCount(@RequestBody String incidentGetAllCount) {
 
-        int incidentListCount = incientBusiness.GetAllCount();
+        //map from client
+        JSONObject requestJson = AESEncryptionService.decryptToJSONObject(incidentGetAllCount);
 
-        return ResponseEntity.ok(incidentListCount);
+        if (requestJson == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        //Build new Object server
+        IncidentGetAllCount request = new IncidentGetAllCount(requestJson.getString("sessionid"));
+
+        if (isSessionActive(request.sessionid)) {
+            int incidentListCount = incientBusiness.GetAllCount();
+
+            IncidentGetAllCountResponse response = new IncidentGetAllCountResponse(incidentListCount);
+
+            return ResponseEntity.ok(AESEncryptionService.encryptFromJSONObject(response.convertObjectToJson()));
+        } else {
+            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
+        }
 
     }
 
     /**
      * Crea el incident
      *
-     * @param incident
      * @return Retorna missagte si ha creat OK o un badrequest
      */
     @PutMapping("/create")
     @Consumes("MediaType.APPLICATION_JSON")
     @Produces("MediaType.APPLICATION_JSON")
-    public ResponseEntity<String> create(@RequestBody Incident incident) {
-        if (incientBusiness.CreateNewIncident(incident)) {
-            return ResponseEntity.ok("Incidencia creada.");
+    public ResponseEntity<String> create(@RequestBody String incidentrequest) {
 
+        IncidentEntityRequest request = this.parseIncidentRequest(incidentrequest);
+
+        if (request == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        if (request == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        if (isSessionActive(request.sessionid)) {
+
+            if (incientBusiness.CreateNewIncident(request.incident)) {
+                return ResponseEntity.ok("Incidencia creada.");
+
+            } else {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("El recurs ja existeix");
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("El recurs ja existeix");
+            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -153,7 +183,7 @@ public class IncidentController {
         }
     }
 
-    private String BuilderQuery(IncidentRequest incidentRequest) {
+    private String BuilderQuery(IncidentCriteriaRequest incidentRequest) {
 
         // Construir la consulta SQL base
         StringBuilder query = new StringBuilder("SELECT * FROM Incidents WHERE ");
@@ -171,4 +201,24 @@ public class IncidentController {
         return isActive;
     }
 
+    private IncidentEntityRequest parseIncidentRequest(String incidentRequestString) {
+        // Map from the client
+        JSONObject requestJSON = AESEncryptionService.decryptToJSONObject(incidentRequestString);
+
+        if (requestJSON == null) {
+            return null;
+        }
+
+        // Extract the user object from the JSON
+        JSONObject incidentObject = requestJSON.getJSONObject("incident");
+
+        // Convert the user JSON to a User object
+        Incident incident = Incident.convertJsonToObject(incidentObject.toString());
+
+        // Create a UserRequest object
+        IncidentEntityRequest request = new IncidentEntityRequest(requestJSON.getString("sessionid"), incident);
+
+        // Return request
+        return request;
+    }
 }

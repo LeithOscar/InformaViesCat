@@ -1,7 +1,11 @@
-
 package com.server.informaViesCat.Entities.Incident;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.server.informaViesCat.Entities.User.User;
+import java.io.IOException;
 import java.util.Date;
+import org.json.JSONObject;
 
 /**
  *
@@ -10,31 +14,32 @@ import java.util.Date;
 public class Incident {
 
     public int id;
-    public int UserId;
-    public int TecnicId;
-    public int IncidentTypeId;
-    public String RoadName;
-    public String KM;
-    public String Geo;
-    public String Description;
-    public String StartDate;
-    public String EndDate;
-    public boolean Urgent;
+    public int userid;
+    public int tecnicid;
+    public int incidenttypeid;
+    public String raodname;
+    public String km;
+    public String geo;
+    public String description;
+    public String startdate;
+    public String enddate;
+    public boolean urgent;
 
-    public Incident()
-    {}
-    public Incident(int id, int userId, int tecnicId,int incidentTypeId, String roadName, String km, String geo, String description, String startDate, String endDate, boolean urgent) {
+    public Incident() {
+    }
+
+    public Incident(int id, int userId, int tecnicId, int incidentTypeId, String roadName, String km, String geo, String description, String startDate, String endDate, boolean urgent) {
         this.id = id;
-        this.UserId = userId;
-        this.TecnicId = tecnicId;
-        this.RoadName = roadName;
-        this.KM = km;
-        this.Geo = geo;
-        this.Description = description;
-        this.StartDate = startDate;
-        this.EndDate = endDate;
-        this.Urgent = urgent;
-        this.IncidentTypeId= incidentTypeId;
+        this.userid = userId;
+        this.tecnicid = tecnicId;
+        this.raodname = roadName;
+        this.km = km;
+        this.geo = geo;
+        this.description = description;
+        this.startdate = startDate;
+        this.enddate = endDate;
+        this.urgent = urgent;
+        this.incidenttypeid = incidentTypeId;
     }
 
     // Getters para las propiedades
@@ -42,51 +47,72 @@ public class Incident {
         return this.id;
     }
 
-    public int getUserId() {
-        return UserId;
+    public int getUserid() {
+        return userid;
     }
 
-    public int getTecnicId() {
-        return TecnicId;
+    public int getTecnicid() {
+        return tecnicid;
     }
 
-    public int getIncidentTypeId() {
-        return IncidentTypeId;
+    public int getIncidenttypeid() {
+        return incidenttypeid;
     }
 
-    public String getRoadName() {
-        return RoadName;
+    public String getRaodname() {
+        return raodname;
     }
 
-    public String getKM() {
-        return KM;
+    public String getKm() {
+        return km;
     }
 
-    public String getGeo() {
-        return Geo;
+    public String getgeo() {
+        return geo;
     }
 
-    public String getDescription() {
-        return Description;
+    public String getdescription() {
+        return description;
     }
 
-    public String getStartDate() {
-        return this.StartDate;
+    public String getStartdate() {
+        return this.startdate;
     }
 
-    public String getEndDate() {
-        return this.EndDate;
+    public String getEnddate() {
+        return this.enddate;
     }
 
-    public boolean isUrgent() {
-        return Urgent;
+    public boolean isurgent() {
+        return urgent;
     }
-    
-     @Override
+
+    @Override
     public String toString() {
-        return "ObjetoDeCarretera{" +
-                "carretera='" + this.getRoadName() + '\'' +
-                ", longitud=" + this.getGeo() +
-                '}';
+        return "ObjetoDeCarretera{"
+                + "carretera='" + this.getRaodname() + '\''
+                + ", longitud=" + this.getgeo()
+                + '}';
+    }
+
+    public JSONObject convertObjectToJson() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonString = objectMapper.writeValueAsString(this);
+            return new JSONObject(jsonString);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace(); // Maneja la excepción según tus necesidades
+            return null;
+        }
+    }
+
+    public static Incident convertJsonToObject(String jsonString) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonString, Incident.class);
+        } catch (IOException e) {
+            e.printStackTrace(); // Maneja la excepción según tus necesidades
+            return null;
+        }
     }
 }

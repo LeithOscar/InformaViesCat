@@ -1,7 +1,6 @@
 package com.server.informaViesCat.Interfaces.IBusiness;
 
 import com.server.informaViesCat.Entities.Incident.Incident;
-import com.server.informaViesCat.Entities.Incident.IncidentRequest;
 import java.util.List;
 
 /**

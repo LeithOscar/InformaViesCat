@@ -2,11 +2,9 @@ package com.server.infoviescat.Business;
 
 import com.server.informaViesCat.Business.IncidentBusiness;
 import com.server.informaViesCat.Entities.Incident.Incident;
-import com.server.informaViesCat.Entities.Incident.IncidentRequest;
+import com.server.informaViesCat.Entities.Incident.IncidentCriteriaRequest;
 import com.server.informaViesCat.Interfaces.IBusiness.IIncidentsBusiness;
 import com.server.informaViesCat.Repository.IncidentRepository;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -69,7 +67,7 @@ public class IncidentBusinessTest {
       
          List<Incident> incidentList =  new ArrayList<>();
          
-         IncidentRequest incidentRequest = new IncidentRequest();
+         IncidentCriteriaRequest incidentRequest = new IncidentCriteriaRequest();
          
         when(repoMock.GetAll(incidentRequest)).thenReturn(incidentList);
 
@@ -88,7 +86,7 @@ public class IncidentBusinessTest {
       
          int incidentListCount = 0;
          
-         IncidentRequest incidentRequest = new IncidentRequest();
+         IncidentCriteriaRequest incidentRequest = new IncidentCriteriaRequest();
          
         when(repoMock.GetAllCount()).thenReturn(incidentListCount);
 

@@ -5,7 +5,7 @@ package com.server.informaViesCat.Entities.Incident;
  *
  * @author leith
  */
-public class IncidentRequest {
+public class IncidentCriteriaRequest {
     
     public String UserId;
     

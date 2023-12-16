@@ -1,7 +1,6 @@
 package com.server.informaViesCat.Business;
 
 import com.server.informaViesCat.Entities.Incident.Incident;
-import com.server.informaViesCat.Entities.Incident.IncidentRequest;
 import com.server.informaViesCat.Entities.User.UserValidations;
 import com.server.informaViesCat.Interfaces.IBusiness.IIncidentsBusiness;
 import com.server.informaViesCat.Interfaces.IRepository.IIncidentRepository;

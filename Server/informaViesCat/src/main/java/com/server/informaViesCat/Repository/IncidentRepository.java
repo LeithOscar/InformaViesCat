@@ -2,7 +2,7 @@ package com.server.informaViesCat.Repository;
 
 import com.server.informaViesCat.Configuration.ConnectionBD;
 import com.server.informaViesCat.Entities.Incident.Incident;
-import com.server.informaViesCat.Entities.Incident.IncidentRequest;
+import com.server.informaViesCat.Entities.Incident.IncidentCriteriaRequest;
 import com.server.informaViesCat.Interfaces.IRepository.IIncidentRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,16 +36,16 @@ public class IncidentRepository implements IIncidentRepository {
 
             PreparedStatement pstmt = bdConnection.prepareStatement(insertSQL);
 
-            pstmt.setInt(1, incident.getUserId());
-            pstmt.setInt(2, incident.getTecnicId());
-            pstmt.setString(3, incident.getRoadName());
-            pstmt.setString(4, incident.getKM());
-            pstmt.setString(5, incident.getGeo());
-            pstmt.setString(6, incident.getDescription());
-            pstmt.setString(7, incident.getStartDate());
-            pstmt.setString(8, incident.getEndDate());
-            pstmt.setBoolean(9, incident.isUrgent());
-            pstmt.setInt(10, incident.getIncidentTypeId());
+            pstmt.setInt(1, incident.getUserid());
+            pstmt.setInt(2, incident.getTecnicid());
+            pstmt.setString(3, incident.getRaodname());
+            pstmt.setString(4, incident.getKm());
+            pstmt.setString(5, incident.getgeo());
+            pstmt.setString(6, incident.getdescription());
+            pstmt.setString(7, incident.getStartdate());
+            pstmt.setString(8, incident.getEnddate());
+            pstmt.setBoolean(9, incident.isurgent());
+            pstmt.setInt(10, incident.getIncidenttypeid());
 
             pstmt.executeUpdate();
 
@@ -67,14 +67,14 @@ public class IncidentRepository implements IIncidentRepository {
 
             PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
 
-            pstmt.setString(1, Incident.getRoadName());
-            pstmt.setString(2, Incident.getKM());
-            pstmt.setString(3, Incident.getGeo());
-            pstmt.setString(4, Incident.getDescription());
-            pstmt.setString(5, Incident.getStartDate());
-            pstmt.setString(6, Incident.getEndDate());
-            pstmt.setBoolean(7, Incident.isUrgent());
-            pstmt.setInt(8, Incident.getIncidentTypeId());
+            pstmt.setString(1, Incident.getRaodname());
+            pstmt.setString(2, Incident.getKm());
+            pstmt.setString(3, Incident.getgeo());
+            pstmt.setString(4, Incident.getdescription());
+            pstmt.setString(5, Incident.getStartdate());
+            pstmt.setString(6, Incident.getEnddate());
+            pstmt.setBoolean(7, Incident.isurgent());
+            pstmt.setInt(8, Incident.getIncidenttypeid());
             pstmt.setInt(9, Incident.getId());
 
             pstmt.executeUpdate();
@@ -188,7 +188,7 @@ public class IncidentRepository implements IIncidentRepository {
         return incidents.size();
     }
 
-    private Comparator<Incident> GetFieldComparator(IncidentRequest incidentRequest) {
+    private Comparator<Incident> GetFieldComparator(IncidentCriteriaRequest incidentRequest) {
         /* switch (field) {
             case "UserId":
                 return Comparator.comparing(Incident::getUserId);
