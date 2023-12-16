@@ -70,7 +70,7 @@ public class IncidentController {
         IncidentGetAllRequest request = new IncidentGetAllRequest(requestJson.getInt("userid"), requestJson.getInt("rolid"), requestJson.getString("sessionid"));
 
         if (isSessionActive(request.sessionid)) {
-            var incidentList = incientBusiness.GetAll(request.sessionid, request.rolid);
+            var incidentList = incientBusiness.GetAll(request.userid, request.rolid);
             if (incidentList != null) {
 
                 IncidentListResponse response = new IncidentListResponse(incidentList, requestJson.getString("sessionid"));

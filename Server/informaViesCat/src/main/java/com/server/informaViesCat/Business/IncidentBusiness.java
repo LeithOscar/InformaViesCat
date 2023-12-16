@@ -31,7 +31,7 @@ public class IncidentBusiness implements IIncidentsBusiness {
 
     }
 
-    public List<Incident> GetAll(String userId, int rolId) {
+    public List<Incident> GetAll(int userId, int rolId) {
         // si es admin o tecnic..getall
         // si el userId esta informat filtrar.
 

@@ -22,15 +22,15 @@ public class User implements Serializable {
     public String email = null;
     private String password = null;
     private boolean islogged;
-    private Integer rolId;
+    private Integer rolid;
 
     public User() {
     }
 
-    public User(int id, int rolId, String name, String password, Boolean connected, String userName,
+    public User(int id, int rolid, String name, String password, Boolean connected, String userName,
             String lastName, String email, int parentId) {
         this.id = id;
-        this.rolId = rolId;
+        this.rolid = rolid;
         this.name = name;
         this.username = userName;
         this.lastname = lastName;
@@ -50,7 +50,7 @@ public class User implements Serializable {
     }
 
     public int getRolId() {
-        return rolId;
+        return rolid;
     }
 
     public String getName() {

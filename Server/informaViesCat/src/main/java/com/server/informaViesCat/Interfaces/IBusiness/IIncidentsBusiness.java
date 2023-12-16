@@ -11,7 +11,7 @@ public interface IIncidentsBusiness {
 
     boolean CreateNewIncident(Incident incident);
 
-    List<Incident> GetAll(String userId, int rolId);
+    List<Incident> GetAll(int userId, int rolId);
 
     boolean Modify(Incident incident);
 

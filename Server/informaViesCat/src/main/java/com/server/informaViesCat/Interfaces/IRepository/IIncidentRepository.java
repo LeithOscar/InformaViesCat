@@ -14,7 +14,7 @@ public interface IIncidentRepository {
 
     boolean Exist(int id);
 
-    List<Incident> GetAll(String userId);
+    List<Incident> GetAll(int userId);
 
     List<Incident> GetAll();
 

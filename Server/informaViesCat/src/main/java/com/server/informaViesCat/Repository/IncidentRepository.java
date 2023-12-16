@@ -123,7 +123,7 @@ public class IncidentRepository implements IIncidentRepository {
         return false;
     }
 
-    public List<Incident> GetAll(String userId) {
+    public List<Incident> GetAll(int userId) {
 
         List<Incident> incidents = new ArrayList<>();
         String consultaSQL = "SELECT * FROM incidents WHERE userId = " + userId + ";";
