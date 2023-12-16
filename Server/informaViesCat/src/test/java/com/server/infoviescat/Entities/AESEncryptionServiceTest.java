@@ -48,8 +48,8 @@ public class AESEncryptionServiceTest {
 
         JSONObject jsonObject = new JSONObject();
 
-        //jsonObject.put("user",  new User(45, 1, " nou usuario", "1234", false, "nouUsername", "nou lastname", "nouU<Pepeser@gmail.com", 0).convertObjectToJson());
-        //jsonObject.put("incident",   new Incident(6,26,1,3,"bbbb","12","Coordenadas geográficas","provbbbb","2023-11-10","2023-11-10",false).convertObjectToJson());    
+        //jsonObject.put("user",  new User(45, 1, " nou usuario", "1234", false, "usernit", "nou lastname", "testnit@gmail.com", 0).convertObjectToJson());
+        jsonObject.put("incident",   new Incident(32,26,1,3,"valencia","122","Coordenadas geográficas modificades","forat","2023-11-10","2023-11-10",true).convertObjectToJson());    
         //jsonObject.put("userid", 26);
         //jsonObject.put("rolid", 3);
         jsonObject.put("sessionid", "d4ebc623-eafa-418e-b775-eec2426148a4");

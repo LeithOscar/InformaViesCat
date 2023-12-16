@@ -157,12 +157,27 @@ public class IncidentController {
     @PutMapping("/modify")
     @Consumes("MediaType.APPLICATION_JSON")
     @Produces("MediaType.APPLICATION_JSON")
-    public ResponseEntity<String> modify(@RequestBody Incident incident) {
-        if (incientBusiness.Modify(incident)) {
-            return ResponseEntity.ok("incidencia modificada.");
+    public ResponseEntity<String> modify(@RequestBody String incidentrequest) {
 
+        IncidentEntityRequest request = this.parseIncidentRequest(incidentrequest);
+
+        if (request == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        if (request == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        if (isSessionActive(request.sessionid)) {
+
+            if (incientBusiness.Modify(request.incident)) {
+                return ResponseEntity.ok("incidencia modificada.");
+
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("No es pot modificar");
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("No es pot modificar");
+            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -173,7 +188,8 @@ public class IncidentController {
      * @return Retorna missagte si ha elimnat OK o un badrequest
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable int id) {
+    public ResponseEntity<String> delete(@PathVariable int id
+    ) {
         if (incientBusiness.Delete(id)) {
             return ResponseEntity.ok("Incident eliminat.");
 
