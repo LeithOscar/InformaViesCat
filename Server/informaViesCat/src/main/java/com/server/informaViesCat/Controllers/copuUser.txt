@@ -282,3 +282,9 @@ public class UserController {
         return isActive;
     }
 }
+
+
+getall by rol 3
+
+{"userid":26,"rolid":3,"sessionid":"d4ebc623-eafa-418e-b775-eec2426148a4"}
+3fYCdUcb8xGWezUkO7HTwnVjby8KHp5z9jIDUouseHLKsJTkV81RnKVmV1ke/EXwpmh8WPFSSG2MvsJnKcLyaKZ9fHSvtQVBAwUrWIbG3sa72SrUgxubhU78OUU3uZLi

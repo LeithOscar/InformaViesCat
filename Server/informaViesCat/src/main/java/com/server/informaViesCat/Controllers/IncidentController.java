@@ -90,7 +90,7 @@ public class IncidentController {
      *
      * @return llistat dels Incidenciesss
      */
-    @GetMapping("/getAllCount")
+    @PostMapping("/getAllCount")
     @Consumes("MediaType.APPLICATION_JSON")
     @Produces("MediaType.APPLICATION_JSON")
     public ResponseEntity<String> getAllCount(@RequestBody String incidentGetAllCount) {
