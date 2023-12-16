@@ -10,6 +10,8 @@ import com.server.informaViesCat.Entities.Incident.IncidentGetAllRequest;
 import com.server.informaViesCat.Entities.Incident.IncidentListResponse;
 import com.server.informaViesCat.Entities.Incident.IncidentCriteriaRequest;
 import com.server.informaViesCat.Entities.Incident.IncidentEntityRequest;
+import com.server.informaViesCat.Entities.Incident.IncidentRemoveRequest;
+import com.server.informaViesCat.Entities.User.UserRemoveRequest;
 import com.server.informaViesCat.Entities.User.UserRequest;
 import com.server.informaViesCat.Interfaces.IRepository.ISessionRepository;
 import com.server.informaViesCat.Repository.SessionRepository;
@@ -184,19 +186,31 @@ public class IncidentController {
     /**
      * Elimina el incident
      *
-     * @param id id del incident
      * @return Retorna missagte si ha elimnat OK o un badrequest
      */
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable int id
-    ) {
-        if (incientBusiness.Delete(id)) {
-            return ResponseEntity.ok("Incident eliminat.");
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> delete(@RequestBody String incidentRemoveRequest) {
 
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No existeix");
+        JSONObject requestJSON = AESEncryptionService.decryptToJSONObject(incidentRemoveRequest);
 
+        if (requestJSON == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+        //Build new Object server
+        IncidentRemoveRequest request = new IncidentRemoveRequest(requestJSON.getString("sessionid"), requestJSON.getInt("incidentid"));
+
+        if (isSessionActive(request.sessionId)) {
+            if (incientBusiness.Delete(request.incidentid)) {
+                return ResponseEntity.ok("");
+
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No existeix");
+
+            }
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
     }
 
     private String BuilderQuery(IncidentCriteriaRequest incidentRequest) {
