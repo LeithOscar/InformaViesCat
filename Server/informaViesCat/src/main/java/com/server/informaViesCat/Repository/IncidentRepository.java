@@ -2,6 +2,8 @@ package com.server.informaViesCat.Repository;
 
 import com.server.informaViesCat.Configuration.ConnectionBD;
 import com.server.informaViesCat.Entities.Incident.Incident;
+import com.server.informaViesCat.Entities.Incident.IncidentCriteria;
+import com.server.informaViesCat.Entities.Incident.IncidentCriteriaBuilder;
 import com.server.informaViesCat.Entities.Incident.IncidentCriteriaRequest;
 import com.server.informaViesCat.Interfaces.IRepository.IIncidentRepository;
 import java.sql.Connection;
@@ -145,8 +147,8 @@ public class IncidentRepository implements IIncidentRepository {
         //Collections.sort(incidents, comparadorPorCarretera);
         return incidents;
     }
-    
-      public List<Incident> GetAll() {
+
+    public List<Incident> GetAll() {
 
         List<Incident> incidents = new ArrayList<>();
         String consultaSQL = "SELECT * FROM incidents";
@@ -169,9 +171,39 @@ public class IncidentRepository implements IIncidentRepository {
         return incidents;
     }
 
+    public List<Incident> GetAll(IncidentCriteria criteria) {
+      
+        
+        IncidentCriteriaBuilder builder = new IncidentCriteriaBuilder();
+        
+        String query = builder.buildConditions(criteria);
+        
+         List<Incident> incidents = new ArrayList<>();
+         
+         
+        String consultaSQL = "SELECT * FROM incidents WHERE " + query;
+        PreparedStatement pstmt;
+
+        try {
+            pstmt = bdConnection.prepareStatement(consultaSQL);
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+                incidents.add(ExtractIncidentFromResult(result));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(IncidentRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //Apliquem el filtres a la consulta obtinguda
+        //Comparator<Incident> comparadorPorCarretera = GetFieldComparator(incidentRequest);
+        //Ordenació
+        //Collections.sort(incidents, comparadorPorCarretera);
+        return incidents;
+    }
+
     @Override
     public int GetAllCount() {
-         List<Incident> incidents = new ArrayList<>();
+        List<Incident> incidents = new ArrayList<>();
         String consultaSQL = "SELECT * FROM incidents";
         PreparedStatement pstmt;
 

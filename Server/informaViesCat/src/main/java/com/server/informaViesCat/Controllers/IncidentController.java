@@ -3,6 +3,7 @@ package com.server.informaViesCat.Controllers;
 import com.server.informaViesCat.Business.IncidentBusiness;
 import com.server.informaViesCat.Entities.AESEncryptionService;
 import com.server.informaViesCat.Entities.Incident.Incident;
+import com.server.informaViesCat.Entities.Incident.IncidentCriteria;
 import com.server.informaViesCat.Entities.Incident.IncidentCriteriaBuilder;
 import com.server.informaViesCat.Entities.Incident.IncidentGetAllCount;
 import com.server.informaViesCat.Entities.Incident.IncidentGetAllCountResponse;
@@ -10,9 +11,8 @@ import com.server.informaViesCat.Entities.Incident.IncidentGetAllRequest;
 import com.server.informaViesCat.Entities.Incident.IncidentListResponse;
 import com.server.informaViesCat.Entities.Incident.IncidentCriteriaRequest;
 import com.server.informaViesCat.Entities.Incident.IncidentEntityRequest;
+import com.server.informaViesCat.Entities.Incident.IncidentGetAllFilterRequest;
 import com.server.informaViesCat.Entities.Incident.IncidentRemoveRequest;
-import com.server.informaViesCat.Entities.User.UserRemoveRequest;
-import com.server.informaViesCat.Entities.User.UserRequest;
 import com.server.informaViesCat.Interfaces.IRepository.ISessionRepository;
 import com.server.informaViesCat.Repository.SessionRepository;
 import javax.ws.rs.Consumes;
@@ -21,8 +21,6 @@ import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -73,6 +71,44 @@ public class IncidentController {
 
         if (isSessionActive(request.sessionid)) {
             var incidentList = incientBusiness.GetAll(request.userid, request.rolid);
+            if (incidentList != null) {
+
+                IncidentListResponse response = new IncidentListResponse(incidentList, requestJson.getString("sessionid"));
+
+                return ResponseEntity.ok(AESEncryptionService.encryptFromJSONObject(response.convertObjectToJson()));
+            }
+
+            return (ResponseEntity<String>) ResponseEntity.noContent();
+        } else {
+            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
+        }
+
+    }
+    
+     @PostMapping("/getallFiltered")
+    @Consumes("MediaType.APPLICATION_JSON")
+    @Produces("MediaType.APPLICATION_JSON")
+    public ResponseEntity<String> getallFiltered(@RequestBody String request) {
+
+        //map from client
+        JSONObject requestJson = AESEncryptionService.decryptToJSONObject(request);
+
+        if (requestJson == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        //Build new Object server
+        
+         // Extract the user object from the JSON
+        JSONObject criteriaObject = requestJson.getJSONObject("criteria");
+        
+          // Convert the user JSON to a User object
+          
+        IncidentCriteria criteria = IncidentCriteria.convertJsonToObject(criteriaObject.toString());
+        
+        IncidentGetAllFilterRequest filter = new IncidentGetAllFilterRequest(requestJson.getInt("userid"),requestJson.getString("sessionid"),requestJson.getInt("rolid"),criteria);
+
+        if (isSessionActive(filter.sessionid)) {
+            var incidentList = incientBusiness.GetAll(filter);
             if (incidentList != null) {
 
                 IncidentListResponse response = new IncidentListResponse(incidentList, requestJson.getString("sessionid"));

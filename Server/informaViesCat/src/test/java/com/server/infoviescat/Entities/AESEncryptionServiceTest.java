@@ -2,6 +2,7 @@ package com.server.infoviescat.Entities;
 
 import com.server.informaViesCat.Entities.AESEncryptionService;
 import com.server.informaViesCat.Entities.Incident.Incident;
+import com.server.informaViesCat.Entities.Incident.IncidentCriteria;
 import com.server.informaViesCat.Entities.User.User;
 import com.server.informaViesCat.Entities.User.UserResponse;
 import javax.crypto.Cipher;
@@ -54,7 +55,9 @@ public class AESEncryptionServiceTest {
         //jsonObject.put("incidentid", 32);
         jsonObject.put("sessionid", "d4ebc623-eafa-418e-b775-eec2426148a4");
 
-        //jsonObject.put("userId", 26);
+
+        jsonObject.put("criteria", new IncidentCriteria("and",26,2,3, "2023-11-10", "2023-11-10", true).convertObjectToJson());
+        jsonObject.put("rolid", 1);
         String textEncrypted = AESEncryptionService.encryptFromJSONObject(jsonObject);
         System.out.println(jsonObject);
         System.out.println(textEncrypted);

@@ -1,6 +1,7 @@
 package com.server.informaViesCat.Business;
 
 import com.server.informaViesCat.Entities.Incident.Incident;
+import com.server.informaViesCat.Entities.Incident.IncidentGetAllFilterRequest;
 import com.server.informaViesCat.Entities.User.UserValidations;
 import com.server.informaViesCat.Interfaces.IBusiness.IIncidentsBusiness;
 import com.server.informaViesCat.Interfaces.IRepository.IIncidentRepository;
@@ -40,6 +41,12 @@ public class IncidentBusiness implements IIncidentsBusiness {
         } else {
             return this.repo.GetAll(userId);
         }
+
+    }
+
+    public List<Incident> GetAll(IncidentGetAllFilterRequest incidentGetAllFilterRequest) {
+
+        return this.repo.GetAll(incidentGetAllFilterRequest.criteria);
 
     }
 

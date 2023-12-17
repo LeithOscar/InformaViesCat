@@ -14,27 +14,27 @@ public class IncidentCriteriaBuilder {
 
         if (criteria != null) {
 
-            if (!criteria.UserId.isEmpty()) {
-                condition += "UserId ="+ criteria.UserId + " " + criteria.Operator + " "; 
+            if (criteria.userid!=0) {
+                condition += "UserId ="+ criteria.userid + " " + criteria.operator + " "; 
 
             }
-            if (criteria.TecnicId != 0) {
-                condition += "TecnicId = "+ criteria.TecnicId + " " + criteria.Operator + " "; 
+            if (criteria.tecnicid != 0) {
+                condition += "TecnicId = "+ criteria.tecnicid + " " + criteria.operator + " "; 
 
             }
-            if (criteria.IncidentTypeId != 0) {
-                condition += "IncidentTypeId = "+ criteria.IncidentTypeId + " " +  criteria.Operator + " "; 
+            if (criteria.incidenttypeid != 0) {
+                condition += "IncidentTypeId = "+ criteria.incidenttypeid + " " +  criteria.operator + " "; 
             }
-            if (!criteria.StartDate.isEmpty()) {
-                condition += "StartDate = "+ criteria.StartDate + " " + criteria.Operator + " "; 
+            if (!criteria.startdate.isEmpty()) {
+                condition += "StartDate = '"+ criteria.startdate + "' " + criteria.operator + " "; 
 
             }
-            if (!criteria.EndDate.isEmpty()) {
-                condition += "EndDate = "+ criteria.EndDate + criteria.Operator + " "; 
+            if (!criteria.enddate.isEmpty()) {
+                condition += "EndDate = '"+ criteria.enddate + "' " +  criteria.operator + " "; 
 
             }
             
-            condition += "Urgent = "+ criteria.Urgent + criteria.Operator; 
+            condition += " Urgent = "+ criteria.urgent  + ";";
 
         }
 

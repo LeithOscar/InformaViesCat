@@ -18,15 +18,5 @@ public class IncidentCriteriaBuilderTest {
         this.incidentCriteriaBuilder = new IncidentCriteriaBuilder();
     }
 
-    public void testCreate_Success() {
-        // Arrange
-
-        IncidentCriteria incidentCriteria = new IncidentCriteria();
-
-        incidentCriteria.UserId = "userId";
-        // Act
-        var queryConditions = incidentCriteriaBuilder.buildConditions(incidentCriteria);
-
-        // Assert
-    }
+   
 }
