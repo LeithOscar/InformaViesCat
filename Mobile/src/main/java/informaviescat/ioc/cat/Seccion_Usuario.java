@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import android.app.Activity;
@@ -21,17 +20,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -39,9 +35,6 @@ import okhttp3.Response;
 public class Seccion_Usuario extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
-
-
-    private Button buttonLogout;
 
     //Variables del usuario
     private int id;
@@ -59,7 +52,6 @@ public class Seccion_Usuario extends AppCompatActivity implements NavigationView
 
     //Se inicializa la clase que realiza conexiones
     ServerController serverController = new ServerController();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,11 +92,11 @@ public class Seccion_Usuario extends AppCompatActivity implements NavigationView
             //Extrae todos los valores dentro de usuario
             id = userObject.getInt("id");
             name = userObject.getString("name");
-            userName = userObject.getString("userName");
-            lastName = userObject.getString("lastName");
+            userName = userObject.getString("username");
+            lastName = userObject.getString("lastname");
             email = userObject.getString("email");
             password = userObject.getString("password");
-            rolId = userObject.getInt("rolId");
+            rolId = userObject.getInt("rolid");
 
             //Extrae el userId
             session_id = json.getString("sessionId");
@@ -113,20 +105,11 @@ public class Seccion_Usuario extends AppCompatActivity implements NavigationView
             throw new RuntimeException(e);
         }
 
-        //Bloque para hacer invisibles algunas secciones del menú si el usuario es técnico
+
         Menu navMenu = navigationView.getMenu();
         MenuItem perValidarItem = navMenu.findItem(R.id.nav_per_validar);
         MenuItem resoltesItem = navMenu.findItem(R.id.nav_resolta);
         MenuItem tancadesItem = navMenu.findItem(R.id.nav_tancada);
-
-        if (rolId == 2) {
-
-            //Si el rol es 2 (técnico) se deshabilitan las secciones que son solo para admins, o ciudadanos.
-            Log.d("Debug Vicent","Rol es: " + rolId + " (técnico) .Se esconden las secciones per validar, resolta y tancada.");
-            perValidarItem.setVisible(false);
-            resoltesItem.setVisible(false);
-            tancadesItem.setVisible(false);
-        }
 
         //Se busca el floating button para añadir una incidencia
         FloatingActionButton afegirIncidenciaButton = findViewById(R.id.reportarIncidenciaButton);
@@ -153,6 +136,38 @@ public class Seccion_Usuario extends AppCompatActivity implements NavigationView
         emailEditText.setText(email);
         passwordEditText.setText(password);
 
+        if (rolId == 2) {
+
+            //Si el rol es 2 (técnico) se deshabilitan las secciones que son solo para admins, o ciudadanos.
+            Log.d("Debug Vicent","Rol es: " + rolId + " (técnico) .Se esconden las secciones per validar, resolta y tancada.");
+            perValidarItem.setVisible(false);
+            resoltesItem.setVisible(false);
+            tancadesItem.setVisible(false);
+
+            //Se deshabilitan también los campos para editar los detalles de usuario
+            nomEditText.setEnabled(false);
+            cognomEditText.setEnabled(false);
+            usernameEditText.setEnabled(false);
+            emailEditText.setEnabled(false);
+            passwordEditText.setEnabled(false);
+
+            //Se cambia el texto para informar de que no se puede editar los detalles de usuario
+            TextView informativoTextView = findViewById(R.id.texto_informativo_modificar_usuario);
+            informativoTextView.setText("No disposes de permissos per editar al teu compte amb rol tècnic de carretera. Contacta amb el teu administrador.");
+            TextView warningTextView = findViewById(R.id.warning_modificar_usuario);
+            warningTextView.setVisibility(View.INVISIBLE);
+
+            //Se deshabilita el botón de modificar usuario
+            MaterialButton modificarButton = findViewById(R.id.button_modificar_usuari);
+            modificarButton.setVisibility(View.INVISIBLE);
+            modificarButton.setEnabled(false);
+
+            //Se deshabilita el botón de eliminar usuario
+            MaterialButton eliminarButton = findViewById(R.id.button_eliminar_usuari);
+            eliminarButton.setVisibility(View.INVISIBLE);
+            eliminarButton.setEnabled(false);
+        }
+
         //Listener para el botón de modificar
         MaterialButton modificarButton = findViewById(R.id.button_modificar_usuari);
         modificarButton.setOnClickListener(new View.OnClickListener() {
@@ -166,40 +181,125 @@ public class Seccion_Usuario extends AppCompatActivity implements NavigationView
                 String email_edit = emailEditText.getText().toString();
                 String password_edit = passwordEditText.getText().toString();
 
-                serverController.modificarUsuario(id, rolId, nom_edit, cognom_edit, username_edit, email_edit, password_edit, new Callback() {
+                serverController.modificarUsuario(id, rolId, nom_edit, cognom_edit, username_edit, email_edit, password_edit, session_id, new Callback() {
                     @Override
                     public void onFailure(@NonNull Call call, @NonNull IOException e) {
-
+                        Log.d("Debug Vicent", "Fallo al modificar el usuario");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Muestra el Toast en el hilo principal
+                                Toast.makeText(Seccion_Usuario.this, "No ha podido moodificarse el perfil", Toast.LENGTH_LONG).show();
+                            }
+                        });
                     }
 
+                    //Si hay respuesta se edita el JSON con los datos del usuario
                     @Override
                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                        Log.d("Debug Vicent", "Perfil modificado");
-                        Log.d("Debug Vicent", cognom_edit);
-                        Log.d("Debug Vicent", String.valueOf(response.code()));
-                        Log.d("Debug Vicent", String.valueOf(response.body()));
+                        if (response.isSuccessful()) {
+                            //Si es con código 200
+                            Log.d("Debug Vicent", "Perfil modificado");
+                            updateJsonDatosUsuario(nom_edit, cognom_edit, username_edit, email_edit, password_edit);
 
+                        //Si es con código 304
+                        } else if (response.code() == 304) {
 
+                            Log.d("Debug Vicent", "Sección usuario: Response con error 304 al modificar el perfil");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // Muestra el Toast en el hilo principal
+                                    Toast.makeText(Seccion_Usuario.this, "Error al modificar el perfil", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        } else {
+                            //Otros posibles errores
+                            Log.d("Debug Vicent", "Sección usuario: Respuesta inesperada con código: " + response.code());
+                        }
 
+                        updateJsonDatosUsuario(nom_edit, cognom_edit, username_edit, email_edit, password_edit);
                     }
                 });
             }
         });
 
-        //Listener para el botón de editar
+        //Listener para el botón de eliminar
         MaterialButton eliminarButton = findViewById(R.id.button_eliminar_usuari);
         eliminarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Handle the click for Eliminar button
-                // You can perform the necessary actions here
-                //Toast.makeText(SeccionUsuarioActivity.this, "Eliminar button clicked", Toast.LENGTH_SHORT).show();
+                serverController.eliminarUsuario(id, session_id, new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        Log.d("Debug Vicent", "Fallo al eliminar el usuario");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //Muestra el Toast en el hilo principal
+                                Toast.makeText(Seccion_Usuario.this, "No ha podido eliminarse el perfil", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        Log.d("Debug Vicent", "Usuario eliminado");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Muestra el Toast en el hilo principal
+                                Toast.makeText(Seccion_Usuario.this, "Perfil eliminado", Toast.LENGTH_LONG).show();
+
+                                //Se vacían los datoa de usuario y se pasa a la pantalla de login
+                                json_datos_usuario = "";
+                                abrirActividadPasandoJSONUsuario(activity_de_origen,  MainActivity.class, json_datos_usuario);
+                            }
+                        });
+                    }
+                });
             }
         });
+    }
 
 
+    //Función para actualizar el json con los datos del usuario tras utilizar "Modificar el meu compte"
+    private void updateJsonDatosUsuario(String nom, String cognom, String username, String email, String password) {
+        try {
+            //Se parsea el JSON actual
+            JSONObject json = new JSONObject(json_datos_usuario);
 
+            //Se actualiza con los nuevos datos
+            JSONObject userObject = json.getJSONObject("user");
+            userObject.put("name", nom);
+            userObject.put("lastName", cognom);
+            userObject.put("userName", username);
+            userObject.put("email", email);
+            userObject.put("password", password);
 
+            //Se guarda
+            json_datos_usuario = json.toString();
+
+            //Toast de feedback para el usuario
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showToast("Perfil actualitzat correctament");
+                }
+            });
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showToast(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(Seccion_Usuario.this, message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override

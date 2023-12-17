@@ -123,6 +123,7 @@ public class Seccion_Reportar extends AppCompatActivity implements NavigationVie
 
         //Se extrae del intent el json con la info del usuario
         json_datos_usuario = intent.getStringExtra("json_datos_usuario");
+        Log.d("Debug Vicent","JSON de usuario: " +  json_datos_usuario);
 
         //Se parsean los datos del usuario
         try {
@@ -134,11 +135,11 @@ public class Seccion_Reportar extends AppCompatActivity implements NavigationVie
             //Extrae todos los valores dentro de usuario
             id = userObject.getInt("id");
             name = userObject.getString("name");
-            userName = userObject.getString("userName");
-            lastName = userObject.getString("lastName");
+            userName = userObject.getString("username");
+            lastName = userObject.getString("lastname");
             email = userObject.getString("email");
             password = userObject.getString("password");
-            rolId = userObject.getInt("rolId");
+            rolId = userObject.getInt("rolid");
 
             //Extrae el userId
             session_id = json.getString("sessionId");
@@ -236,7 +237,7 @@ public class Seccion_Reportar extends AppCompatActivity implements NavigationVie
 
 
                 //Proceder con el report d'incidencia
-                serverController.crearIncidencia(id, carretera, km, coordenadas, descripcio, startDate, esUrgente, new Callback() {
+                serverController.crearIncidencia(id, carretera, km, coordenadas, descripcio, startDate, esUrgente, session_id, new Callback() {
 
                     @Override
                     public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -261,9 +262,7 @@ public class Seccion_Reportar extends AppCompatActivity implements NavigationVie
                             }
                         });
 
-                        //Y vuelve a la actividad "home"
-                        Intent intent = new Intent(Seccion_Reportar.this,Seccion_Home.class);
-                        startActivity(intent);
+                        abrirActividadPasandoJSONUsuario(activity_de_origen, Seccion_Home.class, json_datos_usuario);
                     }
                 });
             }
@@ -372,22 +371,6 @@ public class Seccion_Reportar extends AppCompatActivity implements NavigationVie
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-    //No tocar nada debajo de esto!
-
-
-
 
     /**
      * Este método se llama cuando un elemento de la barra de navegación lateral es seleccionado.

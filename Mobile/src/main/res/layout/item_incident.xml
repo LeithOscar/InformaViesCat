@@ -1,0 +1,77 @@
+<!-- res/layout/item_incident.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingTop="16dp"
+    android:paddingEnd="16dp">
+
+    <!-- Main column (90% width) -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="9"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView_Id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/id_de_la_incid_ncia" />
+
+        <TextView
+            android:id="@+id/textView_Carretera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/carretera" />
+
+        <TextView
+            android:id="@+id/textView_Km"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/km" />
+
+        <TextView
+            android:id="@+id/textView_Description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/descripci"
+            />
+
+        <TextView
+            android:id="@+id/textView_StartDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Data d'inici:"
+            android:layout_marginBottom="16dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/blau_clar" />
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/btnEdit"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_weight="1"
+        android:src="@drawable/baseline_mode_edit_outline_24"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:focusable="true"/>
+
+
+
+</LinearLayout>
+
+

@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -18,22 +17,29 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-
+import android.widget.Spinner;
+import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
-
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class Seccion_En_Progress extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
-
-
-    private Button buttonLogout;
 
     //Variables del usuario
     private int id;
@@ -47,11 +53,14 @@ public class Seccion_En_Progress extends AppCompatActivity implements Navigation
     private String session_id;
     private String json_datos_usuario;
     Activity activity_de_origen = Seccion_En_Progress.this;
+    String temp_userId = " ";
 
+    private IncidentAdapter incidentAdapter;
+
+    private int incidentType_seleccionado = 3;
 
     //Se inicializa la clase que realiza conexiones
     ServerController serverController = new ServerController();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +85,17 @@ public class Seccion_En_Progress extends AppCompatActivity implements Navigation
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        //Gestión de las opciones del spiner para ordenar las incidencias
+        String[] sortingOptions = {"Id", "Carretera", "Km", "Descripció", "Data d'inici"};
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sortingOptions);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner sortSpinner = findViewById(R.id.sortSpinner);
+        sortSpinner.setAdapter(spinnerAdapter);
+
+        //Por defecto ordenaremos las incidencias por fecha
+        int defaultSelectedPosition = 4;
+        sortSpinner.setSelection(defaultSelectedPosition);
+
         //Se obtiene el Intent que inició esta activity
         Intent intent = getIntent();
 
@@ -92,11 +112,11 @@ public class Seccion_En_Progress extends AppCompatActivity implements Navigation
             //Extrae todos los valores dentro de usuario
             id = userObject.getInt("id");
             name = userObject.getString("name");
-            userName = userObject.getString("userName");
-            lastName = userObject.getString("lastName");
+            userName = userObject.getString("username");
+            lastName = userObject.getString("lastname");
             email = userObject.getString("email");
             password = userObject.getString("password");
-            rolId = userObject.getInt("rolId");
+            rolId = userObject.getInt("rolid");
 
             //Extrae el userId
             session_id = json.getString("sessionId");
@@ -118,6 +138,11 @@ public class Seccion_En_Progress extends AppCompatActivity implements Navigation
             perValidarItem.setVisible(false);
             resoltesItem.setVisible(false);
             tancadesItem.setVisible(false);
+
+            //La petición para obtener todas las incidencias recibirá eun userId vacío si se trata de un técnico, pero el userId habitual si es un ciudadano
+            temp_userId = " ";
+        } else if (rolId == 3) {
+            temp_userId = String.valueOf(id);
         }
 
         //Se busca el floating button para añadir una incidencia
@@ -131,6 +156,106 @@ public class Seccion_En_Progress extends AppCompatActivity implements Navigation
             }
         });
 
+        CriptografiaController criptografiaController = new CriptografiaController();
+
+        //Se obtienen todas las incidencias con su id de usuario
+        serverController.getAllIncidencias(String.valueOf(id), String.valueOf(rolId), session_id, new Callback() {
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    //Se guarda el responsebody cifrado
+                    String json_recibido_cifrado = response.body().string();
+                    Log.d("Debug Vicent", "En progres Activity: respuesta de get all cifrada: " + json_recibido_cifrado);
+
+                    //Se descifra
+                    JSONObject json_recibido_descifrado = criptografiaController.decryptToJSONObject(json_recibido_cifrado);
+                    String responseBody = String.valueOf(json_recibido_descifrado);
+                    Log.d("Debug Vicent", "En progres Activity: respuesta de get all descifrada: " + responseBody);
+
+                    //Se crea la array de incidencias
+                    List<Incidencia> incidentList = new ArrayList<>();
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(responseBody);
+                        JSONArray jsonArray = jsonObject.getJSONArray("incidents");
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonIncident = jsonArray.getJSONObject(i);
+
+                            if (jsonIncident.getInt("incidenttypeid") == incidentType_seleccionado) {
+                                // Se parsean todos los campos de cada incidencia
+                                Incidencia incident = new Incidencia();
+                                incident.setId(jsonIncident.getInt("id"));
+                                incident.setUserId(jsonIncident.getInt("userid"));
+                                incident.setTecnicId(jsonIncident.getInt("tecnicid"));
+                                incident.setIncidentTypeId(jsonIncident.getInt("incidenttypeid"));
+                                incident.setRoadName(jsonIncident.getString("raodname"));
+                                incident.setKm(jsonIncident.getString("km"));
+                                incident.setGeo(jsonIncident.getString("geo"));
+                                incident.setDescription(jsonIncident.getString("description"));
+                                incident.setStartDate(jsonIncident.getString("startdate"));
+                                incident.setEndDate(jsonIncident.getString("enddate"));
+                                incident.setUrgent(jsonIncident.getBoolean("urgent"));
+
+                                //Se añade la incidencia a la array de incidencias
+                                incidentList.add(incident);
+                            }
+                        }
+
+                        //Actualizar el RecyclerView después de obtener los datos
+                        runOnUiThread(() -> {
+                            RecyclerView recyclerView = findViewById(R.id.recyclerView);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(Seccion_En_Progress.this));
+
+                            //El incidentAdapter recibe el listado de incidencias y el rol del usuario
+                            incidentAdapter = new IncidentAdapter(incidentList, rolId, session_id);
+                            recyclerView.setAdapter(incidentAdapter);
+                            incidentAdapter.sortBy("Data d'inici");
+                            incidentAdapter.notifyDataSetChanged();
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                            //Selección actual
+                            String selectedOption = sortingOptions[position];
+                            runOnUiThread(() -> {
+                                // UI update code here
+                                incidentAdapter.sortBy(selectedOption);
+                            });
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parentView) {
+                        }
+                    });
+                } else {
+                    // Se muestra un toast de error para el usuario
+                    Log.d("Debug Vicent", "Error al descargar las incidencias: " + response.code());
+                    runOnUiThread(() -> {
+                        Toast.makeText(Seccion_En_Progress.this, "Error al descargar las incidencias", Toast.LENGTH_LONG).show();
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(Seccion_En_Progress.this, "Error al descargar las incidencias", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+                //Hacer un logcat del error de conexión
+                Log.d("Debug Vicent", "Error al descargar las incidencias: " + e.getMessage());
+            }
+        });
     }
 
     @Override
@@ -175,5 +300,4 @@ public class Seccion_En_Progress extends AppCompatActivity implements Navigation
     public void onBackPressed() {
         Utility.logout(this, id, session_id);
     }
-
 }

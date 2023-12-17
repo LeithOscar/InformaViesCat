@@ -1,9 +1,10 @@
-package informaviescat.ioc.cat;
+/**
+ * @author Vicent Gil Esteve
+ */
 
+package informaviescat.ioc.cat;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -12,27 +13,17 @@ import android.text.SpannableString;
 import android.text.style.ClickableSpan;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.style.ClickableSpan;
-import android.text.style.URLSpan;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import java.io.IOException;
 import java.util.regex.Pattern;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
 public class AltaUsuario extends AppCompatActivity {
-
 
     //Se crean los TextInputs
     private EditText editNom;
@@ -192,24 +183,37 @@ public class AltaUsuario extends AppCompatActivity {
 
                     @Override
                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Muestra el Toast en el hilo principal
-                                Toast.makeText(AltaUsuario.this, "Compte creat correctament. Fes login amb les noves credencials.", Toast.LENGTH_LONG).show();
-                            }
-                        });
-                        Log.d("Debug Vicent", "Compte creat correctament. Fes login amb les noves credencials");
+                        final int statusCode = response.code();
 
-                        Intent intent = new Intent(AltaUsuario.this,MainActivity.class);
-                        startActivity(intent);
+                        if (statusCode == 200) {
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // Muestra el Toast en el hilo principal
+                                    Toast.makeText(AltaUsuario.this, "Compte creat correctament. Fes login amb les noves credencials.", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                            Log.d("Debug Vicent", "Alta usuario: usuario registrado correctamente con respuesta con código 200");
+
+                            Intent intent = new Intent(AltaUsuario.this, MainActivity.class);
+                            startActivity(intent);
+                        }  else {
+                            // Display error code in logs
+                            Log.e("Debug Vicent", "Error response code: " + statusCode);
+
+                            // You can also display an error Toast if needed
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(AltaUsuario.this, "Error al donar al usuari d'alta", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
                     }
                 });
-
-
             }
         });
-
     }
 
     //Función para comprobar con regex si el email tiene el formato correcto
