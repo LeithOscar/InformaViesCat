@@ -46,4 +46,9 @@
     <string name="logout">Logout</string>
     <string name="reportar_una_incidencia">Reportar una incidencia</string>
     <string name="reportar_nova_incid_ncia">Reportar nova incidència</string>
+    <string name="id_de_la_incid_ncia">ID de la incidència:</string>
+    <string name="carretera">Carretera:</string>
+    <string name="km">Km:</string>
+    <string name="descripci">Descripció:</string>
+    <string name="abans_de_ser_asignades_a_un_t_cnic_els_nostres_administradors_revisen_i_corroboren_les_incid_ncies_en_aquesta_secci">Abans de ser asignades a un tècnic, els nostres administradors revisen i corroboren les incidències en aquesta secció.</string>
 </resources>

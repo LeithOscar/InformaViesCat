@@ -94,7 +94,7 @@ public class Permisos_Test {
         SystemClock.sleep(2000);
 
         //Introduce en "password" la contraseña correcta, cierra el teclado y espera
-        onView(ViewMatchers.withId(R.id.edit_password)).perform(ViewActions.typeText("Patata45@"));
+        onView(ViewMatchers.withId(R.id.edit_password)).perform(ViewActions.typeText("1234"));
         Espresso.closeSoftKeyboard();
         SystemClock.sleep(2000);
 

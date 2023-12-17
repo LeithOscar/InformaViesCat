@@ -5,7 +5,6 @@
 package informaviescat.ioc.cat;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,7 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import org.json.JSONObject;
 import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -38,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
     //Se crean los SharedPreferences para guardar username y password con la opción "Recorda'm"
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+
+    //Instancia del controller de criptografía
+    CriptografiaController criptografiaController = new CriptografiaController();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,66 +92,71 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //Click listener para el botón de Login
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            buttonLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                //Se cogen los strings que haya en los textedits
-                String username = editUsername.getText().toString();
-                String password = editPassword.getText().toString();
+                    //Se cogen los strings que haya en los textedits
+                    String username = editUsername.getText().toString();
+                    String password = editPassword.getText().toString();
 
-                Log.d("Debug Vicent", "Username capturado: " + username);
-                Log.d("Debug Vicent", "Password capturado: " + password);
+                    Log.d("Debug Vicent", "Username capturado: " + username);
+                    Log.d("Debug Vicent", "Password capturado: " + password);
 
-                //Se lanza la función "login" del serverController
-                serverController.login(username, password, new Callback() {
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    //Se lanza la función "login" del serverController
+                    serverController.login(username, password, new Callback() {
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
 
-                        Log.d("Debug Vicent", "Login hecho con status code: " + response.code());
+                            Log.d("Debug Vicent", "Login hecho con status code: " + response.code());
 
-                        //Si se devuelve error 400 se retorna Toast para credenciales incorrectas
-                        if (response.code() == 400) {
+                            //Si se devuelve error 400 se retorna Toast para credenciales incorrectas
+                            if (response.code() == 400) {
 
-                            Log.d("Debug Vicent", "Login con credenciales incorrectas");
+                                Log.d("Debug Vicent", "Login con credenciales incorrectas");
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // Muestra el Toast en el hilo principal
+                                        Toast.makeText(MainActivity.this, "Credenciales incorrectas", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
 
+                            //Si se retorna 200 se guarda el json recibido por el servidor, que se pasa al Home intent
+                            if (response.isSuccessful() && response.code()== 200) {
+
+                                //Se guarda el responsebody cifrado
+                                String json_recibido_cifrado = response.body().string();
+                                Log.d("Debug Vicent", "Main Activity: respuesta de login cifrada: " + json_recibido_cifrado);
+
+                                //Se descifra
+                                JSONObject json_recibido_descifrado = criptografiaController.decryptToJSONObject(json_recibido_cifrado);
+                                String responseBody = String.valueOf(json_recibido_descifrado);
+                                Log.d("Debug Vicent", "Main Activity: respuesta de login descifrada: " + responseBody);
+
+                                //Se pasa al intent del Home Activity con los datos de usuario
+                                Intent intent = new Intent(MainActivity.this, Seccion_Home.class);
+                                intent.putExtra("json_datos_usuario",responseBody);
+                                startActivity(intent);
+                            }
+                        }
+
+                        //Si la respuesta falla, enseñar un Toast informando al usuario
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Log.d("Debug Vicent", "Ha fallado error en la conexión: " + e.getMessage());
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     // Muestra el Toast en el hilo principal
-                                    Toast.makeText(MainActivity.this, "Credenciales incorrectas", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this, "Error en la conexión, comprobar servidor", Toast.LENGTH_LONG).show();
                                 }
                             });
                         }
-
-                        //Si se retorna 200 se guarda el json recibido por el servidor, que se pasa al Home intent
-                        if (response.isSuccessful() && response.code()== 200) {
-
-                            //Se guarda la respuesta del servidor en un string
-                            String responseBody = response.body().string();
-                            Log.d("Debug Vicent", "Login correcto");
-                            Log.d("Debug Vicent", "JSON recibido: " + responseBody);
-                            Intent intent = new Intent(MainActivity.this, Seccion_Home.class);
-                            intent.putExtra("json_datos_usuario",responseBody);
-                            startActivity(intent);
-                        }
-                    }
-
-                    //Si la respuesta falla, enseñar un Toast informando al usuario
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Log.d("Debug Vicent", "Ha fallado error en la conexión: " + e.getMessage());
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Muestra el Toast en el hilo principal
-                                Toast.makeText(MainActivity.this, "Error en la conexión, comprobar servidor", Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                });
-            };
-        });
+                    });
+                };
+            });
 
         //Al hacer click en "done" al teclear el password se esconde el teclado
         editPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {

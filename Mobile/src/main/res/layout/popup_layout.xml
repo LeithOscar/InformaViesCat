@@ -1,0 +1,139 @@
+<!-- res/layout/popup_layout.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Carretera -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Carretera:"
+        android:textStyle="bold"
+        android:textSize="14sp"/>
+
+    <EditText
+        android:id="@+id/editTextRoadName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Introdueix la nova carretera"
+        android:textSize="14sp"/>
+
+    <!-- Km -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Km:"
+        android:textStyle="bold"
+        android:textSize="14sp"/>
+
+    <EditText
+        android:id="@+id/editTextKm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="km"
+        android:textSize="14sp"/>
+
+    <!-- Data d'inici and Data final -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Data d'inici:"
+        android:textStyle="bold"
+        android:textSize="14sp"/>
+
+    <EditText
+        android:id="@+id/editTextStartDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint=""
+        android:textSize="14sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Data final:"
+        android:textStyle="bold"
+        android:textSize="14sp"/>
+
+    <EditText
+        android:id="@+id/editTextEndDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint=""
+        android:textSize="14sp"/>
+
+    <!-- Descripció -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Descripció:"
+        android:textStyle="bold"
+        android:textSize="14sp"/>
+
+    <EditText
+        android:id="@+id/editTextDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Introdueix la nova descripció"
+        android:textSize="14sp"/>
+
+    <!-- Tècnic ID -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tècnic ID:"
+        android:textStyle="bold"
+        android:textSize="14sp"/>
+
+    <EditText
+        android:id="@+id/editTextTecnic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Introdueix el ID del nou tècnic assignat"
+        android:textSize="14sp"/>
+
+    <!-- RadioButton Group -->
+    <RadioGroup
+        android:id="@+id/radioGroupUrgent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radioButtonTrue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Urgent"
+            android:textSize="14sp"/>
+
+        <RadioButton
+            android:id="@+id/radioButtonFalse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No urgent"
+            android:textSize="14sp"/>
+    </RadioGroup>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Status de la incidència:"
+        android:textStyle="bold"
+        android:textSize="14sp"/>
+
+    <Spinner
+        android:id="@+id/spinnerIncidentType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/buttonSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Guardar canvis"
+        android:layout_gravity="center_horizontal"
+        android:textSize="14sp"/>
+</LinearLayout>

@@ -109,10 +109,7 @@ public class Alta_Test {
         //Hace click en el botón de registre
         Espresso.onView(ViewMatchers.withId(R.id.button_registre)).perform(ViewActions.click());
 
-        SystemClock.sleep(2000);
-
-        //Hace click en el botón de registre
-        Espresso.onView(ViewMatchers.withId(R.id.button_registre)).perform(ViewActions.click());
+        SystemClock.sleep(4000);
 
     }
 }
