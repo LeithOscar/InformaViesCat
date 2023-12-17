@@ -241,6 +241,35 @@ public class UserController {
         }
 
     }
+    /**
+     * Elimina el usuari
+     *
+     * @return Retorna missagte si ha elimnat OK o un badrequest
+     */
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteDesk(@RequestBody String userRemoveRequest) {
+
+        JSONObject requestJSON = AESEncryptionService.decryptToJSONObject(userRemoveRequest);
+
+        if (requestJSON == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        //Build new Object server
+        UserRemoveRequest request = new UserRemoveRequest(requestJSON.getString("sessionid"), requestJSON.getInt("userid"));
+
+        if (isSessionActive(request.sessionId)) {
+            if (userBusiness.Delete(request.userid)) {
+                return ResponseEntity.ok("");
+
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No existeix");
+
+            }
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
+    }
 
     /**
      * Decrypta una entitat user (proves)s
@@ -248,7 +277,7 @@ public class UserController {
      * @param userEncrypted
      * @return usuari encriptat
      */
-    @GetMapping("/decrypt")
+    @PostMapping("/decrypt")
     public ResponseEntity<UserResponse> decrypt(@RequestBody String userEncrypted) {
 
         UserResponse user = (UserResponse) AESEncryptionService.decryptObject(userEncrypted, UserResponse.class

@@ -153,7 +153,6 @@ public class IncidentController {
     /**
      * Modifica el incident
      *
-     * @param incident
      * @return Retorna missagte si ha creat OK o un badrequest
      */
     @PutMapping("/modify")
@@ -184,6 +183,36 @@ public class IncidentController {
     }
 
     /**
+     * Elimina el incident
+     *
+     * @return Retorna missagte si ha elimnat OK o un badrequest
+     */
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteDesk(@RequestBody String incidentRemoveRequest) {
+
+        JSONObject requestJSON = AESEncryptionService.decryptToJSONObject(incidentRemoveRequest);
+
+        if (requestJSON == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        //Build new Object server
+        IncidentRemoveRequest request = new IncidentRemoveRequest(requestJSON.getString("sessionid"), requestJSON.getInt("incidentid"));
+
+        if (isSessionActive(request.sessionId)) {
+            if (incientBusiness.Delete(request.incidentid)) {
+                return ResponseEntity.ok("");
+
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No existeix");
+
+            }
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
+    }
+    
+     /**
      * Elimina el incident
      *
      * @return Retorna missagte si ha elimnat OK o un badrequest
