@@ -42,31 +42,56 @@ public class ServerController {
      * @param callback Objeto Callback para manejar la respuesta.
      */
     public void login(String username, String password, final Callback callback) {
+        // Número máximo de intentos de conexión
+        int maxRetries = 5;
+        int currentRetry = 0;
 
-        //Se crea el JSON
-        JSONObject objeto = new JSONObject();
+        // Bucle para reintentar la conexión
+        while (currentRetry < maxRetries) {
+            try {
+                // Se crea el JSON
+                JSONObject objeto = new JSONObject();
 
-        try {
-            //Se le insertan los valores
-            objeto.put("username", username);
-            objeto.put("password", password);
-        } catch (JSONException e) {
-            e.printStackTrace();
+                // Se le insertan los valores
+                objeto.put("username", username);
+                objeto.put("password", password);
+
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de login antes de ser cifrado: " + objeto);
+
+                String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
+
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de login cifrado " + objeto_cifrado);
+
+                // Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
+                String url_peticion = protocolo + ip + ":" + puerto + endpoint_login;
+                OkHttpClient client = new OkHttpClient();
+                HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), objeto_cifrado);
+                Request request = new Request.Builder().url(urlBuilder.build()).post(requestBody).build();
+
+                // Se realiza la solicitud y se sale del bucle si tiene éxito
+                client.newCall(request).enqueue(callback);
+                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Debug Vicent", "Exception occurred: " + e.getMessage());
+
+                // Si hay un fallo, incrementa el contador de reintento
+                currentRetry++;
+
+                // Introduce un pequeño retraso antes de volver a intentar la conexión
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
 
-        Log.d("Debug Vicent", "ServerController: Objeto para petición de login antes de ser cifrado: " + objeto);
-
-        String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
-
-        Log.d("Debug Vicent", "ServerController: Objeto para petición de login cifrado " + objeto_cifrado);
-
-        //Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
-        String url_peticion = protocolo + ip + ":" + puerto + endpoint_login;
-        OkHttpClient client = new OkHttpClient();
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), objeto_cifrado);
-        Request request = new Request.Builder().url(urlBuilder.build()).post(requestBody).build();
-        client.newCall(request).enqueue(callback);
+        // Si todos los intentos fallan, muestra un mensaje o realiza alguna acción adicional
+        if (currentRetry == maxRetries) {
+            Log.d("Debug Vicent", "Se alcanzó el número máximo de intentos, conexión fallida.");
+        }
     }
 
 
@@ -78,33 +103,59 @@ public class ServerController {
      * @param callback Objeto Callback para manejar la respuesta.
      */
     public void logout(String userId, String session_id, final Callback callback) {
+        // Número máximo de intentos de conexión
+        int maxRetries = 5;
+        int currentRetry = 0;
 
-        //Se crea el JSON
-        JSONObject objeto = new JSONObject();
+        // Bucle para reintentar la conexión
+        while (currentRetry < maxRetries) {
+            try {
+                // Se crea el JSON
+                JSONObject objeto = new JSONObject();
 
-        try {
-            //Se le insertan los valores
-            objeto.put("userid", userId);
-            objeto.put("sessionid", session_id);
-        } catch (JSONException e) {
-            e.printStackTrace();
+                // Se le insertan los valores
+                objeto.put("userid", userId);
+                objeto.put("sessionid", session_id);
+
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de logout antes de ser cifrado: " + objeto);
+
+                String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
+
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de logout cifrado " + objeto_cifrado);
+
+                // Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
+                String url_peticion = protocolo + ip + ":" + puerto + endpoint_logout;
+                Log.d("Debug Vicent","Petición de logout en: " + url_peticion);
+                OkHttpClient client = new OkHttpClient();
+                HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), objeto_cifrado);
+                Request request = new Request.Builder().url(urlBuilder.build()).post(requestBody).build();
+
+                // Se realiza la solicitud y se sale del bucle si tiene éxito
+                client.newCall(request).enqueue(callback);
+                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Debug Vicent", "Exception occurred: " + e.getMessage());
+
+                // Si hay un fallo, incrementa el contador de reintento
+                currentRetry++;
+
+                // Introduce un pequeño retraso antes de volver a intentar la conexión
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
 
-        Log.d("Debug Vicent", "ServerController: Objeto para petición de logout antes de ser cifrado: " + objeto);
-
-        String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
-
-        Log.d("Debug Vicent", "ServerController: Objeto para petición de logout cifrado " + objeto_cifrado);
-
-        //Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
-        String url_peticion = protocolo + ip + ":" + puerto + endpoint_logout;
-        Log.d("Debug Vicent","Petición de logout en: " + url_peticion);
-        OkHttpClient client = new OkHttpClient();
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), objeto_cifrado);
-        Request request = new Request.Builder().url(urlBuilder.build()).post(requestBody).build();
-        client.newCall(request).enqueue(callback);
+        // Si todos los intentos fallan, muestra un mensaje o realiza alguna acción adicional
+        if (currentRetry == maxRetries) {
+            Log.d("Debug Vicent", "Se alcanzó el número máximo de intentos, conexión fallida.");
+        }
     }
+
 
     /**
      * Realiza una solicitud de registro al servidor con los datos proporcionados.
@@ -118,39 +169,64 @@ public class ServerController {
      *
      */
     public void register(String name, String lastName, String userName, String email, String password, Callback callback) {
-        try {
+        //Número máximo de intentos de conexión
+        int maxRetries = 5;
+        int currentRetry = 0;
 
-            //Se constuye el JSON que la petición PUT pasa en el body
-            JSONObject userData = new JSONObject();
-            userData.put("rolid", "3");
-            userData.put("name", name);
-            userData.put("username", userName);
-            userData.put("lastname", lastName);
-            userData.put("email", email);
-            userData.put("password", password);
-            JSONObject objeto = new JSONObject();
-            objeto.put("sessionid","");
-            objeto.put("user",userData);
+        // Bucle para reintentar la conexión
+        while (currentRetry < maxRetries) {
+            try {
+                // Se constuye el JSON que la petición PUT pasa en el body
+                JSONObject userData = new JSONObject();
+                userData.put("rolid", "3");
+                userData.put("name", name);
+                userData.put("username", userName);
+                userData.put("lastname", lastName);
+                userData.put("email", email);
+                userData.put("password", password);
+                JSONObject objeto = new JSONObject();
+                objeto.put("sessionid", "");
+                objeto.put("user", userData);
 
-            Log.d("Debug Vicent", "ServerController: Objeto para petición de register antes de ser cifrado: " + objeto);
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de register antes de ser cifrado: " + objeto);
 
-            String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
+                String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
 
-            Log.d("Debug Vicent", "ServerController: Objeto para petición de register cifrado " + objeto_cifrado);
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de register cifrado " + objeto_cifrado);
 
-            //Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
-            String url_peticion = protocolo + ip + ":" + puerto + endpoint_register;
-            Log.d("Debug Vicent","Petición de register en: " + url_peticion);
-            OkHttpClient client = new OkHttpClient();
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
-            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), String.valueOf(objeto_cifrado));
-            Request request = new Request.Builder().url(urlBuilder.build()).put(requestBody).build();
-            client.newCall(request).enqueue(callback);
+                // Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
+                String url_peticion = protocolo + ip + ":" + puerto + endpoint_register;
+                Log.d("Debug Vicent", "Petición de register en: " + url_peticion);
+                OkHttpClient client = new OkHttpClient();
+                HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), String.valueOf(objeto_cifrado));
+                Request request = new Request.Builder().url(urlBuilder.build()).put(requestBody).build();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                // Se realiza la solicitud y se sale del bucle si tiene éxito
+                client.newCall(request).enqueue(callback);
+                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Debug Vicent", "Exception occurred: " + e.getMessage());
+
+                // Si hay un fallo, incrementa el contador de reintento
+                currentRetry++;
+
+                // Introduce un pequeño retraso antes de volver a intentar la conexión
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        //Si todos los intentos fallan, muestra un mensaje o realiza alguna acción adicional
+        if (currentRetry == maxRetries) {
+            Log.d("Debug Vicent", "Se alcanzó el número máximo de intentos, conexión fallida.");
         }
     }
+
 
     /**
      * Realiza una solicitud para crear una incidencia en el servidor con los datos proporcionados.
@@ -166,43 +242,68 @@ public class ServerController {
      * @param callback Objeto Callback que manejará la respuesta de la solicitud
      */
     public void crearIncidencia(int userId, String carretera, String km, String coordenadas, String descripcio, String startDate, boolean urgent, String session_id, Callback callback) {
-        try {
+        // Número máximo de intentos de conexión
+        int maxRetries = 5;
+        int currentRetry = 0;
 
-            //Se constuye el JSON que la petición PUT pasa en el body
-            JSONObject incidenciaData = new JSONObject();
-            incidenciaData.put("userid", userId);
-            incidenciaData.put("tecnicid", 26);
-            incidenciaData.put("incidenttypeid",1);
-            incidenciaData.put("raodname", carretera);
-            incidenciaData.put("km", km);
-            incidenciaData.put("geo", coordenadas);
-            incidenciaData.put("description", descripcio);
-            incidenciaData.put("startdate", startDate);
-            incidenciaData.put("enddate", "");
-            incidenciaData.put("urgent",urgent);
-            JSONObject objeto = new JSONObject();
-            objeto.put("sessionid",session_id);
-            objeto.put("incident",incidenciaData);
+        // Bucle para reintentar la conexión
+        while (currentRetry < maxRetries) {
+            try {
+                // Se constuye el JSON que la petición PUT pasa en el body
+                JSONObject incidenciaData = new JSONObject();
+                incidenciaData.put("userid", userId);
+                incidenciaData.put("tecnicid", 26);
+                incidenciaData.put("incidenttypeid", 1);
+                incidenciaData.put("raodname", carretera);
+                incidenciaData.put("km", km);
+                incidenciaData.put("geo", coordenadas);
+                incidenciaData.put("description", descripcio);
+                incidenciaData.put("startdate", startDate);
+                incidenciaData.put("enddate", "");
+                incidenciaData.put("urgent", urgent);
+                JSONObject objeto = new JSONObject();
+                objeto.put("sessionid", session_id);
+                objeto.put("incident", incidenciaData);
 
-            Log.d("Debug Vicent", "ServerController: Objeto para petición de crear incidencia antes de ser cifrado: " + objeto);
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de crear incidencia antes de ser cifrado: " + objeto);
 
-            String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
+                String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
 
-            Log.d("Debug Vicent", "ServerController: Objeto para petición de crear incidencia cifrado " + objeto_cifrado);
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de crear incidencia cifrado " + objeto_cifrado);
 
-            //Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
-            String url_peticion = protocolo + ip + ":" + puerto + endpoint_crear_incidencia;
-            Log.d("Debug Vicent","Petición de crear incidencia en: " + url_peticion);
-            OkHttpClient client = new OkHttpClient();
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
-            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), String.valueOf(objeto_cifrado));
-            Request request = new Request.Builder().url(urlBuilder.build()).put(requestBody).build();
-            client.newCall(request).enqueue(callback);
+                // Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
+                String url_peticion = protocolo + ip + ":" + puerto + endpoint_crear_incidencia;
+                Log.d("Debug Vicent", "Petición de crear incidencia en: " + url_peticion);
+                OkHttpClient client = new OkHttpClient();
+                HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), String.valueOf(objeto_cifrado));
+                Request request = new Request.Builder().url(urlBuilder.build()).put(requestBody).build();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                // Se realiza la solicitud y se sale del bucle si tiene éxito
+                client.newCall(request).enqueue(callback);
+                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Debug Vicent", "Exception occurred: " + e.getMessage());
+
+                // Si hay un fallo, incrementa el contador de reintento
+                currentRetry++;
+
+                // Introduce un pequeño retraso antes de volver a intentar la conexión
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        // Si todos los intentos fallan, muestra un mensaje o realiza alguna acción adicional
+        if (currentRetry == maxRetries) {
+            Log.d("Debug Vicent", "Se alcanzó el número máximo de intentos, conexión fallida.");
         }
     }
+
 
     /**
      * Realiza una solicitud para modificar los datos de un usuario en el servidor.
@@ -218,43 +319,67 @@ public class ServerController {
      * @param callback Objeto Callback que manejará la respuesta de la solicitud.
      */
     public void modificarUsuario(int id, int rollId, String name, String lastName, String userName, String email, String password, String session_id, Callback callback) {
-        try {
+        // Número máximo de intentos de conexión
+        int maxRetries = 5;
+        int currentRetry = 0;
 
-            //Se constuye el JSON que la petición PUT pasa en el body
-            JSONObject userData = new JSONObject();
-            userData.put("id", id);
-            userData.put("parentid", 1);
-            userData.put("name", name);
-            userData.put("username", userName);
-            userData.put("lastname", lastName);
-            userData.put("email", email);
-            userData.put("password", password);
-            userData.put("islogged", true);
-            userData.put("rolid", rollId);
-            JSONObject objeto = new JSONObject();
-            objeto.put("sessionid", session_id);
-            objeto.put("user", userData);
+        // Bucle para reintentar la conexión
+        while (currentRetry < maxRetries) {
+            try {
+                // Se constuye el JSON que la petición PUT pasa en el body
+                JSONObject userData = new JSONObject();
+                userData.put("id", id);
+                userData.put("parentid", 1);
+                userData.put("name", name);
+                userData.put("username", userName);
+                userData.put("lastname", lastName);
+                userData.put("email", email);
+                userData.put("password", password);
+                userData.put("islogged", true);
+                userData.put("rolid", rollId);
+                JSONObject objeto = new JSONObject();
+                objeto.put("sessionid", session_id);
+                objeto.put("user", userData);
 
-            Log.d("Debug Vicent", "ServerController: Objeto para petición de modify user antes de ser cifrado: " + objeto);
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de modify user antes de ser cifrado: " + objeto);
 
-            String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
+                String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
 
-            Log.d("Debug Vicent", "ServerController: Objeto para petición de modify user cifrado " + objeto_cifrado);
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de modify user cifrado " + objeto_cifrado);
 
-            //Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
-            String url_peticion = protocolo + ip + ":" + puerto + endpoint_modificar_usuario;
-            Log.d("Debug Vicent", "Petición de modify en: " + url_peticion);
-            OkHttpClient client = new OkHttpClient();
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
-            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), objeto_cifrado);
-            Request request = new Request.Builder().url(urlBuilder.build()).put(requestBody).build();
-            client.newCall(request).enqueue(callback);
+                // Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
+                String url_peticion = protocolo + ip + ":" + puerto + endpoint_modificar_usuario;
+                Log.d("Debug Vicent", "Petición de modify en: " + url_peticion);
+                OkHttpClient client = new OkHttpClient();
+                HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), objeto_cifrado);
+                Request request = new Request.Builder().url(urlBuilder.build()).put(requestBody).build();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("Debug Vicent", "Exception occurred: " + e.getMessage());
+                // Se realiza la solicitud y se sale del bucle si tiene éxito
+                client.newCall(request).enqueue(callback);
+                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Debug Vicent", "Exception occurred: " + e.getMessage());
+
+                // Si hay un fallo, incrementa el contador de reintento
+                currentRetry++;
+
+                // Introduce un pequeño retraso antes de volver a intentar la conexión
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        // Si todos los intentos fallan, muestra un mensaje o realiza alguna acción adicional
+        if (currentRetry == maxRetries) {
+            Log.d("Debug Vicent", "Se alcanzó el número máximo de intentos, conexión fallida.");
         }
     }
+
 
     /**
      * Realiza una solicitud para eliminar un usuario en el servidor.
@@ -264,31 +389,57 @@ public class ServerController {
      * @param callback Objeto Callback que manejará la respuesta de la solicitud.
      */
     public void eliminarUsuario(int id, String session_id, Callback callback) {
-        try {
+        // Número máximo de intentos de conexión
+        int maxRetries = 5;
+        int currentRetry = 0;
 
-            JSONObject objeto = new JSONObject();
-            objeto.put("sessionid", session_id);
-            objeto.put("userid", id);
+        // Bucle para reintentar la conexión
+        while (currentRetry < maxRetries) {
+            try {
+                // Se crea el JSON
+                JSONObject objeto = new JSONObject();
+                objeto.put("sessionid", session_id);
+                objeto.put("userid", id);
 
-            Log.d("Debug Vicent", "ServerController: Objeto para petición de delete user antes de ser cifrado: " + objeto);
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de delete user antes de ser cifrado: " + objeto);
 
-            String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
+                String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
 
-            Log.d("Debug Vicent", "ServerController: Objeto para petición de delete user cifrado " + objeto_cifrado);
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de delete user cifrado " + objeto_cifrado);
 
-            //Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
-            String url_peticion = protocolo + ip + ":" + puerto + endpoint_eliminar_usuario;
-            Log.d("Debug Vicent", "Petición de delete user en: " + url_peticion);
-            OkHttpClient client = new OkHttpClient();
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
-            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), String.valueOf(objeto_cifrado));
-            Request request = new Request.Builder().url(urlBuilder.build()).delete(requestBody).build();
-            client.newCall(request).enqueue(callback);
+                // Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
+                String url_peticion = protocolo + ip + ":" + puerto + endpoint_eliminar_usuario;
+                Log.d("Debug Vicent", "Petición de delete user en: " + url_peticion);
+                OkHttpClient client = new OkHttpClient();
+                HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), String.valueOf(objeto_cifrado));
+                Request request = new Request.Builder().url(urlBuilder.build()).delete(requestBody).build();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                // Se realiza la solicitud y se sale del bucle si tiene éxito
+                client.newCall(request).enqueue(callback);
+                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Debug Vicent", "Exception occurred: " + e.getMessage());
+
+                // Si hay un fallo, incrementa el contador de reintento
+                currentRetry++;
+
+                // Introduce un pequeño retraso antes de volver a intentar la conexión
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        // Si todos los intentos fallan, muestra un mensaje o realiza alguna acción adicional
+        if (currentRetry == maxRetries) {
+            Log.d("Debug Vicent", "Se alcanzó el número máximo de intentos, conexión fallida.");
         }
     }
+
 
     /**
      * Realiza una solicitud para obtener todas las incidencias asociadas a un usuario en el servidor.
@@ -299,34 +450,59 @@ public class ServerController {
      * @param callback Objeto Callback que manejará la respuesta de la solicitud.
      */
     public void getAllIncidencias(String id, String rollId, String session_id, final Callback callback) {
+        // Número máximo de intentos de conexión
+        int maxRetries = 5;
+        int currentRetry = 0;
 
-        try {
+        // Bucle para reintentar la conexión
+        while (currentRetry < maxRetries) {
+            try {
+                // Se crea el JSON
+                JSONObject objeto = new JSONObject();
+                objeto.put("userid", id);
+                objeto.put("rolid", rollId);
+                objeto.put("sessionid", session_id);
 
-        JSONObject objeto = new JSONObject();
-        objeto.put("userid", id);
-        objeto.put("rolid", rollId);
-        objeto.put("sessionid", session_id);
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de get all incidencias antes de ser cifrado: " + objeto);
 
-        Log.d("Debug Vicent", "ServerController: Objeto para petición de get all incidencias antes de ser cifrado: " + objeto);
+                String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
 
-        String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de get all incidencias cifrado " + objeto_cifrado);
 
-        Log.d("Debug Vicent", "ServerController: Objeto para petición de get all incidencias cifrado " + objeto_cifrado);
+                // Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
+                String url_peticion = protocolo + ip + ":" + puerto + endpoint_get_all_incidencias;
+                Log.d("Debug Vicent", "Petición de get all incidencias en: " + url_peticion);
+                OkHttpClient client = new OkHttpClient();
+                HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), objeto_cifrado);
+                Request request = new Request.Builder().url(urlBuilder.build()).post(requestBody).build();
 
+                // Se realiza la solicitud y se sale del bucle si tiene éxito
+                client.newCall(request).enqueue(callback);
+                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Debug Vicent", "Exception occurred: " + e.getMessage());
 
-        //Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
-        String url_peticion = protocolo + ip + ":" + puerto + endpoint_get_all_incidencias;
-        Log.d("Debug Vicent", "Petición de get all incidencias en: " + url_peticion);
-        OkHttpClient client = new OkHttpClient();
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), objeto_cifrado);
-        Request request = new Request.Builder().url(urlBuilder.build()).post(requestBody).build();
-        client.newCall(request).enqueue(callback);
+                // Si hay un fallo, incrementa el contador de reintento
+                currentRetry++;
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                // Introduce un pequeño retraso antes de volver a intentar la conexión
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        // Si todos los intentos fallan, muestra un mensaje o realiza alguna acción adicional
+        if (currentRetry == maxRetries) {
+            Log.d("Debug Vicent", "Se alcanzó el número máximo de intentos, conexión fallida.");
         }
     }
+
+
     /**
      * Realiza una solicitud para modificar una incidencia en el servidor con los datos proporcionados.
      *
@@ -345,45 +521,70 @@ public class ServerController {
      * @param callback Objeto Callback que manejará la respuesta de la solicitud.
      */
     public void modificarIncidencia(int id, int userId, int tecnicId, int incidentType, String carretera, String km, String geo, String description, String startDate, String endDate, boolean urgent, String session_id, final Callback callback) {
+        // Número máximo de intentos de conexión
+        int maxRetries = 5;
+        int currentRetry = 0;
 
-        try {
+        // Bucle para reintentar la conexión
+        while (currentRetry < maxRetries) {
+            try {
+                // Se constuye el JSON que la petición PUT pasa en el body
+                JSONObject incidenciaData = new JSONObject();
+                incidenciaData.put("id", id);
+                incidenciaData.put("userid", userId);
+                incidenciaData.put("tecnicid", tecnicId);
+                incidenciaData.put("incidenttypeid", incidentType);
+                incidenciaData.put("raodname", carretera);
+                incidenciaData.put("km", km);
+                incidenciaData.put("geo", geo);
+                incidenciaData.put("description", description);
+                incidenciaData.put("startdate", startDate);
+                incidenciaData.put("enddate", endDate);
+                incidenciaData.put("urgent", urgent);
+                JSONObject objeto = new JSONObject();
+                objeto.put("sessionid", session_id);
+                objeto.put("incident", incidenciaData);
 
-            //Se constuye el JSON que la petición PUT pasa en el body
-            JSONObject incidenciaData = new JSONObject();
-            incidenciaData.put("id",id);
-            incidenciaData.put("userid", userId);
-            incidenciaData.put("tecnicid", tecnicId);
-            incidenciaData.put("incidenttypeid",incidentType);
-            incidenciaData.put("raodname", carretera);
-            incidenciaData.put("km", km);
-            incidenciaData.put("geo", geo);
-            incidenciaData.put("description", description);
-            incidenciaData.put("startdate", startDate);
-            incidenciaData.put("enddate", endDate);
-            incidenciaData.put("urgent",urgent);
-            JSONObject objeto = new JSONObject();
-            objeto.put("sessionid",session_id);
-            objeto.put("incident",incidenciaData);
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de modificar incidencia antes de ser cifrado: " + objeto);
 
-            Log.d("Debug Vicent", "ServerController: Objeto para petición de modificar incidencia antes de ser cifrado: " + objeto);
+                String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
 
-            String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de modificar incidencia cifrado " + objeto_cifrado);
 
-            Log.d("Debug Vicent", "ServerController: Objeto para petición de modificar incidencia cifrado " + objeto_cifrado);
+                // Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
+                String url_peticion = protocolo + ip + ":" + puerto + endpoint_modificar_incidencias;
+                Log.d("Debug Vicent", "Petición de modificar incidencia en: " + url_peticion);
+                OkHttpClient client = new OkHttpClient();
+                HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), String.valueOf(objeto_cifrado));
+                Request request = new Request.Builder().url(urlBuilder.build()).put(requestBody).build();
 
-            //Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
-            String url_peticion = protocolo + ip + ":" + puerto + endpoint_modificar_incidencias;
-            Log.d("Debug Vicent","Petición de modificar incidencia en: " + url_peticion);
-            OkHttpClient client = new OkHttpClient();
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
-            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), String.valueOf(objeto_cifrado));
-            Request request = new Request.Builder().url(urlBuilder.build()).put(requestBody).build();
-            client.newCall(request).enqueue(callback);
+                // Se realiza la solicitud y se sale del bucle si tiene éxito
+                client.newCall(request).enqueue(callback);
+                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Debug Vicent", "Exception occurred: " + e.getMessage());
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                // Si hay un fallo, incrementa el contador de reintento
+                currentRetry++;
+
+                // Introduce un pequeño retraso antes de volver a intentar la conexión
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        // Si todos los intentos fallan, muestra un mensaje o realiza alguna acción adicional
+        if (currentRetry == maxRetries) {
+            Log.d("Debug Vicent", "Se alcanzó el número máximo de intentos, conexión fallida.");
+            // Puedes agregar aquí código adicional si todos los intentos fallan
         }
     }
+
 
     /**
      * Realiza una solicitud para obtener el total de incidencias en el servidor.
@@ -392,31 +593,55 @@ public class ServerController {
      * @param callback Objeto Callback que manejará la respuesta de la solicitud.
      */
     public void getTotalIncidencias(String session_id, final Callback callback) {
+        // Número máximo de intentos de conexión
+        int maxRetries = 5;
+        int currentRetry = 0;
 
-        try {
+        // Bucle para reintentar la conexión
+        while (currentRetry < maxRetries) {
+            try {
+                JSONObject objeto = new JSONObject();
+                objeto.put("sessionid", session_id);
 
-            JSONObject objeto = new JSONObject();
-            objeto.put("sessionid", session_id);
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de get total incidencias antes de ser cifrado: " + objeto);
 
-            Log.d("Debug Vicent", "ServerController: Objeto para petición de get total incidencias antes de ser cifrado: " + objeto);
+                String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
 
-            String objeto_cifrado = criptografiaController.encryptFromJSONObject(objeto);
+                Log.d("Debug Vicent", "ServerController: Objeto para petición de get total incidencias cifrado " + objeto_cifrado);
 
-            Log.d("Debug Vicent", "ServerController: Objeto para petición de get total incidencias cifrado " + objeto_cifrado);
+                // Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
+                String url_peticion = protocolo + ip + ":" + puerto + endpoint_get_total_incidencias;
+                Log.d("Debug Vicent", "Petición de get all incidencias en: " + url_peticion);
+                OkHttpClient client = new OkHttpClient();
+                HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), objeto_cifrado);
+                Request request = new Request.Builder().url(urlBuilder.build()).post(requestBody).build();
 
-            //Se construye la URL, instancia de OKhttp y el requestbody... se hace la request
-            String url_peticion = protocolo + ip + ":" + puerto + endpoint_get_total_incidencias;
-            Log.d("Debug Vicent", "Petición de get all incidencias en: " + url_peticion);
-            OkHttpClient client = new OkHttpClient();
-            HttpUrl.Builder urlBuilder = HttpUrl.parse(url_peticion).newBuilder();
-            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), objeto_cifrado);
-            Request request = new Request.Builder().url(urlBuilder.build()).post(requestBody).build();
-            client.newCall(request).enqueue(callback);
+                // Se realiza la solicitud y se sale del bucle si tiene éxito
+                client.newCall(request).enqueue(callback);
+                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Debug Vicent", "Exception occurred: " + e.getMessage());
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                // Si hay un fallo, incrementa el contador de reintento
+                currentRetry++;
+
+                // Introduce un pequeño retraso antes de volver a intentar la conexión
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        // Si todos los intentos fallan, muestra un mensaje o realiza alguna acción adicional
+        if (currentRetry == maxRetries) {
+            Log.d("Debug Vicent", "Se alcanzó el número máximo de intentos, conexión fallida.");
         }
     }
+
 }
 
 
