@@ -140,25 +140,6 @@ public class UserController {
     }
 
     /**
-     * Obté tots els usuaris
-     *
-     * @return llistat dels usuarios
-     */
-    @PostMapping("/getall/proves")
-    public ResponseEntity<UserListResponse> getAllProves() {
-
-        var userList = userBusiness.GetAll();
-        if (userList != null) {
-
-            UserListResponse response = new UserListResponse(userList, "proves");
-
-            return ResponseEntity.ok(response);
-        }
-        return (ResponseEntity<UserListResponse>) ResponseEntity.noContent();
-
-    }
-
-    /**
      * Crea el usuari
      *
      * @param UserRequest
