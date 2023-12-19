@@ -1,8 +1,9 @@
 
 package ioc.informaviescat.Vista;
 
-import ioc.informaviescat.Controller.IncidencesManagement;
+import ioc.informaviescat.Controller.Functions;
 import ioc.informaviescat.Entities.Incident;
+import ioc.informaviescat.Entities.User;
 
 /**
  *
@@ -10,8 +11,17 @@ import ioc.informaviescat.Entities.Incident;
  */
 public class ModifyIncident extends javax.swing.JFrame {
 
+    User user;
     Incident incidentToModify;
 
+    /**
+     * Setter de l'usuari que realitza l'acció
+     */
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    
     /**
      * Assigna valor a incidentToModify i inicialitza valors
      * @param incidentToModify incident a modificar.
@@ -281,7 +291,7 @@ public class ModifyIncident extends javax.swing.JFrame {
             incidentToModify.setUrgent(false);
         }
         
-        IncidencesManagement.modifyIncident(incidentToModify);
+        Functions.modifyIncident(user, incidentToModify);
         this.dispose();
     }//GEN-LAST:event_buttonModifyActionPerformed
 

@@ -1,7 +1,7 @@
 
 package ioc.informaviescat.Vista;
 
-import ioc.informaviescat.Controller.UsersManagement;
+import ioc.informaviescat.Controller.Functions;
 import ioc.informaviescat.Entities.User;
 import static javax.swing.JOptionPane.showMessageDialog;
 
@@ -11,7 +11,15 @@ import static javax.swing.JOptionPane.showMessageDialog;
  */
 public class ModifyUser extends javax.swing.JFrame {
 
+    User user;
     User userToModify;
+
+    /**
+     * Setter de l'usuari que realitza l'acció
+     */
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     /**
      * Actualitza en la finestra de modificació l'usuari a modificar
@@ -222,7 +230,7 @@ public class ModifyUser extends javax.swing.JFrame {
             userToModify.setPassword(textPassword.getText());
             userToModify.setUserName(textUsername.getText());
             
-            UsersManagement.modifyUser(userToModify);
+            Functions.modifyUser(userToModify, user.getSessionId());
             this.dispose();
         } else{
             showMessageDialog(null, "Revisa que no hi hagi cap error en la contrasenya");

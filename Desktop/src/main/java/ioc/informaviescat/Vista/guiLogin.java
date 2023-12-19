@@ -1,8 +1,8 @@
 
 package ioc.informaviescat.Vista;
 
-import ioc.informaviescat.Controller.UserSaver;
-import ioc.informaviescat.Controller.UsersManagement;
+import ioc.informaviescat.Controller.Functions;
+import ioc.informaviescat.Entities.Response;
 import ioc.informaviescat.Entities.User;
 import javax.swing.ImageIcon;
 import static javax.swing.JOptionPane.showMessageDialog;
@@ -21,7 +21,7 @@ public class guiLogin extends javax.swing.JFrame {
         initComponents();
         
         //Recupera usuari i contrasenya guardats.
-        String[] credentials = UserSaver.restoreCredentials();
+        String[] credentials = Functions.restoreCredentials();
         textUser.setText(credentials[0]);
         textPassword.setText(credentials[1]);
         
@@ -151,14 +151,15 @@ public class guiLogin extends javax.swing.JFrame {
         //Si s'escull la opció, guarda l'usuari i contrasenya.
         System.out.println("Guardar usuari: "+checkSaveUser.isSelected());
         if(checkSaveUser.isSelected()){
-            UserSaver.saveCredentials(textUser.getText(), textPassword.getText());
+            Functions.saveCredentials(textUser.getText(), textPassword.getText());
         }
         else{
-            UserSaver.saveCredentials("", "");
+            Functions.saveCredentials("", "");
         }
             
         try{
-            User usuari = UsersManagement.login(textUser.getText(), textPassword.getText());
+            Response resposta = Functions.login(textUser.getText(), textPassword.getText());
+            User usuari = resposta.getUser();
             System.out.println("S'intenta loguejar l'usuari "+ textUser.getText()+" amb contrasenya "+textPassword.getText());
             System.out.println("    Nom: "+usuari.getName());
             System.out.println("    Cognoms: "+usuari.getLastName());
@@ -172,7 +173,7 @@ public class guiLogin extends javax.swing.JFrame {
             }
             else{
                 if(usuari.getRolId()==3){
-                    UsersManagement.logout(usuari.getSessionId(), usuari.getId());
+                    Functions.logout(usuari.getId(), usuari.getSessionId());
                     showMessageDialog(null, "Un usuari/a normal no pot fer servir l'aplicació d'escriptori");
                 }
                 else{
@@ -198,16 +199,20 @@ public class guiLogin extends javax.swing.JFrame {
      *
      */
     private void textPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textPasswordActionPerformed
+        
+        
+        //Si s'escull la opció, guarda l'usuari i contrasenya.
         System.out.println("Guardar usuari: "+checkSaveUser.isSelected());
         if(checkSaveUser.isSelected()){
-            UserSaver.saveCredentials(textUser.getText(), textPassword.getText());
+            Functions.saveCredentials(textUser.getText(), textPassword.getText());
         }
         else{
-            UserSaver.saveCredentials("", "");
+            Functions.saveCredentials("", "");
         }
             
         try{
-            User usuari = UsersManagement.login(textUser.getText(), textPassword.getText());
+            Response resposta = Functions.login(textUser.getText(), textPassword.getText());
+            User usuari = resposta.getUser();
             System.out.println("S'intenta loguejar l'usuari "+ textUser.getText()+" amb contrasenya "+textPassword.getText());
             System.out.println("    Nom: "+usuari.getName());
             System.out.println("    Cognoms: "+usuari.getLastName());
@@ -221,7 +226,7 @@ public class guiLogin extends javax.swing.JFrame {
             }
             else{
                 if(usuari.getRolId()==3){
-                    UsersManagement.logout(usuari.getSessionId(), usuari.getId());
+                    Functions.logout(usuari.getId(), usuari.getSessionId());
                     showMessageDialog(null, "Un usuari/a normal no pot fer servir l'aplicació d'escriptori");
                 }
                 else{
@@ -237,8 +242,6 @@ public class guiLogin extends javax.swing.JFrame {
                     this.dispose();
                 }
             }
-            
-            
         } catch (Exception e) {
             showMessageDialog(null, "Problema amb la connexió");
         }
