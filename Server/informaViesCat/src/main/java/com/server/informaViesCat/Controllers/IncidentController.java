@@ -170,9 +170,6 @@ public class IncidentController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
-        if (request == null) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
         if (isSessionActive(request.sessionid)) {
 
             if (incientBusiness.CreateNewIncident(request.incident)) {
