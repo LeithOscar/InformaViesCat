@@ -1,8 +1,7 @@
 
 package ioc.informaviescat.Vista;
 
-import ioc.informaviescat.Controller.IncidencesManagement;
-import ioc.informaviescat.Controller.UsersManagement;
+import ioc.informaviescat.Controller.Functions;
 import ioc.informaviescat.Entities.Incident;
 import ioc.informaviescat.Entities.User;
 import java.io.IOException;
@@ -11,8 +10,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JTable;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -48,7 +50,7 @@ public class MainScreen extends javax.swing.JFrame {
     public void setSessionType(User user) throws IOException{
         this.user = user;
         labelUser.setText(user.getName()+" "+user.getLastName());
-        llistaIncidencies = IncidencesManagement.getIncidenceList();
+        llistaIncidencies = Functions.getAllIncidents(user);
         
         for(Incident incident: llistaIncidencies){
             if(incident.getIncidentTypeId() == 1){
@@ -99,7 +101,7 @@ public class MainScreen extends javax.swing.JFrame {
                 dataValidar[i][0] = String.valueOf(llistaPerValidar.get(i).getId());
                 dataValidar[i][1] = llistaPerValidar.get(i).getRoadName();
                 dataValidar[i][2] = llistaPerValidar.get(i).getStartDate();
-                dataValidar[i][3] = IncidencesManagement.getUrgency(llistaPerValidar.get(i));
+                dataValidar[i][3] = Functions.getUrgency(llistaPerValidar.get(i));
                 dataValidar[i][4] = llistaPerValidar.get(i).getDescription();
             }
             tableConfirmar.setModel(new javax.swing.table.DefaultTableModel(
@@ -121,7 +123,7 @@ public class MainScreen extends javax.swing.JFrame {
                 dataValidated[i][0] = String.valueOf(llistaValidades.get(i).getId());
                 dataValidated[i][1] = llistaValidades.get(i).getRoadName();
                 dataValidated[i][2] = llistaValidades.get(i).getStartDate();
-                dataValidated[i][3] = IncidencesManagement.getUrgency(llistaValidades.get(i));
+                dataValidated[i][3] = Functions.getUrgency(llistaValidades.get(i));
                 dataValidated[i][4] = llistaValidades.get(i).getDescription();
             }
             tableObertes.setModel(new javax.swing.table.DefaultTableModel(
@@ -143,7 +145,7 @@ public class MainScreen extends javax.swing.JFrame {
                 dataAssigned[i][0] = String.valueOf(llistaAssignades.get(i).getId());
                 dataAssigned[i][1] = llistaAssignades.get(i).getRoadName();
                 dataAssigned[i][2] = llistaAssignades.get(i).getStartDate();
-                dataAssigned[i][3] = IncidencesManagement.getUrgency(llistaAssignades.get(i));
+                dataAssigned[i][3] = Functions.getUrgency(llistaAssignades.get(i));
                 dataAssigned[i][4] = llistaAssignades.get(i).getDescription();
             }
             tableReparacio.setModel(new javax.swing.table.DefaultTableModel(
@@ -165,7 +167,7 @@ public class MainScreen extends javax.swing.JFrame {
                 dataToClose[i][0] = String.valueOf(llistaReparades.get(i).getId());
                 dataToClose[i][1] = llistaReparades.get(i).getRoadName();
                 dataToClose[i][2] = llistaReparades.get(i).getStartDate();
-                dataToClose[i][3] = IncidencesManagement.getUrgency(llistaReparades.get(i));
+                dataToClose[i][3] = Functions.getUrgency(llistaReparades.get(i));
                 dataToClose[i][4] = llistaReparades.get(i).getDescription();
             }
             tableTancar.setModel(new javax.swing.table.DefaultTableModel(
@@ -187,7 +189,7 @@ public class MainScreen extends javax.swing.JFrame {
                 dataClosed[i][0] = String.valueOf(llistaTancades.get(i).getId());
                 dataClosed[i][1] = llistaTancades.get(i).getRoadName();
                 dataClosed[i][2] = llistaTancades.get(i).getStartDate();
-                dataClosed[i][3] = IncidencesManagement.getUrgency(llistaTancades.get(i));
+                dataClosed[i][3] = Functions.getUrgency(llistaTancades.get(i));
                 dataClosed[i][4] = llistaTancades.get(i).getDescription();
             }
             tableTancades.setModel(new javax.swing.table.DefaultTableModel(
@@ -203,9 +205,9 @@ public class MainScreen extends javax.swing.JFrame {
             tableTancades.getColumnModel().getColumn(2).setMaxWidth(120);
             tableTancades.getColumnModel().getColumn(3).setMaxWidth(100);
             
-            String[][] dataUsers = UsersManagement.getUserData();
+            String[][] dataUsers = Functions.getUserData(user);
             dataFromUsers = dataUsers;
-            llistaUsuaris = UsersManagement.getUserList();
+            llistaUsuaris = Functions.getAllUsers(user.getSessionId());
             tableUsuaris.setModel(new javax.swing.table.DefaultTableModel(
             dataUsers,
             new String [] {
@@ -241,6 +243,8 @@ public class MainScreen extends javax.swing.JFrame {
         labelUser = new javax.swing.JLabel();
         labelLevel = new javax.swing.JLabel();
         botoSortir = new javax.swing.JButton();
+        botoInformeIncidencies = new javax.swing.JButton();
+        botoBuscarIncidencia = new javax.swing.JButton();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel8 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
@@ -249,25 +253,41 @@ public class MainScreen extends javax.swing.JFrame {
         buttonVisualizeIncident = new javax.swing.JButton();
         buttonModifyIncident = new javax.swing.JButton();
         buttonCreateIncident = new javax.swing.JButton();
+        botoEliminarValidacio = new javax.swing.JButton();
+        botoOrdenaA = new javax.swing.JButton();
+        comboOrdenaA = new javax.swing.JComboBox<>();
         jPanel9 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableObertes = new javax.swing.JTable();
         buttonVisualizeIncident2 = new javax.swing.JButton();
         buttonModifyIncident2 = new javax.swing.JButton();
+        botoEliminarValidades = new javax.swing.JButton();
+        comboOrdenaB = new javax.swing.JComboBox<>();
+        botoOrdenaB = new javax.swing.JButton();
         jPanel10 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tableReparacio = new javax.swing.JTable();
         buttonVisualizeIncident3 = new javax.swing.JButton();
         buttonModifyIncident3 = new javax.swing.JButton();
+        botoEliminarAssignades = new javax.swing.JButton();
+        comboOrdenaC = new javax.swing.JComboBox<>();
+        botoOrdenaC = new javax.swing.JButton();
         jPanel11 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tableTancar = new javax.swing.JTable();
         buttonVisualizeIncident4 = new javax.swing.JButton();
         buttonModifyIncident4 = new javax.swing.JButton();
+        botoEliminarResoltes = new javax.swing.JButton();
+        comboOrdenaD = new javax.swing.JComboBox<>();
+        botoOrdenaD = new javax.swing.JButton();
         jPanel12 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         tableTancades = new javax.swing.JTable();
         buttonVisualizeIncident5 = new javax.swing.JButton();
+        botoEliminarResoltes1 = new javax.swing.JButton();
+        botoEliminarTancades = new javax.swing.JButton();
+        comboOrdenaE = new javax.swing.JComboBox<>();
+        botoOrdenaE = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane6 = new javax.swing.JScrollPane();
@@ -327,6 +347,22 @@ public class MainScreen extends javax.swing.JFrame {
             }
         });
 
+        botoInformeIncidencies.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        botoInformeIncidencies.setText("Informe d'incidències");
+        botoInformeIncidencies.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoInformeIncidenciesActionPerformed(evt);
+            }
+        });
+
+        botoBuscarIncidencia.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        botoBuscarIncidencia.setText("Buscar Incidència");
+        botoBuscarIncidencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoBuscarIncidenciaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -344,6 +380,10 @@ public class MainScreen extends javax.swing.JFrame {
                     .addComponent(labelLevel, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(botoInformeIncidencies, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                    .addComponent(botoBuscarIncidencia, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(botoRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(botoSortir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -355,18 +395,22 @@ public class MainScreen extends javax.swing.JFrame {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelImatge, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
+                        .addGap(2, 2, 2)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(labelUsuari)
                                 .addComponent(labelUser))
-                            .addComponent(botoRefresh))
+                            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(botoRefresh)
+                                .addComponent(botoInformeIncidencies)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(labelNivell)
                                 .addComponent(labelLevel))
-                            .addComponent(botoSortir))))
+                            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(botoSortir)
+                                .addComponent(botoBuscarIncidencia)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -386,6 +430,7 @@ public class MainScreen extends javax.swing.JFrame {
         tableConfirmar.setShowGrid(true);
         jScrollPane2.setViewportView(tableConfirmar);
 
+        buttonVisualizeIncident.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         buttonVisualizeIncident.setText("Visualitzar Incidència");
         buttonVisualizeIncident.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -393,6 +438,7 @@ public class MainScreen extends javax.swing.JFrame {
             }
         });
 
+        buttonModifyIncident.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         buttonModifyIncident.setText("Modificar Incidència");
         buttonModifyIncident.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -400,6 +446,7 @@ public class MainScreen extends javax.swing.JFrame {
             }
         });
 
+        buttonCreateIncident.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         buttonCreateIncident.setText("Crear Incidència");
         buttonCreateIncident.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -407,13 +454,37 @@ public class MainScreen extends javax.swing.JFrame {
             }
         });
 
+        botoEliminarValidacio.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        botoEliminarValidacio.setText("Eliminar Incidència");
+        botoEliminarValidacio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoEliminarValidacioActionPerformed(evt);
+            }
+        });
+
+        botoOrdenaA.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        botoOrdenaA.setText("Ordena");
+        botoOrdenaA.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoOrdenaAActionPerformed(evt);
+            }
+        });
+
+        comboOrdenaA.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        comboOrdenaA.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Per ID", "Carretera", "Prioritat" }));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 869, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(comboOrdenaA, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botoOrdenaA)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(botoEliminarValidacio)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonCreateIncident)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonModifyIncident)
@@ -427,9 +498,12 @@ public class MainScreen extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonVisualizeIncident)
                     .addComponent(buttonModifyIncident)
-                    .addComponent(buttonCreateIncident))
+                    .addComponent(buttonCreateIncident)
+                    .addComponent(botoEliminarValidacio)
+                    .addComponent(botoOrdenaA)
+                    .addComponent(comboOrdenaA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
@@ -465,6 +539,7 @@ public class MainScreen extends javax.swing.JFrame {
         tableObertes.setShowGrid(true);
         jScrollPane1.setViewportView(tableObertes);
 
+        buttonVisualizeIncident2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         buttonVisualizeIncident2.setText("Visualitzar Incidència");
         buttonVisualizeIncident2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -472,10 +547,30 @@ public class MainScreen extends javax.swing.JFrame {
             }
         });
 
+        buttonModifyIncident2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         buttonModifyIncident2.setText("Modificar Incidència");
         buttonModifyIncident2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonModifyIncident2ActionPerformed(evt);
+            }
+        });
+
+        botoEliminarValidades.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        botoEliminarValidades.setText("Eliminar Incidència");
+        botoEliminarValidades.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoEliminarValidadesActionPerformed(evt);
+            }
+        });
+
+        comboOrdenaB.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        comboOrdenaB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Per ID", "Carretera", "Prioritat" }));
+
+        botoOrdenaB.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        botoOrdenaB.setText("Ordena");
+        botoOrdenaB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoOrdenaBActionPerformed(evt);
             }
         });
 
@@ -488,7 +583,12 @@ public class MainScreen extends javax.swing.JFrame {
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 869, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(comboOrdenaB, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(botoOrdenaB)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botoEliminarValidades)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonModifyIncident2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonVisualizeIncident2)))
@@ -500,9 +600,13 @@ public class MainScreen extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonVisualizeIncident2)
-                    .addComponent(buttonModifyIncident2))
+                    .addComponent(buttonModifyIncident2)
+                    .addComponent(botoEliminarValidades)
+                    .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(botoOrdenaB)
+                        .addComponent(comboOrdenaB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -522,6 +626,7 @@ public class MainScreen extends javax.swing.JFrame {
         tableReparacio.setShowGrid(true);
         jScrollPane3.setViewportView(tableReparacio);
 
+        buttonVisualizeIncident3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         buttonVisualizeIncident3.setText("Visualitzar Incidència");
         buttonVisualizeIncident3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -529,10 +634,30 @@ public class MainScreen extends javax.swing.JFrame {
             }
         });
 
+        buttonModifyIncident3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         buttonModifyIncident3.setText("Modificar Incidència");
         buttonModifyIncident3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonModifyIncident3ActionPerformed(evt);
+            }
+        });
+
+        botoEliminarAssignades.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        botoEliminarAssignades.setText("Eliminar Incidència");
+        botoEliminarAssignades.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoEliminarAssignadesActionPerformed(evt);
+            }
+        });
+
+        comboOrdenaC.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        comboOrdenaC.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Per ID", "Carretera", "Prioritat" }));
+
+        botoOrdenaC.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        botoOrdenaC.setText("Ordena");
+        botoOrdenaC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoOrdenaCActionPerformed(evt);
             }
         });
 
@@ -545,7 +670,12 @@ public class MainScreen extends javax.swing.JFrame {
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 869, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(comboOrdenaC, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(botoOrdenaC)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botoEliminarAssignades)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonModifyIncident3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonVisualizeIncident3)))
@@ -557,9 +687,13 @@ public class MainScreen extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonVisualizeIncident3)
-                    .addComponent(buttonModifyIncident3))
+                    .addComponent(buttonModifyIncident3)
+                    .addComponent(botoEliminarAssignades)
+                    .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(botoOrdenaC)
+                        .addComponent(comboOrdenaC, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -579,6 +713,7 @@ public class MainScreen extends javax.swing.JFrame {
         tableTancar.setShowGrid(true);
         jScrollPane4.setViewportView(tableTancar);
 
+        buttonVisualizeIncident4.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         buttonVisualizeIncident4.setText("Visualitzar Incidència");
         buttonVisualizeIncident4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -586,10 +721,30 @@ public class MainScreen extends javax.swing.JFrame {
             }
         });
 
+        buttonModifyIncident4.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         buttonModifyIncident4.setText("Modificar Incidència");
         buttonModifyIncident4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonModifyIncident4ActionPerformed(evt);
+            }
+        });
+
+        botoEliminarResoltes.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        botoEliminarResoltes.setText("Eliminar Incidència");
+        botoEliminarResoltes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoEliminarResoltesActionPerformed(evt);
+            }
+        });
+
+        comboOrdenaD.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        comboOrdenaD.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Per ID", "Carretera", "Prioritat" }));
+
+        botoOrdenaD.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        botoOrdenaD.setText("Ordena");
+        botoOrdenaD.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoOrdenaDActionPerformed(evt);
             }
         });
 
@@ -602,7 +757,12 @@ public class MainScreen extends javax.swing.JFrame {
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 869, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(comboOrdenaD, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(botoOrdenaD)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botoEliminarResoltes)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonModifyIncident4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonVisualizeIncident4)))
@@ -614,9 +774,13 @@ public class MainScreen extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonVisualizeIncident4)
-                    .addComponent(buttonModifyIncident4))
+                    .addComponent(buttonModifyIncident4)
+                    .addComponent(botoEliminarResoltes)
+                    .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(botoOrdenaD)
+                        .addComponent(comboOrdenaD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -636,10 +800,32 @@ public class MainScreen extends javax.swing.JFrame {
         tableTancades.setShowGrid(true);
         jScrollPane5.setViewportView(tableTancades);
 
+        buttonVisualizeIncident5.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         buttonVisualizeIncident5.setText("Visualitzar Incidència");
         buttonVisualizeIncident5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonVisualizeIncident5ActionPerformed(evt);
+            }
+        });
+
+        botoEliminarResoltes1.setText("Eliminar Incidència");
+
+        botoEliminarTancades.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        botoEliminarTancades.setText("Eliminar Incidència");
+        botoEliminarTancades.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoEliminarTancadesActionPerformed(evt);
+            }
+        });
+
+        comboOrdenaE.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        comboOrdenaE.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Per ID", "Carretera", "Prioritat" }));
+
+        botoOrdenaE.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        botoOrdenaE.setText("Ordena");
+        botoOrdenaE.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botoOrdenaEActionPerformed(evt);
             }
         });
 
@@ -652,18 +838,38 @@ public class MainScreen extends javax.swing.JFrame {
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 869, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(comboOrdenaE, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(botoOrdenaE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botoEliminarTancades)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonVisualizeIncident5)))
                 .addContainerGap())
+            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel12Layout.createSequentialGroup()
+                    .addGap(375, 375, 375)
+                    .addComponent(botoEliminarResoltes1)
+                    .addContainerGap(376, Short.MAX_VALUE)))
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(buttonVisualizeIncident5)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonVisualizeIncident5)
+                    .addComponent(botoEliminarTancades)
+                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(botoOrdenaE)
+                        .addComponent(comboOrdenaE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel12Layout.createSequentialGroup()
+                    .addGap(226, 226, 226)
+                    .addComponent(botoEliminarResoltes1)
+                    .addContainerGap(227, Short.MAX_VALUE)))
         );
 
         jTabbedPane2.addTab("Incidències Tancades", jPanel12);
@@ -727,7 +933,7 @@ public class MainScreen extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(533, Short.MAX_VALUE)
                 .addComponent(botoAddUser)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(botoModifyUser)
@@ -781,7 +987,7 @@ public class MainScreen extends javax.swing.JFrame {
      */
     private void botoRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoRefreshActionPerformed
         
-        llistaIncidencies = IncidencesManagement.getIncidenceList();
+        llistaIncidencies = Functions.getAllIncidents(user);
         
         llistaPerValidar.clear(); llistaValidades.clear(); llistaAssignades.clear(); llistaReparades.clear(); llistaTancades.clear();
         
@@ -805,13 +1011,9 @@ public class MainScreen extends javax.swing.JFrame {
         
         if(user.getRolId() == 1){
             String[][] dataUsers = null;
-            try {
-                dataUsers = UsersManagement.getUserData();
-                dataFromUsers = dataUsers;
-                llistaUsuaris = UsersManagement.getUserList();
-            } catch (IOException ex) {
-                Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            dataUsers = Functions.getUserData(user);
+            dataFromUsers = dataUsers;
+            llistaUsuaris = Functions.getAllUsers(user.getSessionId());
             tableUsuaris.setModel(new javax.swing.table.DefaultTableModel(
                 dataUsers,
                 new String [] {
@@ -825,7 +1027,7 @@ public class MainScreen extends javax.swing.JFrame {
                 dataValidar[i][0] = String.valueOf(llistaPerValidar.get(i).getId());
                 dataValidar[i][1] = llistaPerValidar.get(i).getRoadName();
                 dataValidar[i][2] = llistaPerValidar.get(i).getStartDate();
-                dataValidar[i][3] = IncidencesManagement.getUrgency(llistaPerValidar.get(i));
+                dataValidar[i][3] = Functions.getUrgency(llistaPerValidar.get(i));
                 dataValidar[i][4] = llistaPerValidar.get(i).getDescription();
             }
             tableConfirmar.setModel(new javax.swing.table.DefaultTableModel(
@@ -847,7 +1049,7 @@ public class MainScreen extends javax.swing.JFrame {
                 dataValidated[i][0] = String.valueOf(llistaValidades.get(i).getId());
                 dataValidated[i][1] = llistaValidades.get(i).getRoadName();
                 dataValidated[i][2] = llistaValidades.get(i).getStartDate();
-                dataValidated[i][3] = IncidencesManagement.getUrgency(llistaValidades.get(i));
+                dataValidated[i][3] = Functions.getUrgency(llistaValidades.get(i));
                 dataValidated[i][4] = llistaValidades.get(i).getDescription();
             }
             tableObertes.setModel(new javax.swing.table.DefaultTableModel(
@@ -869,7 +1071,7 @@ public class MainScreen extends javax.swing.JFrame {
                 dataAssigned[i][0] = String.valueOf(llistaAssignades.get(i).getId());
                 dataAssigned[i][1] = llistaAssignades.get(i).getRoadName();
                 dataAssigned[i][2] = llistaAssignades.get(i).getStartDate();
-                dataAssigned[i][3] = IncidencesManagement.getUrgency(llistaAssignades.get(i));
+                dataAssigned[i][3] = Functions.getUrgency(llistaAssignades.get(i));
                 dataAssigned[i][4] = llistaAssignades.get(i).getDescription();
             }
             tableReparacio.setModel(new javax.swing.table.DefaultTableModel(
@@ -891,7 +1093,7 @@ public class MainScreen extends javax.swing.JFrame {
                 dataToClose[i][0] = String.valueOf(llistaReparades.get(i).getId());
                 dataToClose[i][1] = llistaReparades.get(i).getRoadName();
                 dataToClose[i][2] = llistaReparades.get(i).getStartDate();
-                dataToClose[i][3] = IncidencesManagement.getUrgency(llistaReparades.get(i));
+                dataToClose[i][3] = Functions.getUrgency(llistaReparades.get(i));
                 dataToClose[i][4] = llistaReparades.get(i).getDescription();
             }
             tableTancar.setModel(new javax.swing.table.DefaultTableModel(
@@ -913,7 +1115,7 @@ public class MainScreen extends javax.swing.JFrame {
                 dataClosed[i][0] = String.valueOf(llistaTancades.get(i).getId());
                 dataClosed[i][1] = llistaTancades.get(i).getRoadName();
                 dataClosed[i][2] = llistaTancades.get(i).getStartDate();
-                dataClosed[i][3] = IncidencesManagement.getUrgency(llistaTancades.get(i));
+                dataClosed[i][3] = Functions.getUrgency(llistaTancades.get(i));
                 dataClosed[i][4] = llistaTancades.get(i).getDescription();
             }
             tableTancades.setModel(new javax.swing.table.DefaultTableModel(
@@ -934,13 +1136,9 @@ public class MainScreen extends javax.swing.JFrame {
             
         }
         String[][] dataUsers = null;
-        try {
-            dataUsers = UsersManagement.getUserData();
-            dataFromUsers = dataUsers;
-            llistaUsuaris = UsersManagement.getUserList();
-        } catch (IOException ex) {
-            Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        dataUsers = Functions.getUserData(user);
+        dataFromUsers = dataUsers;
+        llistaUsuaris = Functions.getAllUsers(user.getSessionId());
         tableUsuaris.setModel(new javax.swing.table.DefaultTableModel(
             dataUsers,
             new String [] {
@@ -955,7 +1153,7 @@ public class MainScreen extends javax.swing.JFrame {
      * *@param evt event del botó apretat
      */
     private void botoSortirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoSortirActionPerformed
-        UsersManagement.logout(user.getSessionId(), user.getId());
+        Functions.logout(user.getId(), user.getSessionId());
         this.dispose();
         //Es crea l'objecta finestra de login
         guiLogin guilogin = new guiLogin();
@@ -974,6 +1172,7 @@ public class MainScreen extends javax.swing.JFrame {
      */
     private void botoAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoAddUserActionPerformed
         CreateNewUser createUser = new CreateNewUser();
+        createUser.setUser(user);
         createUser.setLocationRelativeTo(null);
         createUser.setIconImage(img.getImage());
         createUser.setVisible(true);
@@ -1004,6 +1203,7 @@ public class MainScreen extends javax.swing.JFrame {
         
         //Es crida una finestra de modificació
         ModifyUser modificacioUsuari = new ModifyUser();
+        modificacioUsuari.setUser(user);
         modificacioUsuari.setUserToModify(usuariAModificar);
         modificacioUsuari.setLocationRelativeTo(null);
         modificacioUsuari.setIconImage(img.getImage());
@@ -1035,6 +1235,7 @@ public class MainScreen extends javax.swing.JFrame {
         }
         
         DeleteUser eliminacioUsuari = new DeleteUser();
+        eliminacioUsuari.setUser(user);
         eliminacioUsuari.setUserToDelete(usuariAEliminar);
         eliminacioUsuari.setLocationRelativeTo(null);
         eliminacioUsuari.setIconImage(img.getImage());
@@ -1048,7 +1249,7 @@ public class MainScreen extends javax.swing.JFrame {
      */
     private void buttonCreateIncidentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateIncidentActionPerformed
         CreateIncident createIncident = new CreateIncident();
-        createIncident.setUserId(this.user.getId());
+        createIncident.setUser(user);
         createIncident.setLocationRelativeTo(null);
         createIncident.setIconImage(img.getImage());
         createIncident.setVisible(true);
@@ -1136,6 +1337,110 @@ public class MainScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonModifyIncident4ActionPerformed
 
     /**
+     * L'acció del botó botoEliminarValidacio, obre una finestra per a eliminar-la
+     *
+     * *@param evt event del botó apretat
+     */
+    private void botoEliminarValidacioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoEliminarValidacioActionPerformed
+        accioBotoEliminar(tableConfirmar, llistaPerValidar, dataValidar);
+    }//GEN-LAST:event_botoEliminarValidacioActionPerformed
+
+    /**
+     * L'acció del botó botoEliminarValidades, obre una finestra per a eliminar-la
+     *
+     * *@param evt event del botó apretat
+     */
+    private void botoEliminarValidadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoEliminarValidadesActionPerformed
+        accioBotoEliminar(tableObertes, llistaValidades, dataValidated);
+    }//GEN-LAST:event_botoEliminarValidadesActionPerformed
+
+    /**
+     * L'acció del botó botoEliminarAssignades, obre una finestra per a eliminar-la
+     *
+     * *@param evt event del botó apretat
+     */
+    private void botoEliminarAssignadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoEliminarAssignadesActionPerformed
+        accioBotoEliminar(tableReparacio, llistaAssignades, dataAssigned);
+    }//GEN-LAST:event_botoEliminarAssignadesActionPerformed
+
+    /**
+     * L'acció del botó botoEliminarResoltes, obre una finestra per a eliminar-la
+     *
+     * *@param evt event del botó apretat
+     */
+    private void botoEliminarResoltesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoEliminarResoltesActionPerformed
+        accioBotoEliminar(tableTancar, llistaReparades, dataToClose);
+    }//GEN-LAST:event_botoEliminarResoltesActionPerformed
+
+    /**
+     * L'acció del botó botoEliminarTancades, obre una finestra per a eliminar-la
+     *
+     * *@param evt event del botó apretat
+     */
+    private void botoEliminarTancadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoEliminarTancadesActionPerformed
+        accioBotoEliminar(tableTancades, llistaTancades, dataClosed);
+    }//GEN-LAST:event_botoEliminarTancadesActionPerformed
+
+    /**
+     * L'acció del botó generar informe
+     *
+     * *@param evt event del botó apretat
+     */
+    private void botoInformeIncidenciesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoInformeIncidenciesActionPerformed
+        
+        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        fileChooser.setApproveButtonText("Sel·lecciona carpeta");
+        int returnValue = fileChooser.showOpenDialog(null);
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            
+            String selectedDirectoryPath = fileChooser.getSelectedFile().getAbsolutePath();
+            System.out.println("Directori seleccionat: " + selectedDirectoryPath);
+            Functions.reportGenerator(llistaUsuaris, llistaIncidencies, selectedDirectoryPath);
+            
+        } else {
+            System.out.println("Selecció de directori cancel·lada");
+        }
+    }//GEN-LAST:event_botoInformeIncidenciesActionPerformed
+
+    /**
+     * L'acció del botó buscar incidències
+     *
+     * *@param evt event del botó apretat
+     */
+    private void botoBuscarIncidenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoBuscarIncidenciaActionPerformed
+        
+        SearchIncidence searchIncident = new SearchIncidence();
+        searchIncident.setLocationRelativeTo(null);
+        searchIncident.setLlistaIncident(llistaIncidencies);
+        searchIncident.setIconImage(img.getImage());
+        searchIncident.setVisible(true);
+        
+    }//GEN-LAST:event_botoBuscarIncidenciaActionPerformed
+
+    private void botoOrdenaAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoOrdenaAActionPerformed
+        accioBotoOrdenar(comboOrdenaA, dataValidar, tableConfirmar);
+    }//GEN-LAST:event_botoOrdenaAActionPerformed
+
+    private void botoOrdenaEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoOrdenaEActionPerformed
+        accioBotoOrdenar(comboOrdenaE, dataClosed, tableTancades);
+    }//GEN-LAST:event_botoOrdenaEActionPerformed
+
+    private void botoOrdenaDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoOrdenaDActionPerformed
+        accioBotoOrdenar(comboOrdenaD, dataToClose, tableTancar);
+    }//GEN-LAST:event_botoOrdenaDActionPerformed
+
+    private void botoOrdenaCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoOrdenaCActionPerformed
+        accioBotoOrdenar(comboOrdenaC, dataAssigned, tableReparacio);
+    }//GEN-LAST:event_botoOrdenaCActionPerformed
+
+    private void botoOrdenaBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botoOrdenaBActionPerformed
+        accioBotoOrdenar(comboOrdenaB, dataValidated, tableObertes);
+    }//GEN-LAST:event_botoOrdenaBActionPerformed
+
+    /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -1168,6 +1473,61 @@ public class MainScreen extends javax.swing.JFrame {
                 new MainScreen().setVisible(true);
             }
         });
+    }
+    
+    /**
+     * La funció que executaran tots els botons de ordenar incidència
+     *
+     * @param jCombo jcombo d'on s'extreu quin tipus de sort es vol fer
+     * @param llista array que s'ordenarà i s'escriurà a la taula
+     * @param table Taula d'on extreure la incidència seleccionada
+     */
+    public void accioBotoOrdenar(JComboBox jCombo, String[][] llista, JTable table){
+        if(jCombo.getSelectedIndex() == 0){
+            llista = Functions.sortByID(llista);
+            table.setModel(new javax.swing.table.DefaultTableModel(
+            llista,
+            new String [] {
+                "ID", "Carretera", "Data Inici", "Prioritat", "Descripció"
+                }
+            ));
+            table.getColumnModel().getColumn(0).setMinWidth(75);
+            table.getColumnModel().getColumn(0).setMaxWidth(75);
+            table.getColumnModel().getColumn(1).setMinWidth(150);
+            table.getColumnModel().getColumn(1).setMaxWidth(150);
+            table.getColumnModel().getColumn(2).setMaxWidth(120);
+            table.getColumnModel().getColumn(3).setMaxWidth(100);
+        }
+        else if(jCombo.getSelectedIndex() == 1){
+            llista = Functions.sortByRoad(llista);
+            table.setModel(new javax.swing.table.DefaultTableModel(
+            llista,
+            new String [] {
+                "ID", "Carretera", "Data Inici", "Prioritat", "Descripció"
+                }
+            ));
+            table.getColumnModel().getColumn(0).setMinWidth(75);
+            table.getColumnModel().getColumn(0).setMaxWidth(75);
+            table.getColumnModel().getColumn(1).setMinWidth(150);
+            table.getColumnModel().getColumn(1).setMaxWidth(150);
+            table.getColumnModel().getColumn(2).setMaxWidth(120);
+            table.getColumnModel().getColumn(3).setMaxWidth(100);
+        }
+        else{
+            llista = Functions.sortByPriority(llista);
+            table.setModel(new javax.swing.table.DefaultTableModel(
+            llista,
+            new String [] {
+                "ID", "Carretera", "Data Inici", "Prioritat", "Descripció"
+                }
+            ));
+            table.getColumnModel().getColumn(0).setMinWidth(75);
+            table.getColumnModel().getColumn(0).setMaxWidth(75);
+            table.getColumnModel().getColumn(1).setMinWidth(150);
+            table.getColumnModel().getColumn(1).setMaxWidth(150);
+            table.getColumnModel().getColumn(2).setMaxWidth(120);
+            table.getColumnModel().getColumn(3).setMaxWidth(100);
+        }
     }
     
     /**
@@ -1226,16 +1586,62 @@ public class MainScreen extends javax.swing.JFrame {
         }
         
         ModifyIncident modifyIncident = new ModifyIncident();
+        modifyIncident.setUser(user);
         modifyIncident.setLocationRelativeTo(null);
         modifyIncident.setIconImage(img.getImage());
         modifyIncident.setIncidentToModify(incidentToModify);
         modifyIncident.setVisible(true);
     }
+    
+    /**
+     * La funció que executaran tots els botons de eliminar incidència
+     *
+     * @param table Taula d'on extreure la incidència seleccionada
+     * @param list Llista d'on treure l'objecte incident
+     * @param stringList String[][] d'on extreure la incidència
+     */
+    public void accioBotoEliminar(JTable table, List<Incident> list, String[][] stringList){
+        int seleccio = table.getSelectedRow();
+        System.out.println(seleccio);
+        Incident incidentToModify = null;
+        try{
+            String idIncidence = stringList[seleccio][0];
+            int intIdIncidence = Integer.parseInt(idIncidence);
+            System.out.println("ID incidència: "+idIncidence);
+            for(Incident incident: list){
+                if(incident.getId() == intIdIncidence){
+                    incidentToModify = incident;
+                }
+            }
+        } catch(Exception e){
+            showMessageDialog(null, "Has de sel·leccionar una incidència!");
+        }
+        
+        DeleteIncident deleteIncident = new DeleteIncident();
+        deleteIncident.setUser(user);
+        deleteIncident.setLocationRelativeTo(null);
+        deleteIncident.setIconImage(img.getImage());
+        deleteIncident.setIncident(incidentToModify);
+        deleteIncident.setVisible(true);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botoAddUser;
+    private javax.swing.JButton botoBuscarIncidencia;
     private javax.swing.JButton botoDeleteUser;
+    private javax.swing.JButton botoEliminarAssignades;
+    private javax.swing.JButton botoEliminarResoltes;
+    private javax.swing.JButton botoEliminarResoltes1;
+    private javax.swing.JButton botoEliminarTancades;
+    private javax.swing.JButton botoEliminarValidacio;
+    private javax.swing.JButton botoEliminarValidades;
+    private javax.swing.JButton botoInformeIncidencies;
     private javax.swing.JButton botoModifyUser;
+    private javax.swing.JButton botoOrdenaA;
+    private javax.swing.JButton botoOrdenaB;
+    private javax.swing.JButton botoOrdenaC;
+    private javax.swing.JButton botoOrdenaD;
+    private javax.swing.JButton botoOrdenaE;
     private javax.swing.JButton botoRefresh;
     private javax.swing.JButton botoSortir;
     private javax.swing.JButton buttonCreateIncident;
@@ -1248,6 +1654,11 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JButton buttonVisualizeIncident3;
     private javax.swing.JButton buttonVisualizeIncident4;
     private javax.swing.JButton buttonVisualizeIncident5;
+    private javax.swing.JComboBox<String> comboOrdenaA;
+    private javax.swing.JComboBox<String> comboOrdenaB;
+    private javax.swing.JComboBox<String> comboOrdenaC;
+    private javax.swing.JComboBox<String> comboOrdenaD;
+    private javax.swing.JComboBox<String> comboOrdenaE;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;

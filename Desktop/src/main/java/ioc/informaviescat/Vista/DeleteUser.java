@@ -1,7 +1,7 @@
 
 package ioc.informaviescat.Vista;
 
-import ioc.informaviescat.Controller.UsersManagement;
+import ioc.informaviescat.Controller.Functions;
 import ioc.informaviescat.Entities.User;
 
 /**
@@ -10,8 +10,17 @@ import ioc.informaviescat.Entities.User;
  */
 public class DeleteUser extends javax.swing.JFrame {
 
+    User user;
     User userToDelete;
 
+    /**
+     * Setter de User que realitza la acció
+     */
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    
     /**
      * Actualitza en la finestra de eliminació l'usuari a eliminar
      *
@@ -23,7 +32,7 @@ public class DeleteUser extends javax.swing.JFrame {
         textName.setText(userToDelete.getName());
         textLastname.setText(userToDelete.getLastName());
         textUsername.setText(userToDelete.getUserName());
-        textRole.setText(UsersManagement.getRole(userToDelete.getRolId()));
+        textRole.setText(Functions.getRole(userToDelete.getRolId()));
     }
     
     /**
@@ -166,7 +175,7 @@ public class DeleteUser extends javax.swing.JFrame {
      * *@param evt event del botó apretat
      */
     private void buttonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteActionPerformed
-        UsersManagement.deleteUser(userToDelete);
+        Functions.deleteUser(userToDelete, user);
         this.dispose();
     }//GEN-LAST:event_buttonDeleteActionPerformed
 

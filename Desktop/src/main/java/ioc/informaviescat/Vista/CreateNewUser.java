@@ -1,7 +1,7 @@
 
 package ioc.informaviescat.Vista;
 
-import ioc.informaviescat.Controller.UsersManagement;
+import ioc.informaviescat.Controller.Functions;
 import ioc.informaviescat.Entities.User;
 import static javax.swing.JOptionPane.showMessageDialog;
 
@@ -11,6 +11,15 @@ import static javax.swing.JOptionPane.showMessageDialog;
  */
 public class CreateNewUser extends javax.swing.JFrame {
 
+    User user;
+
+    /**
+     * Setter de User que realitza l'acció
+     */
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
     /**
      * Creates new form CreateNewUser
      */
@@ -193,7 +202,7 @@ public class CreateNewUser extends javax.swing.JFrame {
             newUser.setPassword(password);
             newUser.setRolId(comboRol.getSelectedIndex()+1);
             
-            UsersManagement.createUser(newUser);
+            Functions.createUser(newUser, user.getSessionId());
             this.dispose();
         }
         else{

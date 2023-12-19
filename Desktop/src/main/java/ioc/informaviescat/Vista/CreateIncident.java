@@ -1,8 +1,9 @@
 
 package ioc.informaviescat.Vista;
 
-import ioc.informaviescat.Controller.IncidencesManagement;
+import ioc.informaviescat.Controller.Functions;
 import ioc.informaviescat.Entities.Incident;
+import ioc.informaviescat.Entities.User;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -12,11 +13,15 @@ import java.util.Date;
  */
 public class CreateIncident extends javax.swing.JFrame {
 
-    int userId;
+    User user;
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    /**
+     * Setter de User que realitza l'acció
+     */
+    public void setUser(User user) {
+        this.user = user;
     }
+
     /**
      * Creates new form CreateIncident
      */
@@ -175,7 +180,7 @@ public class CreateIncident extends javax.swing.JFrame {
     private void buttonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateActionPerformed
         Incident nouIncident = new Incident();
         nouIncident.setDescription(textDescription.getText());
-        nouIncident.setUserId(userId);
+        nouIncident.setUserId(user.getId());
         nouIncident.setTecnicId(2);
         nouIncident.setIncidentTypeId(1);
         nouIncident.setRoadName(textCarretera.getText());
@@ -187,13 +192,14 @@ public class CreateIncident extends javax.swing.JFrame {
         }
         nouIncident.setKM(textPuntQuilometric.getText());
         nouIncident.setGeo(textCoordenades.getText());
+        nouIncident.setEndDate("-");
         
         Date currentDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = sdf.format(currentDate);
         nouIncident.setStartDate(formattedDate);
         
-        IncidencesManagement.createIncident(nouIncident);
+        Functions.createIncident(user, nouIncident);
         
         this.dispose();
     }//GEN-LAST:event_buttonCreateActionPerformed

@@ -1,7 +1,7 @@
 
 package ioc.informaviescat.Vista;
 
-import ioc.informaviescat.Controller.IncidencesManagement;
+import ioc.informaviescat.Controller.Functions;
 import ioc.informaviescat.Entities.Incident;
 
 /**
@@ -23,9 +23,9 @@ public class VisualizeIncident extends javax.swing.JFrame {
         this.textIdTechnician.setText(String.valueOf(this.incident.getTecnicId()));
         this.textIdUser.setText(String.valueOf(this.incident.getUserId()));
         this.textKM.setText(incident.getKM());
-        this.textPriority.setText(IncidencesManagement.getUrgency(incident));
+        this.textPriority.setText(Functions.getUrgency(incident));
         this.textRoad.setText(incident.getRoadName());
-        this.textState.setText(IncidencesManagement.getIncidentType(incident));
+        this.textState.setText(Functions.getIncidentType(incident));
     }
     /**
      * Creates new form VisualizeIncident

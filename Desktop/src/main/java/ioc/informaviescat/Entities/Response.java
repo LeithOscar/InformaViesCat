@@ -16,4 +16,14 @@ public class Response {
     public String getSessionId(){
         return sessionId;
     }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+    
+    
 }
