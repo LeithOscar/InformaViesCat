@@ -21,6 +21,10 @@ public interface IUserRepository {
     boolean Exist(int id);
 
     List<User> GetAll();
+    
+    List<User> GetAllByRol(int rolId);
+    
+    List<User> GetAllWithoutIncidents() ;
 
     boolean Modify(User user);
 

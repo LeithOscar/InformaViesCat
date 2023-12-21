@@ -10,7 +10,9 @@ import com.server.informaViesCat.Entities.User.UserRemoveRequest;
 import com.server.informaViesCat.Entities.User.UserRequest;
 import com.server.informaViesCat.Entities.User.UserResponse;
 import com.server.informaViesCat.Interfaces.IRepository.ISessionRepository;
+import com.server.informaViesCat.Interfaces.IRepository.IUserRepository;
 import com.server.informaViesCat.Repository.SessionRepository;
+import com.server.informaViesCat.Repository.UserRepository;
 import java.util.UUID;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -19,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,11 +37,13 @@ public class UserController {
 
     private UserBusiness userBusiness = null;
     private ISessionRepository sessionRepo = null;
+    private IUserRepository userRepo = null;
 
     public UserController() {
 
         this.userBusiness = new UserBusiness();
         this.sessionRepo = new SessionRepository();
+        this.userRepo = new UserRepository();
 
     }
 
@@ -140,6 +143,64 @@ public class UserController {
     }
 
     /**
+     * Obté tots els usuaris segon el rol indicat
+     *
+     * @return llistat dels usuarios por rol id
+     */
+    @PostMapping("/getAllByRol")
+    public ResponseEntity<String> getAllByRolid(@RequestBody String UserRequest) {
+
+        UserRequest request = this.parseUserRequest(UserRequest);
+
+        if (isSessionActive(request.sessionId)) {
+
+            var userList = userRepo.GetAllByRol(request.user.getrolid());
+            if (userList != null) {
+
+                UserListResponse response = new UserListResponse(userList, request.sessionId);
+
+                return ResponseEntity.ok(AESEncryptionService.encryptFromJSONObject(response.convertObjectToJson()));
+            }
+            return (ResponseEntity<String>) ResponseEntity.noContent();
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
+    }
+
+     /**
+     * Obté tots els usuaris sense que no han reportat cap incidencia
+     *
+     * @return llistat dels usuarios que no han reportat cap incidencia
+     */
+    @PostMapping("/getAllWithoutReported")
+    public ResponseEntity<String> getAllWithoutReported(@RequestBody String sessionId) {
+
+         //map from client
+        JSONObject requestJSON = AESEncryptionService.decryptToJSONObject(sessionId);
+
+        if (requestJSON == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        if (isSessionActive(requestJSON.getString("sessionid"))) {
+
+            var userList = userRepo.GetAllWithoutIncidents();
+            
+            if (userList != null) {
+
+                UserListResponse response = new UserListResponse(userList, requestJSON.getString("sessionid"));
+
+                return ResponseEntity.ok(AESEncryptionService.encryptFromJSONObject(response.convertObjectToJson()));
+            }
+            return (ResponseEntity<String>) ResponseEntity.noContent();
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
+    }
+
+    /**
      * Crea el usuari
      *
      * @param UserRequest
@@ -222,6 +283,7 @@ public class UserController {
         }
 
     }
+
     /**
      * Elimina el usuari
      *
@@ -252,6 +314,18 @@ public class UserController {
 
     }
 
+    /**
+     * Decrypta una entitat user (proves)
+     *
+     * @return text encriptat
+     */
+    @PostMapping("/decrytFromJSONObject")
+    public ResponseEntity<JSONObject> decrytFromJSONObject(@RequestBody String encryptedData) {
+
+        JSONObject txt = AESEncryptionService.decryptToJSONObject(encryptedData);
+        return ResponseEntity.ok(txt);
+
+    }
 
     private boolean isSessionActive(String sessionId) {
 

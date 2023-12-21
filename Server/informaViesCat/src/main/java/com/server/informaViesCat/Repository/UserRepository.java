@@ -76,12 +76,12 @@ public class UserRepository implements IUserRepository {
 
             PreparedStatement pstmt = bdConnection.prepareStatement(consultaSQL);
 
-            String psswordEncrypted = AESEncryptionService.EncryptFixed( user.getPassword());
+            String psswordEncrypted = AESEncryptionService.EncryptFixed(user.getPassword());
             pstmt.setInt(1, user.getrolid());
             pstmt.setString(2, user.getName());
             pstmt.setString(3, user.getLastname());
             pstmt.setString(4, user.getUsername());
-            pstmt.setString(5,  psswordEncrypted);
+            pstmt.setString(5, psswordEncrypted);
             pstmt.setString(6, user.GetEmail());
             pstmt.setBoolean(7, user.isIslogged());
             pstmt.setInt(8, user.getParentid());
@@ -140,6 +140,46 @@ public class UserRepository implements IUserRepository {
         PreparedStatement pstmt;
         try {
             pstmt = bdConnection.prepareStatement(consultaSQL);
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+
+                users.add(ExtractUserFromResult(result));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return users;
+    }
+
+    public List<User> GetAllByRol(int rolId) {
+        List<User> users = new ArrayList<>();
+        String consultaSQL = "SELECT * FROM users WHERE rolId=?;";
+        PreparedStatement pstmt;
+        try {
+            pstmt = bdConnection.prepareStatement(consultaSQL);
+
+            pstmt.setInt(1, rolId);
+
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+
+                users.add(ExtractUserFromResult(result));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return users;
+    }
+    
+    public List<User> GetAllWithoutIncidents() {
+        List<User> users = new ArrayList<>();
+        String consultaSQL = "SELECT * FROM users LEFT JOIN incidents on users.id = incidents.userid WHERE incidents.userid IS NULL";
+        PreparedStatement pstmt;
+        try {
+            pstmt = bdConnection.prepareStatement(consultaSQL);
+
             ResultSet result = pstmt.executeQuery();
             while (result.next()) {
 

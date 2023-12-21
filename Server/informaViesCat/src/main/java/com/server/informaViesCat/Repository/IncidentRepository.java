@@ -171,16 +171,94 @@ public class IncidentRepository implements IIncidentRepository {
         return incidents;
     }
 
+    public List<Incident> GetAllByType(int incidentType) {
+
+        List<Incident> incidents = new ArrayList<>();
+        String consultaSQL = "SELECT * FROM incidents WHERE incidenttypeid = ?;";
+        PreparedStatement pstmt;
+
+        try {
+            pstmt = bdConnection.prepareStatement(consultaSQL);
+
+            pstmt.setInt(1, incidentType);
+
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+                incidents.add(ExtractIncidentFromResult(result));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(IncidentRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //Apliquem el filtres a la consulta obtinguda
+        //Comparator<Incident> comparadorPorCarretera = GetFieldComparator(incidentRequest);
+        //Ordenació
+        //Collections.sort(incidents, comparadorPorCarretera);
+        return incidents;
+    }
+
+     public List<Incident> GetAllByDescriptionContains(String contains) {
+
+        List<Incident> incidents = new ArrayList<>();
+        String consultaSQL = "SELECT * FROM incidents WHERE description ILIKE ?";
+        PreparedStatement pstmt;
+
+        try {
+            pstmt = bdConnection.prepareStatement(consultaSQL);
+
+    pstmt.setString(1, "%" + contains + "%");
+
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+                incidents.add(ExtractIncidentFromResult(result));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(IncidentRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //Apliquem el filtres a la consulta obtinguda
+        //Comparator<Incident> comparadorPorCarretera = GetFieldComparator(incidentRequest);
+        //Ordenació
+        //Collections.sort(incidents, comparadorPorCarretera);
+        return incidents;
+    }
+
     public List<Incident> GetAll(IncidentCriteria criteria) {
-      
-        
+
         IncidentCriteriaBuilder builder = new IncidentCriteriaBuilder();
-        
+
         String query = builder.buildConditions(criteria);
-        
-         List<Incident> incidents = new ArrayList<>();
-         
-         
+
+        List<Incident> incidents = new ArrayList<>();
+
+        String consultaSQL = "SELECT * FROM incidents WHERE " + query;
+        PreparedStatement pstmt;
+
+        try {
+            pstmt = bdConnection.prepareStatement(consultaSQL);
+            ResultSet result = pstmt.executeQuery();
+            while (result.next()) {
+                incidents.add(ExtractIncidentFromResult(result));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(IncidentRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //Apliquem el filtres a la consulta obtinguda
+        //Comparator<Incident> comparadorPorCarretera = GetFieldComparator(incidentRequest);
+        //Ordenació
+        //Collections.sort(incidents, comparadorPorCarretera);
+        return incidents;
+    }
+    
+      public List<Incident> GetAllNearMe(IncidentCriteria criteria) {
+
+        IncidentCriteriaBuilder builder = new IncidentCriteriaBuilder();
+
+        String query = builder.buildConditions(criteria);
+
+        List<Incident> incidents = new ArrayList<>();
+
         String consultaSQL = "SELECT * FROM incidents WHERE " + query;
         PreparedStatement pstmt;
 
@@ -279,5 +357,6 @@ public class IncidentRepository implements IIncidentRepository {
         }
         return incident;
     }
+    
 
 }

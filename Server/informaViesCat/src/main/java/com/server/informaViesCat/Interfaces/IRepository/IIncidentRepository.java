@@ -2,7 +2,6 @@ package com.server.informaViesCat.Interfaces.IRepository;
 
 import com.server.informaViesCat.Entities.Incident.Incident;
 import com.server.informaViesCat.Entities.Incident.IncidentCriteria;
-import com.server.informaViesCat.Entities.Incident.IncidentCriteriaRequest;
 import java.util.List;
 
 /**
@@ -18,8 +17,12 @@ public interface IIncidentRepository {
     List<Incident> GetAll(int userId);
 
     List<Incident> GetAll();
+
+    List<Incident> GetAll(IncidentCriteria criteria);
+
+    List<Incident> GetAllByType(int incidentType);
     
-     List<Incident> GetAll(IncidentCriteria criteria);
+    List<Incident> GetAllByDescriptionContains(String contains);
 
     boolean Modify(Incident incident);
 

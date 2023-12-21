@@ -2,6 +2,7 @@ package com.server.informaViesCat.Controllers;
 
 import com.server.informaViesCat.Business.IncidentBusiness;
 import com.server.informaViesCat.Entities.AESEncryptionService;
+import com.server.informaViesCat.Entities.Incident.GetAllDescriptionContainsRequest;
 import com.server.informaViesCat.Entities.Incident.Incident;
 import com.server.informaViesCat.Entities.Incident.IncidentCriteria;
 import com.server.informaViesCat.Entities.Incident.IncidentCriteriaBuilder;
@@ -13,7 +14,9 @@ import com.server.informaViesCat.Entities.Incident.IncidentCriteriaRequest;
 import com.server.informaViesCat.Entities.Incident.IncidentEntityRequest;
 import com.server.informaViesCat.Entities.Incident.IncidentGetAllFilterRequest;
 import com.server.informaViesCat.Entities.Incident.IncidentRemoveRequest;
+import com.server.informaViesCat.Interfaces.IRepository.IIncidentRepository;
 import com.server.informaViesCat.Interfaces.IRepository.ISessionRepository;
+import com.server.informaViesCat.Repository.IncidentRepository;
 import com.server.informaViesCat.Repository.SessionRepository;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -36,6 +39,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class IncidentController {
 
     private ISessionRepository sessionRepo = null;
+    private IIncidentRepository incidentRepo = null;
+
     private final IncidentCriteriaBuilder incidentCriteriaBuilder;
 
     //TODO només els Admin les modificacions 
@@ -47,6 +52,7 @@ public class IncidentController {
         this.incientBusiness = new IncidentBusiness();
         this.incidentCriteriaBuilder = new IncidentCriteriaBuilder();
         this.sessionRepo = new SessionRepository();
+        this.incidentRepo = new IncidentRepository();
 
     }
 
@@ -84,8 +90,8 @@ public class IncidentController {
         }
 
     }
-    
-     @PostMapping("/getallFiltered")
+
+    @PostMapping("/getallFiltered")
     @Consumes("MediaType.APPLICATION_JSON")
     @Produces("MediaType.APPLICATION_JSON")
     public ResponseEntity<String> getallFiltered(@RequestBody String request) {
@@ -97,15 +103,14 @@ public class IncidentController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         //Build new Object server
-        
-         // Extract the user object from the JSON
+
+        // Extract the user object from the JSON
         JSONObject criteriaObject = requestJson.getJSONObject("criteria");
-        
-          // Convert the user JSON to a User object
-          
+
+        // Convert the user JSON to a User object
         IncidentCriteria criteria = IncidentCriteria.convertJsonToObject(criteriaObject.toString());
-        
-        IncidentGetAllFilterRequest filter = new IncidentGetAllFilterRequest(requestJson.getInt("userid"),requestJson.getString("sessionid"),requestJson.getInt("rolid"),criteria);
+
+        IncidentGetAllFilterRequest filter = new IncidentGetAllFilterRequest(requestJson.getInt("userid"), requestJson.getString("sessionid"), requestJson.getInt("rolid"), criteria);
 
         if (isSessionActive(filter.sessionid)) {
             var incidentList = incientBusiness.GetAll(filter);
@@ -154,6 +159,108 @@ public class IncidentController {
 
     }
 
+    /**
+     * Obté tots els incidents per tipus indicat
+     *"validating"
+     *"validated"
+     *"Assign"
+     *"Repaired"
+     *"close"
+     * @return llistat dels Incidenciess per tipus indicat
+     */
+    @PostMapping("/getAllByType")
+    @Consumes("MediaType.APPLICATION_JSON")
+    @Produces("MediaType.APPLICATION_JSON")
+    public ResponseEntity<String> getAllByType(@RequestBody String incidentrequest) {
+
+        IncidentEntityRequest request = this.parseIncidentRequest(incidentrequest);
+
+        if (isSessionActive(request.sessionid)) {
+            var incidentList = incidentRepo.GetAllByType(request.incident.getIncidenttypeid());
+            if (incidentList != null) {
+
+                IncidentListResponse response = new IncidentListResponse(incidentList, request.sessionid);
+
+                return ResponseEntity.ok(AESEncryptionService.encryptFromJSONObject(response.convertObjectToJson()));
+            }
+
+            return (ResponseEntity<String>) ResponseEntity.noContent();
+        } else {
+            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
+        }
+
+    }
+
+    /**
+     * Obté tots els incidents on la descripcio conte
+     *
+     * @return llistat dels Incidenciess on la descripcio conte
+     */
+    @PostMapping("/getAllByDescriptionContains")
+    @Consumes("MediaType.APPLICATION_JSON")
+    @Produces("MediaType.APPLICATION_JSON")
+    public ResponseEntity<String> getAllByDescriptionContains(@RequestBody String getAllDescriptionContainsRequest) {
+
+        JSONObject requestJSON = AESEncryptionService.decryptToJSONObject(getAllDescriptionContainsRequest);
+
+        if (requestJSON == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        //Build new Object server
+        GetAllDescriptionContainsRequest request = new GetAllDescriptionContainsRequest(requestJSON.getString("sessionid"), requestJSON.getString("contains"));
+
+        if (isSessionActive(request.sessionid)) {
+            var incidentList = incidentRepo.GetAllByDescriptionContains(request.contains);
+            if (incidentList != null) {
+
+                IncidentListResponse response = new IncidentListResponse(incidentList, request.sessionid);
+
+                return ResponseEntity.ok(AESEncryptionService.encryptFromJSONObject(response.convertObjectToJson()));
+            }
+
+            return (ResponseEntity<String>) ResponseEntity.noContent();
+        } else {
+            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
+        }
+
+    }
+
+    
+    /**
+     * Obté tots els incidents
+     *
+     * @return llistat dels Incidenciesss
+     */
+    @PostMapping("/getAllNearMe")
+    @Consumes("MediaType.APPLICATION_JSON")
+    @Produces("MediaType.APPLICATION_JSON")
+    public ResponseEntity<String> getAllNearMe(@RequestBody String incidentGetAllRequest) {
+
+        //map from client
+        JSONObject requestJson = AESEncryptionService.decryptToJSONObject(incidentGetAllRequest);
+
+        if (requestJson == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        
+        if (isSessionActive(requestJson.getString("sessionid"))) {
+            var cordenadaMasPropera = incientBusiness.GetAllNearMe(requestJson.getFloat("latitud"), requestJson.getFloat("longitud"));
+            if (cordenadaMasPropera != null) {
+
+                
+
+                return ResponseEntity.ok(AESEncryptionService.encryptFromJSONObject(cordenadaMasPropera.convertObjectToJson()));
+            }
+
+            return (ResponseEntity<String>) ResponseEntity.noContent();
+        } else {
+            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
+        }
+
+    }
+
+    
     /**
      * Crea el incident
      *
@@ -244,8 +351,8 @@ public class IncidentController {
         }
 
     }
-    
-     /**
+
+    /**
      * Elimina el incident
      *
      * @return Retorna missagte si ha elimnat OK o un badrequest
