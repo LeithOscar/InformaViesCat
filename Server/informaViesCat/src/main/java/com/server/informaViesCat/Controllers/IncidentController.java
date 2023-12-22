@@ -227,14 +227,14 @@ public class IncidentController {
 
     
     /**
-     * Obté tots els incidents
+     * Obté la incidencia mes propera a la posicio indicada
      *
-     * @return llistat dels Incidenciesss
+     * @return la posicio d'un incident mes proper a la indicada
      */
-    @PostMapping("/getAllNearMe")
+    @PostMapping("/getAlertPointNearMe")
     @Consumes("MediaType.APPLICATION_JSON")
     @Produces("MediaType.APPLICATION_JSON")
-    public ResponseEntity<String> getAllNearMe(@RequestBody String incidentGetAllRequest) {
+    public ResponseEntity<String> getAlertPointNearMe(@RequestBody String incidentGetAllRequest) {
 
         //map from client
         JSONObject requestJson = AESEncryptionService.decryptToJSONObject(incidentGetAllRequest);
