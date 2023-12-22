@@ -314,18 +314,6 @@ public class UserController {
 
     }
 
-    /**
-     * Decrypta una entitat user (proves)
-     *
-     * @return text encriptat
-     */
-    @PostMapping("/decrytFromJSONObject")
-    public ResponseEntity<JSONObject> decrytFromJSONObject(@RequestBody String encryptedData) {
-
-        JSONObject txt = AESEncryptionService.decryptToJSONObject(encryptedData);
-        return ResponseEntity.ok(txt);
-
-    }
 
     private boolean isSessionActive(String sessionId) {
 
